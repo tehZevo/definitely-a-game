@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { barWidth } from './hud';
+import { barWidth } from './barWidth';
 
 describe('barWidth', () => {
   it('returns full width when current equals max', () => {

@@ -16,6 +16,8 @@ import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { defaultAttack } from './data/skills/defaultAttack';
+import { fireball } from './data/skills/fireball';
+import { quadStrike } from './data/skills/quadStrike';
 import { SkillSlots } from './skills/skillSlots';
 import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
@@ -45,7 +47,11 @@ async function boot(): Promise<void> {
     new Stats(100, 100, 50, 50),
     new Actor(),
     new Team(0),
-    new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack }),
+    new SkillSlots({
+      [SkillSlot.ALPHA]: defaultAttack,
+      [SkillSlot.BETA]: fireball,
+      [SkillSlot.GAMMA]: quadStrike,
+    }),
     new Sprite({
       idle: [
         'assets/player/idle_down_body.png',

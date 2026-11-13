@@ -1,4 +1,5 @@
 import { SkillRank } from './skillRank';
+import type { SkillSlot } from './skillSlot';
 import type { SkillEffect } from './effects/skillEffect';
 
 export const DEFAULT_SKILL_USE_TIME = 0.5;
@@ -15,7 +16,7 @@ export class SkillDef {
     public mpCost = 0,
     public hpCost = 0,
     public useTime = DEFAULT_SKILL_USE_TIME,
-    public slot: string | null = null,
+    public slot: SkillSlot | string | null = null,
     public icon: string | null = null,
     public miniIcon: string | null = null,
   ) {

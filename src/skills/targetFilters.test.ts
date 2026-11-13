@@ -6,7 +6,7 @@ import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
 import { Skill } from './skill';
 import { SkillEffect } from './effects/skillEffect';
-import { distanceFilter, teamFilter, angleFilter, angleDistanceDeg } from './targetFilters';
+import { distanceFilter, teamFilter, angleFilter, angleDistanceDeg, ignoreEntitiesFilter } from './targetFilters';
 import { TargetType } from './targetType';
 
 function setup(userTeam: number, look: Vector2) {
@@ -50,5 +50,14 @@ describe('targetFilters', () => {
     const f = angleFilter(180);
     expect(f(skill)(front)).toBe(true);
     expect(f(skill)(behind)).toBe(false);
+  });
+
+  it('ignoreEntitiesFilter excludes listed entities', () => {
+    const { world, skill } = setup(0, new Vector2(1, 0));
+    const a = world.createEntity([new Position(0, 0), new Actor(), new Team(1)]);
+    const b = world.createEntity([new Position(0, 0), new Actor(), new Team(1)]);
+    const f = ignoreEntitiesFilter([a]);
+    expect(f(skill)(a)).toBe(false);
+    expect(f(skill)(b)).toBe(true);
   });
 });

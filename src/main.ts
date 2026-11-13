@@ -17,6 +17,7 @@ import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { Hud } from './ui/hud';
+import { DamageNumberRenderer } from './ui/damageNumberRenderer';
 
 async function boot(): Promise<void> {
   const app = new Application();
@@ -61,6 +62,7 @@ async function boot(): Promise<void> {
   await spriteRenderer.preload(world);
 
   const hud = new Hud(app.stage);
+  const damageNumbers = new DamageNumberRenderer(app.stage);
   const camera = new Camera(worldLayer);
 
   let last = performance.now();
@@ -70,6 +72,7 @@ async function boot(): Promise<void> {
     last = now;
     world.update(dt);
     spriteRenderer.update(world, dt);
+    damageNumbers.update(world);
     hud.update(player);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),

@@ -4,6 +4,7 @@ import { Position } from '../physics/position';
 import { Stats } from './stats';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
+import type { Action } from '../actions/action';
 
 export class Actor extends Component {
   lookDir = new Vector2(0, -1);
@@ -11,6 +12,18 @@ export class Actor extends Component {
   alive = true;
   inCombat = false;
   combatTimer = 0;
+  currentAction: Action | null = null;
+
+  act(action: Action): void {
+    this.currentAction = action;
+    action.register(this.entity);
+    action.start();
+  }
+
+  enterCombat(): void {
+    this.inCombat = true;
+    this.combatTimer = 0;
+  }
 
   damage(amount: number, damageType: DamageNumberType = DamageNumberType.NORMAL): void {
     const stats = this.entity.getComponent(Stats);

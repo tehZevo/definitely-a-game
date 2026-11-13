@@ -1,6 +1,9 @@
 import { Component } from '../ecs';
 
 export class Stats extends Component {
+  moveSpeed = 120;
+  moveSpeedMultiplier = 1;
+
   constructor(
     public hp: number,
     public maxHp: number,

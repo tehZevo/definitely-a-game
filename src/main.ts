@@ -12,13 +12,16 @@ import { KeyboardInput } from './core/input';
 import { TouchJoystick } from './core/touchJoystick';
 import { CombinedInput } from './core/combinedInput';
 import { generateDungeon } from './maps/dfsGenerator';
+import { chunkTiles } from './maps/chunkTiles';
 import { Tileset } from './tiles/tileset';
 import { Tile } from './tiles/tile';
+import { TilePhysics } from './tiles/tilePhysics';
 import { spawnMob } from './monsters/spawn';
 import { greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime } from './data/mobs/slimes';
 import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
+import { Physics } from './physics/physics';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
 import { quadStrike } from './data/skills/quadStrike';
@@ -72,6 +75,8 @@ async function boot(): Promise<void> {
   await TileRenderer.render(tileset, worldLayer);
 
   const world = new World();
+  const chunks = chunkTiles(dungeon.tiles);
+  world.createEntity([new TilePhysics(chunks)]);
   const spawnRoom = dungeon.rooms[0];
   const spawnX = spawnRoom.x * 8 + 4;
   const spawnY = spawnRoom.y * 8 + 4;
@@ -85,6 +90,7 @@ async function boot(): Promise<void> {
     : keyboard;
   const player = world.createEntity([
     pos,
+    new Physics(),
     new PlayerController(input, defaultAttack),
     new Stats(100, 100, 50, 50),
     new Actor(),

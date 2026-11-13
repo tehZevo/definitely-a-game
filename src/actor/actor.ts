@@ -4,6 +4,7 @@ import { Position } from '../physics/position';
 import { Stats } from './stats';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
+import { Sprite } from '../graphics/sprite';
 import type { Action } from '../actions/action';
 
 export class Actor extends Component {
@@ -32,8 +33,21 @@ export class Actor extends Component {
     this.spawnNumber(amount, damageType);
     if (stats.hp <= 0) {
       this.alive = false;
-      this.entity.remove();
+      this.onDeath();
     }
+  }
+
+  private onDeath(): void {
+    const world = this.entity.world;
+    const pos = this.entity.getComponent(Position);
+    const isPlayer = this.entity.getComponent(Sprite)?.frames['default']?.[0]?.includes('player');
+    if (world && pos && !isPlayer) {
+      world.createEntity([
+        new Position(pos.x, pos.y),
+        new Sprite({ default: ['assets/player/tombstone.png'] }),
+      ]);
+    }
+    this.entity.remove();
   }
 
   damageHits(hits: Array<[number, boolean]>): void {

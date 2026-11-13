@@ -13,7 +13,7 @@ import { TouchJoystick } from './core/touchJoystick';
 import { CombinedInput } from './core/combinedInput';
 import { grassFloor } from './data/maps/grassFloor';
 import { spawnMob } from './monsters/spawn';
-import { greenSlime, slime, redSlime } from './data/mobs/slimes';
+import { greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime } from './data/mobs/slimes';
 import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
@@ -78,6 +78,9 @@ async function boot(): Promise<void> {
   spawnMob(world, greenSlime, 120, 120);
   spawnMob(world, slime, 200, 140);
   spawnMob(world, redSlime, 180, 220);
+  spawnMob(world, brownSlime, 140, 200);
+  spawnMob(world, darkSlime, 220, 180);
+  spawnMob(world, pinkSlime, 160, 100);
   const spriteRenderer = new SpriteRenderer(worldLayer);
   await spriteRenderer.preload(world);
 

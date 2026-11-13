@@ -12,6 +12,7 @@ export class TileRenderer {
         let tex = cache.get(tile.imagePath);
         if (!tex) {
           tex = await Assets.load<Texture>(assetUrl(tile.imagePath));
+          tex.source.scaleMode = 'nearest';
           cache.set(tile.imagePath, tex);
         }
         const sprite = new PixiSprite(tex);

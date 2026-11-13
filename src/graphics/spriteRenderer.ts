@@ -19,6 +19,7 @@ export class SpriteRenderer {
         let tex = this.cache.get(path);
         if (!tex) {
           tex = await Assets.load<Texture>(assetUrl(path));
+          tex.source.scaleMode = 'nearest';
           this.cache.set(path, tex);
         }
         container.addChild(new PixiSprite(tex));
@@ -33,8 +34,8 @@ export class SpriteRenderer {
       const view = this.views.get(entity);
       const pos = entity.getComponent(Position);
       if (view && pos) {
-        view.x = pos.x;
-        view.y = pos.y;
+        view.x = Math.round(pos.x);
+        view.y = Math.round(pos.y);
       }
     }
   }

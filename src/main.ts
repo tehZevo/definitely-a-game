@@ -13,7 +13,12 @@ import { grassFloor } from './data/maps/grassFloor';
 
 async function boot(): Promise<void> {
   const app = new Application();
-  await app.init({ background: '#1099bb', resizeTo: window });
+  await app.init({
+    background: '#1099bb',
+    resizeTo: window,
+    antialias: false,
+    resolution: 1,
+  });
   document.getElementById('app')?.appendChild(app.canvas);
 
   const worldLayer = new Container();
@@ -44,7 +49,11 @@ async function boot(): Promise<void> {
     last = now;
     world.update(dt);
     spriteRenderer.update(world);
-    camera.follow(new Vector2(pos.x, pos.y), app.screen.width, app.screen.height);
+    camera.follow(
+      new Vector2(Math.round(pos.x), Math.round(pos.y)),
+      app.screen.width,
+      app.screen.height,
+    );
   });
 }
 

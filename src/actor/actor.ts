@@ -5,6 +5,7 @@ import { Stats } from './stats';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
 import { Sprite } from '../graphics/sprite';
+import { ItemDropper } from '../items/itemDropper';
 import type { Action } from '../actions/action';
 
 export class Actor extends Component {
@@ -52,6 +53,12 @@ export class Actor extends Component {
           new Position(pos.x, pos.y),
           new Sprite({ default: ['assets/player/tombstone.png'] }),
         ]);
+        const dropper = this.entity.getComponent(ItemDropper);
+        if (dropper) {
+          for (const item of dropper.getDropList()) {
+            dropper.drop(item, pos);
+          }
+        }
       }
     }
     this.entity.remove();

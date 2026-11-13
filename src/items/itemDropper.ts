@@ -6,6 +6,16 @@ import { DroppedItem } from './droppedItem';
 const ITEM_DROP_RADIUS = 2;
 
 export class ItemDropper extends Component {
+  private items: ItemDef[] = [];
+
+  setItems(items: ItemDef[]): void {
+    this.items = items;
+  }
+
+  getDropList(): ItemDef[] {
+    return this.items.filter((item) => Math.random() < item.calcDropRate());
+  }
+
   drop(item: ItemDef, pos: Position): import('../ecs').Entity {
     const world = this.entity.world;
     if (!world) return this.entity;

@@ -6,6 +6,7 @@ import type { Armor } from './armor';
 import { Equips } from './equips';
 import { ItemDropper } from './itemDropper';
 import { Position } from '../physics/position';
+import { Sprite } from '../graphics/sprite';
 
 function isWeapon(item: ItemDef): item is Weapon {
   return 'weaponType' in item;
@@ -21,6 +22,15 @@ export class DroppedItem extends Interactable {
   constructor(item: ItemDef) {
     super();
     this.item = item;
+  }
+
+  override start(): void {
+    this.entity.ensureComponent(Sprite);
+    const sprite = this.entity.getComponent(Sprite);
+    if (sprite) {
+      sprite.frames = { default: [this.item.icon] };
+      sprite.current = 'default';
+    }
   }
 
   override interact(entity: Entity): void {

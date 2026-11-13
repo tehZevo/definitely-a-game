@@ -1,6 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
 import { Entity } from '../ecs';
 import { Stats } from '../actor/stats';
+import { barWidth } from './barWidth';
 
 const BAR_W = 120;
 const BAR_H = 10;
@@ -8,16 +9,6 @@ const PAD = 8;
 const BG = 0x1a1a1a;
 const HP = 0xff3b30;
 const MP = 0x2f7bff;
-
-export function barWidth(
-  current: number,
-  max: number,
-  maxWidth: number,
-): number {
-  if (max <= 0) return 0;
-  const ratio = Math.max(0, Math.min(1, current / max));
-  return Math.round(ratio * maxWidth);
-}
 
 export class Hud {
   private hpFill = new Graphics();

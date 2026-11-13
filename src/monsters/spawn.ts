@@ -1,6 +1,7 @@
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { Sprite } from '../graphics/sprite';
+import { MobAI } from './mobAI';
 import { MobDef } from './mobdef';
 
 export function spawnMob(
@@ -12,5 +13,6 @@ export function spawnMob(
   return world.createEntity([
     new Position(x, y),
     new Sprite({ default: [def.sprite] }),
+    new MobAI(),
   ]);
 }

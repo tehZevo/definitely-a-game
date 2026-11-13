@@ -9,5 +9,8 @@ export function spawnMob(
   x: number,
   y: number,
 ): Entity {
-  return world.createEntity([new Position(x, y), new Sprite([def.sprite])]);
+  return world.createEntity([
+    new Position(x, y),
+    new Sprite({ default: [def.sprite] }),
+  ]);
 }

@@ -1,6 +1,7 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
+import { Sprite } from '../graphics/sprite';
 import type { InputSource } from '../core/input';
 
 export class PlayerController extends Component {
@@ -16,7 +17,12 @@ export class PlayerController extends Component {
     const axis = this.input.getAxis();
     const raw = new Vector2(axis.x, axis.y);
     const len = raw.length();
-    if (len === 0) return;
+    const sprite = this.entity.getComponent(Sprite);
+    if (len === 0) {
+      sprite?.setAnimation('idle');
+      return;
+    }
+    sprite?.setAnimation('walk');
     const dir = raw.scale(1 / len);
     const pos = this.entity.getComponent(Position);
     if (!pos) return;

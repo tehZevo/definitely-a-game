@@ -11,7 +11,9 @@ import { Camera } from './graphics/camera';
 import { KeyboardInput } from './core/input';
 import { TouchJoystick } from './core/touchJoystick';
 import { CombinedInput } from './core/combinedInput';
-import { grassFloor } from './data/maps/grassFloor';
+import { generateDungeon } from './maps/dfsGenerator';
+import { Tileset } from './tiles/tileset';
+import { Tile } from './tiles/tile';
 import { spawnMob } from './monsters/spawn';
 import { greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime } from './data/mobs/slimes';
 import { Stats } from './actor/stats';
@@ -26,6 +28,31 @@ import { Hud } from './ui/hud';
 import { SkillBar } from './ui/skillBar';
 import { DamageNumberRenderer } from './ui/damageNumberRenderer';
 import { JoystickOverlay } from './ui/joystickOverlay';
+import { Stairs } from './tiles/stairs';
+import { Chest } from './tiles/chest';
+import { woodenShortsword } from './data/items/weapons';
+import { cottonRobe } from './data/items/armor';
+
+function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): Tileset {
+  let maxX = 0;
+  let maxY = 0;
+  for (const key of tiles.keys()) {
+    const [x, y] = key.split(',').map(Number);
+    if (x > maxX) maxX = x;
+    if (y > maxY) maxY = y;
+  }
+  const width = maxX + 1;
+  const height = maxY + 1;
+  const grid: Tile[][] = Array.from({ length: height }, () =>
+    Array.from({ length: width }, () => new Tile('', false)),
+  );
+  for (const [key, tileType] of tiles) {
+    const [x, y] = key.split(',').map(Number);
+    const img = tileType.startsWith('wall') ? 'assets/tiles/grass_wall.png' : 'assets/tiles/grass.png';
+    grid[y][x] = new Tile(img, tileType.startsWith('wall'));
+  }
+  return new Tileset(width, height, grid);
+}
 
 async function boot(): Promise<void> {
   const app = new Application();
@@ -40,10 +67,15 @@ async function boot(): Promise<void> {
   const worldLayer = new Container();
   app.stage.addChild(worldLayer);
 
-  await TileRenderer.render(grassFloor(), worldLayer);
+  const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
+  const tileset = dungeonToTileset(dungeon.tiles);
+  await TileRenderer.render(tileset, worldLayer);
 
   const world = new World();
-  const pos = new Position(160, 160);
+  const spawnRoom = dungeon.rooms[0];
+  const spawnX = spawnRoom.x * 8 + 4;
+  const spawnY = spawnRoom.y * 8 + 4;
+  const pos = new Position(spawnX * 16, spawnY * 16);
   const keyboard = new KeyboardInput(window);
   const touch = 'ontouchstart' in window
     ? new TouchJoystick(app.canvas)
@@ -75,12 +107,27 @@ async function boot(): Promise<void> {
       ],
     }),
   ]);
-  spawnMob(world, greenSlime, 120, 120);
-  spawnMob(world, slime, 200, 140);
-  spawnMob(world, redSlime, 180, 220);
-  spawnMob(world, brownSlime, 140, 200);
-  spawnMob(world, darkSlime, 220, 180);
-  spawnMob(world, pinkSlime, 160, 100);
+
+  const mobRooms = dungeon.rooms.slice(1);
+  const mobs = [greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime];
+  for (let i = 0; i < mobRooms.length; i++) {
+    const room = mobRooms[i];
+    const mobType = mobs[i % mobs.length];
+    spawnMob(world, mobType, room.x * 8 * 16 + 64, room.y * 8 * 16 + 64);
+  }
+
+  const lastRoom = dungeon.rooms[dungeon.rooms.length - 1];
+  world.createEntity([
+    new Position(lastRoom.x * 8 * 16 + 64, lastRoom.y * 8 * 16 + 64),
+    new Stairs('plains'),
+  ]);
+
+  const midRoom = dungeon.rooms[Math.floor(dungeon.rooms.length / 2)];
+  world.createEntity([
+    new Position(midRoom.x * 8 * 16 + 32, midRoom.y * 8 * 16 + 32),
+    new Chest([woodenShortsword, cottonRobe]),
+  ]);
+
   const spriteRenderer = new SpriteRenderer(worldLayer);
   await spriteRenderer.preload(world);
 

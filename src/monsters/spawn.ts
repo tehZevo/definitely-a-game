@@ -9,6 +9,7 @@ import { Team } from '../actor/team';
 import { Shadow } from '../actor/shadow';
 import { Physics } from '../physics/physics';
 import { Equips } from '../items/equips';
+import { ItemDropper } from '../items/itemDropper';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot } from '../skills/skillSlot';
 import { defaultAttack } from '../data/skills/defaultAttack';
@@ -42,6 +43,10 @@ export function spawnMob(
     }
   }
   components.push(equips);
+
+  const dropper = new ItemDropper();
+  dropper.setItems(def.drops);
+  components.push(dropper);
 
   const skillSlots = new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack });
   for (const skill of def.skills) {

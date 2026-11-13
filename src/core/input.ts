@@ -5,6 +5,7 @@ export interface Axis {
 
 export interface InputSource {
   getAxis(): Axis;
+  isPressed(code: string): boolean;
 }
 
 const KEY_MAP: Record<string, Axis> = {
@@ -40,12 +41,21 @@ export class KeyboardInput implements InputSource {
       y: Math.max(-1, Math.min(1, axis.y)),
     };
   }
+
+  isPressed(code: string): boolean {
+    return this.keys.has(code);
+  }
 }
 
 export class FakeInput implements InputSource {
-  constructor(private ax = 0, private ay = 0) {}
+  constructor(private ax = 0, private ay = 0, private attack = false) {}
 
   getAxis(): Axis {
     return { x: this.ax, y: this.ay };
+  }
+
+  isPressed(code: string): boolean {
+    void code;
+    return this.attack;
   }
 }

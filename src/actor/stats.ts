@@ -6,6 +6,9 @@ export class Stats extends Component {
     public maxHp: number,
     public mp = 0,
     public maxMp = 0,
+    public physAtt = 100,
+    public physDef = 0,
+    public critical = 0,
   ) {
     super();
   }

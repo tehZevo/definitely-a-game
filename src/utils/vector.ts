@@ -17,4 +17,12 @@ export class Vector2 {
     const len = this.length();
     return len === 0 ? new Vector2(0, 0) : new Vector2(this.x / len, this.y / len);
   }
+
+  sub(v: Vector2): Vector2 {
+    return new Vector2(this.x - v.x, this.y - v.y);
+  }
+
+  angle(): number {
+    return Math.atan2(this.y, this.x) * (180 / Math.PI);
+  }
 }

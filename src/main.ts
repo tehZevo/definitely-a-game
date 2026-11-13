@@ -1,6 +1,5 @@
 import './style.css';
 import { Application, Container } from 'pixi.js';
-import { World } from './ecs';
 import { Vector2 } from './utils/vector';
 import { Position } from './physics/position';
 import { PlayerController } from './actor/playerController';
@@ -36,6 +35,9 @@ import { Stairs } from './tiles/stairs';
 import { Chest } from './tiles/chest';
 import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
+import { Game } from './core/game';
+import { PlayState } from './core/playState';
+import { MainMenuState } from './core/mainMenuState';
 
 function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): Tileset {
   let maxX = 0;
@@ -58,24 +60,14 @@ function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): 
   return new Tileset(width, height, grid);
 }
 
-async function boot(): Promise<void> {
-  const app = new Application();
-  await app.init({
-    background: '#1099bb',
-    resizeTo: window,
-    antialias: false,
-    resolution: 1,
-  });
-  document.getElementById('app')?.appendChild(app.canvas);
-
-  const worldLayer = new Container();
-  app.stage.addChild(worldLayer);
+async function startGame(app: Application, game: Game): Promise<void> {
+  const worldLayer = game.worldLayer!;
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
   const tileset = dungeonToTileset(dungeon.tiles);
   await TileRenderer.render(tileset, worldLayer);
 
-  const world = new World();
+  const world = game.world;
   const chunks = chunkTiles(dungeon.tiles);
   world.createEntity([new TilePhysics(chunks)]);
   const spawnRoom = dungeon.rooms[0];
@@ -145,11 +137,8 @@ async function boot(): Promise<void> {
   const camera = new Camera(worldLayer);
   const joystickOverlay = touch ? new JoystickOverlay(app.stage) : null;
 
-  let last = performance.now();
-  app.ticker.add(() => {
-    const now = performance.now();
-    const dt = (now - last) / 1000;
-    last = now;
+  const playState = new PlayState();
+  playState.setUpdate((dt: number) => {
     world.update(dt);
     spriteRenderer.update(world, dt);
     damageNumbers.update(world);
@@ -160,6 +149,37 @@ async function boot(): Promise<void> {
       app.screen.width,
       app.screen.height,
     );
+  });
+  game.setState(playState);
+}
+
+async function boot(): Promise<void> {
+  const app = new Application();
+  await app.init({
+    background: '#1099bb',
+    resizeTo: window,
+    antialias: false,
+    resolution: 1,
+  });
+  document.getElementById('app')?.appendChild(app.canvas);
+
+  const game = new Game();
+  game.app = app;
+  game.worldLayer = new Container();
+  app.stage.addChild(game.worldLayer);
+
+  const menu = new MainMenuState();
+  menu.setOnStart(() => {
+    void startGame(app, game);
+  });
+  game.setState(menu);
+
+  let last = performance.now();
+  app.ticker.add(() => {
+    const now = performance.now();
+    const dt = (now - last) / 1000;
+    last = now;
+    game.update(dt);
   });
 }
 

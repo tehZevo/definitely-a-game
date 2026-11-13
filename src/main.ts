@@ -13,6 +13,7 @@ import { grassFloor } from './data/maps/grassFloor';
 import { spawnMob } from './monsters/spawn';
 import { greenSlime, slime, redSlime } from './data/mobs/slimes';
 import { Stats } from './actor/stats';
+import { Actor } from './actor/actor';
 import { Hud } from './ui/hud';
 
 async function boot(): Promise<void> {
@@ -36,6 +37,7 @@ async function boot(): Promise<void> {
     pos,
     new PlayerController(new KeyboardInput(window)),
     new Stats(100, 100, 50, 50),
+    new Actor(),
     new Sprite({
       idle: [
         'assets/player/idle_down_body.png',

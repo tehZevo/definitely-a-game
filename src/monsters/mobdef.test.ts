@@ -12,4 +12,11 @@ describe('MobDef', () => {
   it('defaults difficulty to 5', () => {
     expect(new MobDef('x', 'y.png').difficulty).toBe(5);
   });
+
+  it('stores and defaults stats', () => {
+    const d = new MobDef('x', 'y.png', 5, 30, 12);
+    expect(d.maxHp).toBe(30);
+    expect(d.maxMp).toBe(12);
+    expect(new MobDef('x', 'y.png').maxHp).toBe(10);
+  });
 });

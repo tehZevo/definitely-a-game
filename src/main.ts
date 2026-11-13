@@ -21,6 +21,7 @@ import { greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime } from '.
 import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
+import { Shadow } from './actor/shadow';
 import { Physics } from './physics/physics';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
@@ -95,6 +96,7 @@ async function boot(): Promise<void> {
     new Stats(100, 100, 50, 50),
     new Actor(),
     new Team(0),
+    new Shadow(),
     new SkillSlots({
       [SkillSlot.ALPHA]: defaultAttack,
       [SkillSlot.BETA]: fireball,

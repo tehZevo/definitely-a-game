@@ -6,6 +6,7 @@ import { MobDef } from './mobdef';
 import { Stats } from '../actor/stats';
 import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
+import { Shadow } from '../actor/shadow';
 import { Equips } from '../items/equips';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot } from '../skills/skillSlot';
@@ -27,6 +28,7 @@ export function spawnMob(
     new Stats(def.maxHp, def.maxHp, def.maxMp, def.maxMp),
     new Actor(),
     new Team(team),
+    new Shadow(),
   ];
 
   const equips = new Equips();

@@ -38,8 +38,14 @@ import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
+import { CharCreateState } from './core/charCreateState';
+import { getFaceImagePaths, type FaceConfig } from './graphics/characterCreator';
+import { TILE_IMAGES } from './data/tilePalettes';
 
-function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): Tileset {
+function dungeonToTileset(
+  tiles: Map<string, import('./tiles/tile').TileType>,
+  palette: string,
+): Tileset {
   let maxX = 0;
   let maxY = 0;
   for (const key of tiles.keys()) {
@@ -49,22 +55,23 @@ function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): 
   }
   const width = maxX + 1;
   const height = maxY + 1;
+  const floorImg = TILE_IMAGES[palette] ?? TILE_IMAGES['grass'];
   const grid: Tile[][] = Array.from({ length: height }, () =>
     Array.from({ length: width }, () => new Tile('', false)),
   );
   for (const [key, tileType] of tiles) {
     const [x, y] = key.split(',').map(Number);
-    const img = tileType.startsWith('wall') ? 'assets/tiles/wall.png' : 'assets/tiles/grass.png';
+    const img = tileType.startsWith('wall') ? 'assets/tiles/wall.png' : floorImg;
     grid[y][x] = new Tile(img, tileType.startsWith('wall'));
   }
   return new Tileset(width, height, grid);
 }
 
-async function startGame(app: Application, game: Game): Promise<void> {
+async function startGame(app: Application, game: Game, face: FaceConfig): Promise<void> {
   const worldLayer = game.worldLayer!;
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
-  const tileset = dungeonToTileset(dungeon.tiles);
+  const tileset = dungeonToTileset(dungeon.tiles, 'grass');
   await TileRenderer.render(tileset, worldLayer);
 
   const world = game.world;
@@ -81,6 +88,7 @@ async function startGame(app: Application, game: Game): Promise<void> {
   const input = touch
     ? new CombinedInput(keyboard, touch)
     : keyboard;
+  const facePaths = getFaceImagePaths(face);
   const player = world.createEntity([
     pos,
     new Physics(),
@@ -95,16 +103,8 @@ async function startGame(app: Application, game: Game): Promise<void> {
       [SkillSlot.GAMMA]: quadStrike,
     }),
     new Sprite({
-      idle: [
-        'assets/player/idle_down_body.png',
-        'assets/player/idle_down_hair.png',
-        'assets/player/idle_down_eyes.png',
-      ],
-      walk: [
-        'assets/player/walk_down_body.png',
-        'assets/player/walk_down_hair.png',
-        'assets/player/walk_down_eyes.png',
-      ],
+      idle: facePaths,
+      walk: facePaths,
     }),
   ]);
 
@@ -170,7 +170,11 @@ async function boot(): Promise<void> {
 
   const menu = new MainMenuState();
   menu.setOnStart(() => {
-    void startGame(app, game);
+    const charCreate = new CharCreateState();
+    charCreate.setOnConfirm((face) => {
+      void startGame(app, game, face);
+    });
+    game.setState(charCreate);
   });
   game.setState(menu);
 

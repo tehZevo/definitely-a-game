@@ -2,6 +2,7 @@ import { Assets, Container, Rectangle, Sprite as PixiSprite, Texture } from 'pix
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { Sprite } from './sprite';
+import { Shadow } from '../actor/shadow';
 import { assetUrl } from '../assets';
 
 const FRAME_DURATION = 0.1;
@@ -23,6 +24,8 @@ export class SpriteRenderer {
   private views = new Map<Entity, Container>();
   private anims = new Map<Entity, AnimState>();
   private cache = new Map<string, Texture[]>();
+  private shadowTex: Texture | null = null;
+  private shadowViews = new Map<Entity, PixiSprite>();
 
   constructor(private stage: Container) {}
 
@@ -55,6 +58,13 @@ export class SpriteRenderer {
   }
 
   async preload(world: World): Promise<void> {
+    try {
+      this.shadowTex = await Assets.load<Texture>(assetUrl('assets/shadow.png'));
+      this.shadowTex.source.scaleMode = 'nearest';
+    } catch {
+      this.shadowTex = null;
+    }
+
     for (const entity of world.find(Sprite)) {
       const sprite = entity.getComponent(Sprite);
       if (!sprite) continue;
@@ -62,6 +72,13 @@ export class SpriteRenderer {
         for (const path of paths) await this.load(path);
       }
       const container = new Container();
+      if (this.shadowTex && entity.getComponent(Shadow)) {
+        const shadow = new PixiSprite(this.shadowTex);
+        shadow.alpha = 0.5;
+        shadow.y = 5;
+        container.addChild(shadow);
+        this.shadowViews.set(entity, shadow);
+      }
       const built = this.build(sprite.frames[sprite.current] ?? []);
       for (const layer of built.layers) container.addChild(layer.sprite);
       this.stage.addChild(container);
@@ -85,7 +102,9 @@ export class SpriteRenderer {
       if (!view || !pos || !sprite || !anim) continue;
       if (anim.current !== sprite.current) {
         const built = this.build(sprite.frames[sprite.current] ?? []);
+        const shadow = this.shadowViews.get(entity);
         view.removeChildren();
+        if (shadow) view.addChild(shadow);
         for (const layer of built.layers) view.addChild(layer.sprite);
         anim.current = sprite.current;
         anim.layers = built.layers;

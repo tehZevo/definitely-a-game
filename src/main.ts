@@ -10,6 +10,8 @@ import { TileRenderer } from './graphics/tileRenderer';
 import { Camera } from './graphics/camera';
 import { KeyboardInput } from './core/input';
 import { grassFloor } from './data/maps/grassFloor';
+import { spawnMob } from './monsters/spawn';
+import { greenSlime, slime, redSlime } from './data/mobs/slimes';
 
 async function boot(): Promise<void> {
   const app = new Application();
@@ -37,6 +39,9 @@ async function boot(): Promise<void> {
       'assets/player/idle_down_eyes.png',
     ]),
   ]);
+  spawnMob(world, greenSlime, 120, 120);
+  spawnMob(world, slime, 200, 140);
+  spawnMob(world, redSlime, 180, 220);
   const spriteRenderer = new SpriteRenderer(worldLayer);
   await spriteRenderer.preload(world);
 

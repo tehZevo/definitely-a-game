@@ -8,7 +8,7 @@ export class TileRenderer {
     for (let y = 0; y < tileset.height; y++) {
       for (let x = 0; x < tileset.width; x++) {
         const tile = tileset.tileAt(x, y);
-        if (!tile) continue;
+        if (!tile || !tile.imagePath) continue;
         let tex = cache.get(tile.imagePath);
         if (!tex) {
           tex = await Assets.load<Texture>(assetUrl(tile.imagePath));

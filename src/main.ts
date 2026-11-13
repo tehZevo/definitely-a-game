@@ -48,7 +48,7 @@ function dungeonToTileset(tiles: Map<string, import('./tiles/tile').TileType>): 
   );
   for (const [key, tileType] of tiles) {
     const [x, y] = key.split(',').map(Number);
-    const img = 'assets/tiles/grass.png';
+    const img = tileType.startsWith('wall') ? 'assets/tiles/wall.png' : 'assets/tiles/grass.png';
     grid[y][x] = new Tile(img, tileType.startsWith('wall'));
   }
   return new Tileset(width, height, grid);

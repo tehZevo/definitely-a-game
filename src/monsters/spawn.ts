@@ -7,6 +7,7 @@ import { Stats } from '../actor/stats';
 import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
 import { Shadow } from '../actor/shadow';
+import { Physics } from '../physics/physics';
 import { Equips } from '../items/equips';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot } from '../skills/skillSlot';
@@ -23,6 +24,7 @@ export function spawnMob(
 ): Entity {
   const components: import('../ecs').Component[] = [
     new Position(x, y),
+    new Physics(),
     new Sprite({ default: [def.sprite] }),
     new MobAI(),
     new Stats(def.maxHp, def.maxHp, def.maxMp, def.maxMp),

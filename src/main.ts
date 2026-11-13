@@ -166,6 +166,7 @@ async function boot(): Promise<void> {
   const game = new Game();
   game.app = app;
   game.worldLayer = new Container();
+  game.worldLayer.eventMode = 'none';
   app.stage.addChild(game.worldLayer);
 
   const menu = new MainMenuState();
@@ -175,6 +176,15 @@ async function boot(): Promise<void> {
       void startGame(app, game, face);
     });
     game.setState(charCreate);
+  });
+  menu.setOnSkip(() => {
+    void startGame(app, game, {
+      gender: 'male',
+      skinTone: 'light',
+      hairStyle: 0,
+      hairColor: 'brown',
+      eyeColor: 'blue',
+    });
   });
   game.setState(menu);
 

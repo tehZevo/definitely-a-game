@@ -6,15 +6,22 @@ import { Container as PixiContainer, Text } from 'pixi.js';
 export class MainMenuState extends GameState {
   private container: PixiContainer | null = null;
   private onStart: (() => void) | null = null;
+  private onSkip: (() => void) | null = null;
 
   setOnStart(cb: () => void): void {
     this.onStart = cb;
+  }
+
+  setOnSkip(cb: () => void): void {
+    this.onSkip = cb;
   }
 
   enter(app: Application, _world: World, _worldLayer: Container): void {
     void _world;
     void _worldLayer;
     this.container = new PixiContainer();
+    this.container.eventMode = 'static';
+
     const title = new Text({
       text: 'A Game Maybe',
       style: { fontFamily: 'monospace', fontSize: 48, fill: 0xffffff },
@@ -35,6 +42,18 @@ export class MainMenuState extends GameState {
     startBtn.cursor = 'pointer';
     startBtn.on('pointerdown', () => this.onStart?.());
     this.container.addChild(startBtn);
+
+    const skipBtn = new Text({
+      text: '[ Skip ]',
+      style: { fontFamily: 'monospace', fontSize: 18, fill: 0x88ff88 },
+    });
+    skipBtn.anchor.set(0.5);
+    skipBtn.x = app.screen.width / 2;
+    skipBtn.y = app.screen.height / 2 + 40;
+    skipBtn.eventMode = 'static';
+    skipBtn.cursor = 'pointer';
+    skipBtn.on('pointerdown', () => this.onSkip?.());
+    this.container.addChild(skipBtn);
 
     app.stage.addChild(this.container);
   }

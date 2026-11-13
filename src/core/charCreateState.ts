@@ -36,6 +36,7 @@ export class CharCreateState extends GameState {
     void _world;
     void _worldLayer;
     this.container = new PixiContainer();
+    this.container.eventMode = 'static';
     const title = new Text({
       text: 'Character Creator',
       style: { fontFamily: 'monospace', fontSize: 32, fill: 0xffffff },

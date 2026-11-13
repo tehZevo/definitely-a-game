@@ -13,7 +13,15 @@ export class Actor extends Component {
     const stats = this.entity.getComponent(Stats);
     if (!stats) return;
     stats.addHp(-amount);
-    if (stats.hp <= 0) this.alive = false;
+    if (stats.hp <= 0) {
+      this.alive = false;
+      this.entity.remove();
+    }
+  }
+
+  damageHits(hits: Array<[number, boolean]>): void {
+    const total = hits.reduce((sum, [amount]) => sum + amount, 0);
+    this.damage(total);
   }
 
   heal(amount: number): void {

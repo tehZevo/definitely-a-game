@@ -36,11 +36,18 @@ async function boot(): Promise<void> {
     pos,
     new PlayerController(new KeyboardInput(window)),
     new Stats(100, 100, 50, 50),
-    new Sprite([
-      'assets/player/idle_down_body.png',
-      'assets/player/idle_down_hair.png',
-      'assets/player/idle_down_eyes.png',
-    ]),
+    new Sprite({
+      idle: [
+        'assets/player/idle_down_body.png',
+        'assets/player/idle_down_hair.png',
+        'assets/player/idle_down_eyes.png',
+      ],
+      walk: [
+        'assets/player/walk_down_body.png',
+        'assets/player/walk_down_hair.png',
+        'assets/player/walk_down_eyes.png',
+      ],
+    }),
   ]);
   spawnMob(world, greenSlime, 120, 120);
   spawnMob(world, slime, 200, 140);

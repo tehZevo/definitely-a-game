@@ -12,7 +12,7 @@ describe('spawnMob', () => {
     const e = spawnMob(world, def, 50, 60);
     expect(world.find(Sprite)).toContain(e);
     expect(e.getComponent(Position)?.x).toBe(50);
-    expect(e.getComponent(Sprite)?.textures).toEqual([
+    expect(e.getComponent(Sprite)?.frames.default).toEqual([
       'assets/monsters/slime_idle.png',
     ]);
   });

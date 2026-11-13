@@ -3,6 +3,7 @@ import { World } from '../ecs';
 import { Position } from '../physics/position';
 import { FakeInput } from '../core/input';
 import { PlayerController } from './playerController';
+import { Sprite } from '../graphics/sprite';
 
 describe('PlayerController', () => {
   it('moves by speed along the input axis', () => {
@@ -31,5 +32,29 @@ describe('PlayerController', () => {
     world.update(1);
     expect(pos.x).toBe(5);
     expect(pos.y).toBe(7);
+  });
+
+  it('sets walk animation while moving', () => {
+    const world = new World();
+    const sprite = new Sprite({ idle: ['i.png'], walk: ['w.png'] }, 'idle');
+    world.createEntity([
+      new Position(0, 0),
+      new PlayerController(new FakeInput(1, 0)),
+      sprite,
+    ]);
+    world.update(1);
+    expect(sprite.current).toBe('walk');
+  });
+
+  it('sets idle animation when not moving', () => {
+    const world = new World();
+    const sprite = new Sprite({ idle: ['i.png'], walk: ['w.png'] }, 'walk');
+    world.createEntity([
+      new Position(0, 0),
+      new PlayerController(new FakeInput(0, 0)),
+      sprite,
+    ]);
+    world.update(1);
+    expect(sprite.current).toBe('idle');
   });
 });

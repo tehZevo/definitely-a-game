@@ -12,6 +12,8 @@ import { KeyboardInput } from './core/input';
 import { grassFloor } from './data/maps/grassFloor';
 import { spawnMob } from './monsters/spawn';
 import { greenSlime, slime, redSlime } from './data/mobs/slimes';
+import { Stats } from './actor/stats';
+import { Hud } from './ui/hud';
 
 async function boot(): Promise<void> {
   const app = new Application();
@@ -30,9 +32,10 @@ async function boot(): Promise<void> {
 
   const world = new World();
   const pos = new Position(160, 160);
-  world.createEntity([
+  const player = world.createEntity([
     pos,
     new PlayerController(new KeyboardInput(window)),
+    new Stats(100, 100, 50, 50),
     new Sprite([
       'assets/player/idle_down_body.png',
       'assets/player/idle_down_hair.png',
@@ -45,6 +48,7 @@ async function boot(): Promise<void> {
   const spriteRenderer = new SpriteRenderer(worldLayer);
   await spriteRenderer.preload(world);
 
+  const hud = new Hud(app.stage);
   const camera = new Camera(worldLayer);
 
   let last = performance.now();
@@ -54,6 +58,7 @@ async function boot(): Promise<void> {
     last = now;
     world.update(dt);
     spriteRenderer.update(world);
+    hud.update(player);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),
       app.screen.width,

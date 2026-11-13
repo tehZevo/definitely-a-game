@@ -56,8 +56,8 @@ export class Entity {
     return this.getComponent(ctor);
   }
 
-  update(): void {
-    for (const c of this.components.values()) c.update();
+  update(dt = 0): void {
+    for (const c of this.components.values()) c.update(dt);
   }
 
   *[Symbol.iterator](): IterableIterator<Component> {

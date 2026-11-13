@@ -67,9 +67,9 @@ export class World {
     return this.findComponents(ctor)[0];
   }
 
-  update(): void {
+  update(dt = 0): void {
     const ents = [...this.entities];
-    for (const e of ents) e.update();
+    for (const e of ents) e.update(dt);
     for (const e of ents) {
       if (!e.alive) {
         e.onDestroy();

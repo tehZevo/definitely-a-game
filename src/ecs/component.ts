@@ -25,5 +25,5 @@ export abstract class Component {
 
   start(): void {}
   onDestroy(): void {}
-  update(): void {}
+  update(_dt = 0): void {}
 }

@@ -21,3 +21,38 @@ export const redSlime = new MobDef(
   60,
   0,
 );
+export const brownSlime = new MobDef(
+  'brown_slime',
+  'assets/monsters/brown_slime_idle.png',
+  3,
+  18,
+  0,
+);
+export const darkSlime = new MobDef(
+  'dark_slime',
+  'assets/monsters/dark_slime_idle.png',
+  7,
+  40,
+  0,
+);
+export const pinkSlime = new MobDef(
+  'pink_slime',
+  'assets/monsters/pink_slime_idle.png',
+  6,
+  35,
+  0,
+);
+export const purpleSlime = new MobDef(
+  'purple_slime',
+  'assets/monsters/purple_slime_idle.png',
+  4,
+  22,
+  0,
+);
+export const goldSlime = new MobDef(
+  'gold_slime',
+  'assets/monsters/gold_slime_idle.png',
+  8,
+  50,
+  0,
+);

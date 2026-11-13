@@ -1,32 +1,57 @@
-import { Assets, Container, Sprite as PixiSprite, Texture } from 'pixi.js';
+import { Assets, Container, Rectangle, Sprite as PixiSprite, Texture } from 'pixi.js';
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { Sprite } from './sprite';
 import { assetUrl } from '../assets';
 
+const FRAME_DURATION = 0.1;
+
+interface Layer {
+  sprite: PixiSprite;
+  frames: Texture[];
+}
+
+interface AnimState {
+  current: string;
+  frameIndex: number;
+  elapsed: number;
+  layers: Layer[];
+  frameCount: number;
+}
+
 export class SpriteRenderer {
   private views = new Map<Entity, Container>();
-  private rendered = new Map<Entity, string>();
-  private cache = new Map<string, Texture>();
+  private anims = new Map<Entity, AnimState>();
+  private cache = new Map<string, Texture[]>();
 
   constructor(private stage: Container) {}
 
-  private async load(path: string): Promise<Texture> {
-    let tex = this.cache.get(path);
-    if (!tex) {
-      tex = await Assets.load<Texture>(assetUrl(path));
+  private async load(path: string): Promise<Texture[]> {
+    let frames = this.cache.get(path);
+    if (!frames) {
+      const tex = await Assets.load<Texture>(assetUrl(path));
       tex.source.scaleMode = 'nearest';
-      this.cache.set(path, tex);
+      const size = tex.source.height;
+      const count = Math.max(1, Math.floor(tex.source.width / size));
+      frames = [];
+      for (let i = 0; i < count; i++) {
+        frames.push(new Texture({ source: tex.source, frame: new Rectangle(i * size, 0, size, size) }));
+      }
+      this.cache.set(path, frames);
     }
-    return tex;
+    return frames;
   }
 
-  private build(container: Container, paths: string[]): void {
-    container.removeChildren();
+  private build(paths: string[]): { layers: Layer[]; frameCount: number } {
+    const layers: Layer[] = [];
+    let frameCount = Infinity;
     for (const path of paths) {
-      const tex = this.cache.get(path);
-      if (tex) container.addChild(new PixiSprite(tex));
+      const frames = this.cache.get(path);
+      if (!frames) continue;
+      layers.push({ sprite: new PixiSprite(frames[0]), frames });
+      frameCount = Math.min(frameCount, frames.length);
     }
+    return { layers, frameCount: frameCount === Infinity ? 1 : frameCount };
   }
 
   async preload(world: World): Promise<void> {
@@ -37,22 +62,46 @@ export class SpriteRenderer {
         for (const path of paths) await this.load(path);
       }
       const container = new Container();
-      this.build(container, sprite.frames[sprite.current] ?? []);
+      const built = this.build(sprite.frames[sprite.current] ?? []);
+      for (const layer of built.layers) container.addChild(layer.sprite);
       this.stage.addChild(container);
       this.views.set(entity, container);
-      this.rendered.set(entity, sprite.current);
+      this.anims.set(entity, {
+        current: sprite.current,
+        frameIndex: 0,
+        elapsed: 0,
+        layers: built.layers,
+        frameCount: built.frameCount,
+      });
     }
   }
 
-  update(world: World): void {
+  update(world: World, dt = 0): void {
     for (const entity of world.find(Sprite)) {
       const view = this.views.get(entity);
       const pos = entity.getComponent(Position);
       const sprite = entity.getComponent(Sprite);
-      if (!view || !pos || !sprite) continue;
-      if (this.rendered.get(entity) !== sprite.current) {
-        this.build(view, sprite.frames[sprite.current] ?? []);
-        this.rendered.set(entity, sprite.current);
+      const anim = this.anims.get(entity);
+      if (!view || !pos || !sprite || !anim) continue;
+      if (anim.current !== sprite.current) {
+        const built = this.build(sprite.frames[sprite.current] ?? []);
+        view.removeChildren();
+        for (const layer of built.layers) view.addChild(layer.sprite);
+        anim.current = sprite.current;
+        anim.layers = built.layers;
+        anim.frameCount = built.frameCount;
+        anim.frameIndex = 0;
+        anim.elapsed = 0;
+      }
+      if (anim.frameCount > 1) {
+        anim.elapsed += dt;
+        while (anim.elapsed >= FRAME_DURATION) {
+          anim.elapsed -= FRAME_DURATION;
+          anim.frameIndex = (anim.frameIndex + 1) % anim.frameCount;
+        }
+      }
+      for (const layer of anim.layers) {
+        layer.sprite.texture = layer.frames[anim.frameIndex] ?? layer.frames[0];
       }
       view.x = Math.round(pos.x);
       view.y = Math.round(pos.y);

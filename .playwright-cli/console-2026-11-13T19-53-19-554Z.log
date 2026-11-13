@@ -1,0 +1,5 @@
+[     356ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://tehzevo.github.io/favicon.ico:0
+[     550ms] [WARNING] [.WebGL-0x99c001a6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://tehzevo.github.io/definitely-a-game/:0
+[     571ms] [WARNING] [.WebGL-0x99c001a6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://tehzevo.github.io/definitely-a-game/:0
+[     579ms] [WARNING] [.WebGL-0x99c001a6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ https://tehzevo.github.io/definitely-a-game/:0
+[     584ms] [WARNING] [.WebGL-0x99c001a6000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat) @ https://tehzevo.github.io/definitely-a-game/:0

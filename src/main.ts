@@ -66,7 +66,7 @@ async function boot(): Promise<void> {
     const dt = (now - last) / 1000;
     last = now;
     world.update(dt);
-    spriteRenderer.update(world);
+    spriteRenderer.update(world, dt);
     hud.update(player);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),

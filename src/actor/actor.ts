@@ -41,11 +41,18 @@ export class Actor extends Component {
     const world = this.entity.world;
     const pos = this.entity.getComponent(Position);
     const isPlayer = this.entity.getComponent(Sprite)?.frames['default']?.[0]?.includes('player');
-    if (world && pos && !isPlayer) {
-      world.createEntity([
-        new Position(pos.x, pos.y),
-        new Sprite({ default: ['assets/player/tombstone.png'] }),
-      ]);
+    if (world && pos) {
+      if (isPlayer) {
+        world.createEntity([
+          new Position(pos.x, pos.y),
+          new Sprite({ default: ['assets/player/ghost.png'] }),
+        ]);
+      } else {
+        world.createEntity([
+          new Position(pos.x, pos.y),
+          new Sprite({ default: ['assets/player/tombstone.png'] }),
+        ]);
+      }
     }
     this.entity.remove();
   }

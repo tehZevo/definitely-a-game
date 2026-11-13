@@ -26,6 +26,11 @@ export function teamFilter(targetType: TargetType): Filter {
   };
 }
 
+export function ignoreEntitiesFilter(entities: Entity[]): Filter {
+  const set = new Set(entities);
+  return (_skill) => (actor) => !set.has(actor);
+}
+
 export function angleDistanceDeg(a: number, b: number): number {
   let d = Math.abs(a - b) % 360;
   if (d > 180) d = 360 - d;

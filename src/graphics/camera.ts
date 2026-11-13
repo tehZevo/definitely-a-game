@@ -14,8 +14,8 @@ export function cameraTransform(
   zoom: number,
 ): CameraTransform {
   return {
-    x: viewW / 2 - target.x * zoom,
-    y: viewH / 2 - target.y * zoom,
+    x: Math.round(viewW / 2 - target.x * zoom),
+    y: Math.round(viewH / 2 - target.y * zoom),
     scale: zoom,
   };
 }

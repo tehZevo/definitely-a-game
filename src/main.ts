@@ -9,6 +9,8 @@ import { SpriteRenderer } from './graphics/spriteRenderer';
 import { TileRenderer } from './graphics/tileRenderer';
 import { Camera } from './graphics/camera';
 import { KeyboardInput } from './core/input';
+import { TouchJoystick } from './core/touchJoystick';
+import { CombinedInput } from './core/combinedInput';
 import { grassFloor } from './data/maps/grassFloor';
 import { spawnMob } from './monsters/spawn';
 import { greenSlime, slime, redSlime } from './data/mobs/slimes';
@@ -23,6 +25,7 @@ import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
 import { SkillBar } from './ui/skillBar';
 import { DamageNumberRenderer } from './ui/damageNumberRenderer';
+import { JoystickOverlay } from './ui/joystickOverlay';
 
 async function boot(): Promise<void> {
   const app = new Application();
@@ -41,9 +44,16 @@ async function boot(): Promise<void> {
 
   const world = new World();
   const pos = new Position(160, 160);
+  const keyboard = new KeyboardInput(window);
+  const touch = 'ontouchstart' in window
+    ? new TouchJoystick(app.canvas)
+    : null;
+  const input = touch
+    ? new CombinedInput(keyboard, touch)
+    : keyboard;
   const player = world.createEntity([
     pos,
-    new PlayerController(new KeyboardInput(window), defaultAttack),
+    new PlayerController(input, defaultAttack),
     new Stats(100, 100, 50, 50),
     new Actor(),
     new Team(0),
@@ -75,6 +85,7 @@ async function boot(): Promise<void> {
   const damageNumbers = new DamageNumberRenderer(app.stage);
   await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
   const camera = new Camera(worldLayer);
+  const joystickOverlay = touch ? new JoystickOverlay(app.stage) : null;
 
   let last = performance.now();
   app.ticker.add(() => {
@@ -85,6 +96,7 @@ async function boot(): Promise<void> {
     spriteRenderer.update(world, dt);
     damageNumbers.update(world);
     hud.update(player);
+    if (touch && joystickOverlay) joystickOverlay.update(touch);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),
       app.screen.width,

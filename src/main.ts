@@ -16,7 +16,10 @@ import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { defaultAttack } from './data/skills/defaultAttack';
+import { SkillSlots } from './skills/skillSlots';
+import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
+import { SkillBar } from './ui/skillBar';
 import { DamageNumberRenderer } from './ui/damageNumberRenderer';
 
 async function boot(): Promise<void> {
@@ -42,6 +45,7 @@ async function boot(): Promise<void> {
     new Stats(100, 100, 50, 50),
     new Actor(),
     new Team(0),
+    new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack }),
     new Sprite({
       idle: [
         'assets/player/idle_down_body.png',
@@ -63,6 +67,7 @@ async function boot(): Promise<void> {
 
   const hud = new Hud(app.stage);
   const damageNumbers = new DamageNumberRenderer(app.stage);
+  await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
   const camera = new Camera(worldLayer);
 
   let last = performance.now();

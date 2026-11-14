@@ -5,9 +5,12 @@ import { PLAYER_MOVE_SPEED, TILE_SIZE } from '../constants';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
 import { Equips } from '../items/equips';
+import { SKILL_SLOTS, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import type { SkillDef } from '../skills/skillDef';
+import { SkillSlots } from '../skills/skillSlots';
 import { getSkillUseTime } from '../skills/skillUseTime';
 import { useSkill } from '../skills/useSkill';
+import { DEFAULT_KEY_MAP } from '../core/keyMap';
 import type { InputSource } from '../core/input';
 
 export class PlayerController extends Component {
@@ -23,6 +26,23 @@ export class PlayerController extends Component {
     super();
     this.input = input;
     this.skill = skill;
+  }
+
+  private getPressedSkill(): SkillDef | null {
+    const slots = this.entity.getComponent(SkillSlots);
+    if (slots) {
+      for (const slot of SKILL_SLOTS) {
+        if (this.input.isPressed(SKILL_SLOT_KEYS[slot])) {
+          const def = slots.get(slot);
+          if (def) return def;
+        }
+      }
+    }
+
+    if (this.skill && DEFAULT_KEY_MAP.attack.some((key) => this.input.isPressed(key))) {
+      return this.skill;
+    }
+    return null;
   }
 
   override update(dt = 0): void {
@@ -47,10 +67,11 @@ export class PlayerController extends Component {
       }
     }
     this.attackTimer = Math.max(0, this.attackTimer - dt);
-    if (this.skill && this.attackTimer === 0 && this.input.isPressed('Space')) {
-      if (this.entity.world) {
-        useSkill(this.entity.world, this.skill, this.entity);
-        this.attackTimer = getSkillUseTime(this.skill, this.entity.getComponent(Equips));
+    if (this.attackTimer === 0) {
+      const skill = this.getPressedSkill();
+      if (skill && this.entity.world) {
+        useSkill(this.entity.world, skill, this.entity);
+        this.attackTimer = getSkillUseTime(skill, this.entity.getComponent(Equips));
       }
     }
   }

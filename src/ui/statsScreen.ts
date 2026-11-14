@@ -8,27 +8,20 @@ import type { UIManager } from './uiManager';
 export function statsScreenLines(player: Entity): string[] {
   const stats = player.getComponent(Stats);
   if (!stats) return [];
-  const base = stats.baseSnapshot();
-  const current = stats.snapshot();
+  const s = stats.calculated.secondary;
 
   return [
-    'Base:',
-    `HP: ${base.hp}/${base.maxHp}`,
-    `MP: ${base.mp}/${base.maxMp}`,
-    `Phys. Att.: ${base.physAtt}`,
-    `Phys. Def.: ${base.physDef}`,
-    `Mag. Att.: ${base.magAtt}`,
-    `Mag. Def.: ${base.magDef}`,
-    `Crit: ${base.critical}`,
-    '',
-    'Current:',
-    `HP: ${current.hp}/${current.maxHp}`,
-    `MP: ${current.mp}/${current.maxMp}`,
-    `Phys. Att.: ${current.physAtt}`,
-    `Phys. Def.: ${current.physDef}`,
-    `Mag. Att.: ${current.magAtt}`,
-    `Mag. Def.: ${current.magDef}`,
-    `Crit: ${current.critical}`,
+    'Secondary:',
+    `HP: ${s.hp}`,
+    `MP: ${s.mp}`,
+    `Phys. Att.: ${s.physAtt}`,
+    `Mag. Att.: ${s.magAtt}`,
+    `Phys. Def.: ${s.physDef}`,
+    `Mag. Def.: ${s.magDef}`,
+    `Acc.: ${s.accuracy}`,
+    `Eva.: ${s.evasion}`,
+    `Move Spd: ${s.moveSpeed}`,
+    `Crit: ${s.critical}`,
   ];
 }
 

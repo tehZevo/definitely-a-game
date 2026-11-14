@@ -3,35 +3,31 @@ import { Container } from 'pixi.js';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
 import { Stats } from '../actor/stats';
+import { Loadout } from '../items/loadout';
 import { UIManager } from './uiManager';
 import { StatsScreen, statsScreenLines } from './statsScreen';
 
 describe('StatsScreen', () => {
-  it('renders base and current stats', () => {
+  it('renders the calculated secondary stats', () => {
     const world = new World();
     const stats = new Stats(75, 100, 25, 50, 110, 8, 5, 100, 0);
+    stats.recalculate(new Loadout());
     const player = world.createEntity([new Position(0, 0), stats]);
 
     const lines = statsScreenLines(player);
 
     expect(lines).toEqual([
-      'Base:',
-      'HP: 75/100',
-      'MP: 25/50',
-      'Phys. Att.: 110',
-      'Phys. Def.: 8',
-      'Mag. Att.: 100',
-      'Mag. Def.: 0',
-      'Crit: 5',
-      '',
-      'Current:',
-      'HP: 75/100',
-      'MP: 25/50',
-      'Phys. Att.: 110',
-      'Phys. Def.: 8',
-      'Mag. Att.: 100',
-      'Mag. Def.: 0',
-      'Crit: 5',
+      'Secondary:',
+      'HP: 150',
+      'MP: 130',
+      'Phys. Att.: 30',
+      'Mag. Att.: 30',
+      'Phys. Def.: 20',
+      'Mag. Def.: 20',
+      'Acc.: 200',
+      'Eva.: 200',
+      'Move Spd: 110',
+      'Crit: 10',
     ]);
   });
 

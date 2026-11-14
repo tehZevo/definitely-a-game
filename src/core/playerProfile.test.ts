@@ -26,7 +26,7 @@ describe('player profile', () => {
     const loadout = new Loadout();
     loadout.load(DEFAULT_LOADOUT);
 
-    expect(loadout.getArmor(ArmorSlot.BODY)?.id).toBe('cotton_robe');
+    expect(loadout.getArmor(ArmorSlot.SUIT)?.id).toBe('cotton_robe');
   });
 
   it('uses a provided character name', () => {

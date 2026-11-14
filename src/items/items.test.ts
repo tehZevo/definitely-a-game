@@ -6,6 +6,8 @@ import { WeaponSlot, ArmorSlot, WeaponType, weaponHandedness, Handedness, SWINGA
 import { Rarity, rarityColor, rarityDropRate } from '../items/rarity';
 import { EquipGrade, equipGradeIcon } from '../items/equipGrade';
 import { ItemDef, BASE_DROP_RATE } from '../items/itemDef';
+import { Weapon } from '../items/weapon';
+import { Armor } from '../items/armor';
 import { woodenShortsword, woodenShield, copperLongsword } from '../data/items/weapons';
 import { cottonHat, leatherSuit, copperHelmet } from '../data/items/armor';
 
@@ -20,6 +22,11 @@ describe('ItemDef', () => {
   it('calcDropRate uses rarity', () => {
     const item = new ItemDef({ rarity: Rarity.RARE });
     expect(item.calcDropRate()).toBe(BASE_DROP_RATE * 0.5);
+  });
+
+  it('stores passive buff ids', () => {
+    const item = new ItemDef({ id: 'ring', buffs: ['bless'] });
+    expect(item.buffs).toEqual(['bless']);
   });
 });
 
@@ -88,6 +95,27 @@ describe('Loadout component', () => {
     equips.equipWeapon(woodenShortsword);
     equips.equipWeapon(copperLongsword);
     expect(equips.getWeapon(WeaponSlot.PRIMARY)).toBe(copperLongsword);
+  });
+
+  it('collects passive buffs from equipped items', () => {
+    const world = new World();
+    const entity = world.createEntity([new Position(0, 0), new Loadout()]);
+    const equips = entity.getComponent(Loadout)!;
+    equips.equipWeapon(
+      new Weapon({
+        id: 'sword',
+        weaponType: WeaponType.SHORTSWORD,
+        buffs: ['bless', 'shared'],
+      }),
+    );
+    equips.equipArmor(
+      new Armor({
+        id: 'hat',
+        armorSlot: ArmorSlot.HAT,
+        buffs: ['shared', 'regen'],
+      }),
+    );
+    expect(equips.allBuffs()).toEqual(['bless', 'shared', 'regen']);
   });
 });
 

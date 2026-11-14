@@ -47,6 +47,7 @@ import { Stairs } from './tiles/stairs';
 import { Chest } from './tiles/chest';
 import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
+import { quadStrikeSkill } from './data/items/skills';
 import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
 import { ConnectionState } from './core/connectionState';
@@ -190,7 +191,7 @@ async function startGame(
   const midRoom = dungeon.rooms[Math.floor(dungeon.rooms.length / 2)];
   world.createEntity([
     new Position(midRoom.x * 8 * 16 + 32, midRoom.y * 8 * 16 + 32),
-    new Chest([woodenShortsword, cottonRobe]),
+    new Chest([woodenShortsword, cottonRobe, quadStrikeSkill]),
   ]);
 
   const tooltip = new Tooltip(app.stage);

@@ -1,4 +1,4 @@
-import { Assets, Container, Sprite as PixiSprite, Text, Texture } from 'pixi.js';
+import type { Container as PixiContainer, Text as PixiText, Texture } from 'pixi.js';
 import { assetUrl } from '../assets';
 import { UIComponent } from './uiComponent';
 import { KeyHandler } from '../core/keyHandler';
@@ -12,8 +12,8 @@ export class TextField extends UIComponent implements KeyHandler {
   drawLength: number;
   maxLength: number | null;
   text: string;
-  private view: Container | null = null;
-  private textLabel: Text | null = null;
+  private view: PixiContainer | null = null;
+  private textLabel: PixiText | null = null;
 
   constructor(
     onSubmit: (text: string) => void,
@@ -41,8 +41,9 @@ export class TextField extends UIComponent implements KeyHandler {
     return `${this.text.slice(-this.drawLength)}_`;
   }
 
-  async render(parent: Container): Promise<Container> {
+  async render(parent: PixiContainer): Promise<PixiContainer> {
     this.view?.destroy({ children: true });
+    const { Assets, Container, Sprite: PixiSprite, Text } = await import('pixi.js');
     const container = new Container();
     const box = await Assets.load<Texture>(assetUrl('assets/ui/box.png'));
     const bg = new PixiSprite(box);
@@ -51,14 +52,15 @@ export class TextField extends UIComponent implements KeyHandler {
     bg.height = 3 * LINE_HEIGHT;
     container.addChild(bg);
 
-    this.textLabel = new Text({
+    const label = new Text({
       text: this.displayValue(),
       style: { fontFamily: 'monospace', fontSize: 16, fill: 0xffffff },
     });
-    this.textLabel.eventMode = 'none';
-    this.textLabel.x = PADDING;
-    this.textLabel.y = PADDING;
-    container.addChild(this.textLabel);
+    label.eventMode = 'none';
+    label.x = PADDING;
+    label.y = PADDING;
+    container.addChild(label);
+    this.textLabel = label;
 
     parent.addChild(container);
     this.view = container;

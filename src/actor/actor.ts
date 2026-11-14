@@ -3,6 +3,7 @@ import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
 import { IN_COMBAT_TIME } from '../constants';
 import { Stats } from './stats';
+import { SafeArea } from './safeArea';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
 import { Sprite } from '../graphics/sprite';
@@ -82,6 +83,7 @@ export class Actor extends Component {
   damage(amount: number, damageType: DamageNumberType = DamageNumberType.NORMAL): void {
     const stats = this.entity.getComponent(Stats);
     if (!stats) return;
+    if (this.entity.getComponent(SafeArea)?.active) return;
     stats.addHp(-amount);
     this.spawnNumber(amount, damageType);
     if (stats.hp <= 0) {

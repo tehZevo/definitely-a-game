@@ -2,10 +2,15 @@ import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
 import { Actor } from '../actor/actor';
+import { Stats } from '../actor/stats';
 import { PlayerController } from '../actor/playerController';
 import { FakeInput } from '../core/input';
 import { MobAI } from './mobAI';
 import { Vector2 } from '../utils/vector';
+import { Skill } from '../skills/skill';
+import { SkillSlot } from '../skills/skillSlot';
+import { SkillSlots } from '../skills/skillSlots';
+import { defaultAttack } from '../data/skills/defaultAttack';
 
 function withPlayer(world: World, x: number, y: number): void {
   world.createEntity([new Position(x, y), new PlayerController(new FakeInput(0, 0))]);
@@ -44,5 +49,23 @@ describe('MobAI', () => {
     world.update(1);
     expect(mobPos.x).toBe(5);
     expect(mobActor.lookDir).toEqual(new Vector2(-1, 0));
+  });
+
+  it('attacks the player when within attack range', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    const mobActor = new Actor();
+    world.createEntity([
+      new Position(10, 0),
+      new Stats(10, 10),
+      mobActor,
+      new MobAI(),
+      new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack }),
+    ]);
+
+    world.update(1);
+
+    expect(mobActor.currentAction).not.toBeNull();
+    expect(world.find(Skill).length).toBe(1);
   });
 });

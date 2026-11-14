@@ -3,7 +3,7 @@ import { assetUrl } from '../assets';
 import { SkillDef } from '../skills/skillDef';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot, SKILL_SLOT_KEYS } from '../skills/skillSlot';
-import { skillRankIcon } from '../skills/skillRank';
+import { skillRankColor, skillRankIcon } from '../skills/skillRank';
 import { Tooltip } from './tooltip';
 
 const SLOT = 24;
@@ -71,6 +71,7 @@ export class SkillBar {
         if (rank) {
           const s = new PixiSprite(rank);
           s.eventMode = 'none';
+          s.tint = skillRankColor(def.rank);
           s.x = 16;
           s.y = 16;
           slotContainer.addChild(s);

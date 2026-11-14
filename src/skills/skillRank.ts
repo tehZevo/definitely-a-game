@@ -17,3 +17,16 @@ export function skillRankIcon(rank: SkillRank): string {
       return 'assets/icons/iv.png';
   }
 }
+
+export function skillRankColor(rank: SkillRank): number {
+  switch (rank) {
+    case SkillRank.I:
+      return 0x9ad07a;
+    case SkillRank.II:
+      return 0x64a0e6;
+    case SkillRank.III:
+      return 0xa000ff;
+    case SkillRank.IV:
+      return 0xe69632;
+  }
+}

@@ -15,6 +15,7 @@ export class MapDef {
     public id: string,
     public palette: TilePalette = grassWalls.add(grassFloors),
     public generator: string,
+    public opts: Partial<DFSOptions> = {},
   ) {}
 }
 

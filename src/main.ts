@@ -119,7 +119,7 @@ async function startGame(
   game.playerProfile = profile;
   game.onTransition = (next) => startGame(app, game, game.playerProfile ?? profile, next);
 
-  const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
+  const dungeon = generateDungeon(resolved.opts);
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
   const tileRenderer = await TileRenderer.render(tileset, worldLayer);
 

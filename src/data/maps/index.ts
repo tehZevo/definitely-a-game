@@ -2,9 +2,9 @@ import { MapDef } from '../../maps/dfsGenerator';
 import { getMap, registerMap } from '../registry';
 import { grassWalls, grassFloors, sandFloors, stoneWalls, forestWalls } from '../tilePalettes';
 
-export const forest = new MapDef('forest', forestWalls.add(grassFloors), 'dfs');
-export const maze = new MapDef('maze', sandFloors.add(stoneWalls), 'dfs');
-export const plains = new MapDef('plains', grassWalls.add(grassFloors), 'dfs');
+export const forest = new MapDef('forest', forestWalls.add(grassFloors), 'dfs', { roomSize: 8, floorSize: 3, doorWidth: 1 });
+export const maze = new MapDef('maze', sandFloors.add(stoneWalls), 'dfs', { roomSize: 6, floorSize: 6, doorWidth: 1 });
+export const plains = new MapDef('plains', grassWalls.add(grassFloors), 'dfs', { roomSize: 20, floorSize: 2, doorWidth: 1 });
 export const devMap = new MapDef('dev', grassFloors.add(stoneWalls), 'dev');
 
 export const allMaps: MapDef[] = [plains, forest, maze, devMap];

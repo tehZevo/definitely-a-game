@@ -1,11 +1,14 @@
 import { Component, type Entity } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
-import { TILE_SIZE, ENEMY_TARGET_DISTANCE } from '../constants';
+import { Physics } from '../physics/physics';
+import { TILE_SIZE, ENEMY_TARGET_DISTANCE, ENEMY_MOVE_SPEED } from '../constants';
 import { Actor } from '../actor/actor';
 import { PlayerController } from '../actor/playerController';
 import { Sprite } from '../graphics/sprite';
 import { UseSkill } from '../actions/useSkill';
+import { Move } from '../actions/move';
+import { Stats } from '../actor/stats';
 import { defaultAttack } from '../data/skills/defaultAttack';
 import { SkillSlot } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
@@ -21,6 +24,11 @@ export class MobAI extends Component {
 
   constructor(public mobdef?: MobDef) {
     super();
+  }
+
+  override start(): void {
+    const stats = this.entity.getComponent(Stats);
+    if (stats) stats.moveSpeedMultiplier = ENEMY_MOVE_SPEED;
   }
 
   private getSkill(): SkillDef {
@@ -83,6 +91,11 @@ export class MobAI extends Component {
     const sprite = this.entity.getComponent(Sprite);
     if (sprite && dir.x !== 0) {
       sprite.flip = dir.x < 0 ? 'x' : 'none';
+    }
+
+    if (this.entity.getComponent(Physics)) {
+      actor.act(new Move(dir));
+      return;
     }
 
     const step = Math.min(this.speed * dt, dist - this.stopRange);

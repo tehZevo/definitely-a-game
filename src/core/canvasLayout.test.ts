@@ -1,19 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CANVAS_RESOLUTION,
   computeCanvasScale,
   computeCanvasStyle,
   LOGICAL_HEIGHT,
   LOGICAL_WIDTH,
-  MAX_CANVAS_SCALE,
 } from './canvasLayout';
 
 describe('canvasLayout', () => {
-  it('uses an integer scale that fits the window', () => {
-    expect(computeCanvasScale(1000, 740)).toBe(3);
-  });
-
-  it('caps the scale at the maximum', () => {
-    expect(computeCanvasScale(3840, 2160)).toBe(MAX_CANVAS_SCALE);
+  it('scales to fill the window', () => {
+    expect(computeCanvasScale(1000, 740)).toBeCloseTo(3.854, 2);
   });
 
   it('never scales below one', () => {
@@ -21,10 +17,13 @@ describe('canvasLayout', () => {
   });
 
   it('sizes the canvas from the logical size and scale', () => {
-    expect(computeCanvasStyle(1000, 740)).toEqual({
-      width: `${LOGICAL_WIDTH * 3}px`,
-      height: `${LOGICAL_HEIGHT * 3}px`,
-      scale: 3,
-    });
+    const style = computeCanvasStyle(1000, 740);
+    expect(style.width).toBe(`${LOGICAL_WIDTH * computeCanvasScale(1000, 740)}px`);
+    expect(style.height).toBe(`${LOGICAL_HEIGHT * computeCanvasScale(1000, 740)}px`);
+    expect(style.scale).toBeCloseTo(3.854, 2);
+  });
+
+  it('uses a fixed high resolution for crisp rendering', () => {
+    expect(CANVAS_RESOLUTION).toBe(4);
   });
 });

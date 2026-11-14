@@ -9,11 +9,10 @@ export interface CanvasStyle {
   scale: number;
 }
 
-export const MAX_CANVAS_SCALE = 8;
+export const CANVAS_RESOLUTION = 4;
 
 export function computeCanvasScale(windowWidth: number, windowHeight: number): number {
-  const fit = Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
-  return Math.max(1, Math.min(MAX_CANVAS_SCALE, Math.floor(fit)));
+  return Math.max(1, Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT));
 }
 
 export function computeCanvasStyle(windowWidth: number, windowHeight: number): CanvasStyle {

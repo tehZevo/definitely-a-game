@@ -1,4 +1,4 @@
-import { SkillDef } from '../../skills/skillDef';
+import { SkillDef, weaponFilterFor } from '../../skills/skillDef';
 import { SelfTarget } from '../../skills/effects/selfTarget';
 import { SectorTarget } from '../../skills/effects/sectorTarget';
 import { ConsumeHP, UserHPScaling } from '../../skills/effects/hpmp';
@@ -6,6 +6,7 @@ import { Damage } from '../../skills/effects/damage';
 import { TargetType } from '../../skills/targetType';
 import { SkillRank } from '../../skills/skillRank';
 import { SkillSlot } from '../../skills/skillSlot';
+import { SWINGABLE_PRIMARIES } from '../../items/slots';
 
 export const sacrifice = new SkillDef(
   'sacrifice',
@@ -23,4 +24,7 @@ export const sacrifice = new SkillDef(
   0.5,
   SkillSlot.BETA,
   'assets/skills/sacrifice.png',
+  null,
+  null,
+  weaponFilterFor(SWINGABLE_PRIMARIES),
 );

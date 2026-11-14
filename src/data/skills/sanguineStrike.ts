@@ -1,10 +1,11 @@
-import { SkillDef } from '../../skills/skillDef';
+import { SkillDef, weaponFilterFor } from '../../skills/skillDef';
 import { SectorTarget } from '../../skills/effects/sectorTarget';
 import { StealHP } from '../../skills/effects/hpmp';
 import { Damage } from '../../skills/effects/damage';
 import { TargetType } from '../../skills/targetType';
 import { SkillRank } from '../../skills/skillRank';
 import { SkillSlot } from '../../skills/skillSlot';
+import { SWINGABLE_PRIMARIES } from '../../items/slots';
 
 export const sanguineStrike = new SkillDef(
   'sanguine_strike',
@@ -20,4 +21,7 @@ export const sanguineStrike = new SkillDef(
   0.5,
   SkillSlot.ALPHA,
   'assets/skills/sanguine_strike.png',
+  null,
+  null,
+  weaponFilterFor(SWINGABLE_PRIMARIES),
 );

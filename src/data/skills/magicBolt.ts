@@ -1,9 +1,10 @@
-import { SkillDef } from '../../skills/skillDef';
+import { SkillDef, weaponFilterFor } from '../../skills/skillDef';
 import { Projectile } from '../../skills/effects/projectile';
 import { Damage } from '../../skills/effects/damage';
 import { TargetType } from '../../skills/targetType';
 import { SkillRank } from '../../skills/skillRank';
 import { SkillSlot } from '../../skills/skillSlot';
+import { CAN_CAST_MAGIC_PRIMARIES } from '../../items/slots';
 
 export const magicBolt = new SkillDef(
   'magic_bolt',
@@ -27,4 +28,5 @@ export const magicBolt = new SkillDef(
   'assets/skills/magic_bolt.png',
   null,
   'Fires a bolt of arcane energy at an enemy.',
+  weaponFilterFor(CAN_CAST_MAGIC_PRIMARIES),
 );

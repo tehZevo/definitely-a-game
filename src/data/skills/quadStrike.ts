@@ -1,9 +1,10 @@
-import { SkillDef } from '../../skills/skillDef';
+import { SkillDef, weaponFilterFor } from '../../skills/skillDef';
 import { SectorTarget } from '../../skills/effects/sectorTarget';
 import { Damage } from '../../skills/effects/damage';
 import { TargetType } from '../../skills/targetType';
 import { SkillRank } from '../../skills/skillRank';
 import { SkillSlot } from '../../skills/skillSlot';
+import { SWINGABLE_PRIMARIES } from '../../items/slots';
 
 export const quadStrike = new SkillDef(
   'quad_strike',
@@ -18,4 +19,5 @@ export const quadStrike = new SkillDef(
   'assets/skills/quad_strike.png',
   null,
   'Strikes four times in a wide arc.',
+  weaponFilterFor(SWINGABLE_PRIMARIES),
 );

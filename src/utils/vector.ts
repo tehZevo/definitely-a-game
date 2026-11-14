@@ -1,6 +1,17 @@
 export class Vector2 {
   constructor(public x = 0, public y = 0) {}
 
+  static random(): Vector2 {
+    const gaussian = () => {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    };
+    return new Vector2(gaussian(), gaussian()).normalize();
+  }
+
   add(v: Vector2): Vector2 {
     return new Vector2(this.x + v.x, this.y + v.y);
   }

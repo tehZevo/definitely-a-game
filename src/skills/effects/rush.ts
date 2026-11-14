@@ -9,10 +9,16 @@ export class Rush extends SkillEffect {
   }
 
   override start(skill: Skill): unknown {
-    if (!skill.target) return null;
+    if (!skill.target) {
+      skill.success = false;
+      return null;
+    }
     const phys = skill.target.getComponent(Physics);
     const actor = skill.target.getComponent(Actor);
-    if (!phys || !actor) return null;
+    if (!phys || !actor) {
+      skill.success = false;
+      return null;
+    }
     phys.applyForce(actor.moveDir.scale(this.force * skill.multiplier));
     this.spawnChildren(skill, skill.target);
     return null;

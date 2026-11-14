@@ -81,5 +81,21 @@ describe('Target', () => {
     expect(childSkill.effect).toBe(childEffect);
     expect(childSkill.target).toBe(enemy);
     expect(childSkill.multiplier).toBe(6);
+    expect(targetEntity.getComponent(Skill)!.success).toBe(true);
+  });
+
+  it('marks the skill as failed when no targets are found', () => {
+    const world = new World();
+    const user = world.createEntity([
+      new Position(0, 0),
+      new Actor(),
+      new Team(0),
+      new Stats(100, 100),
+    ]);
+    const targetEffect = new Target(teamFilter(TargetType.ENEMY), 1, [new MarkerEffect()], 1);
+    const targetEntity = world.createEntity([new Position(0, 0), new Skill(targetEffect, user)]);
+
+    expect(targetEntity.getComponent(Skill)!.success).toBe(false);
+    expect(world.find(Skill).length).toBe(1);
   });
 });

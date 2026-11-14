@@ -1,4 +1,4 @@
-import { SkillEffect, createChildSkill, type SkillEffectOptions } from './skillEffect';
+import { SkillEffect, spawnEffectChildren, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
@@ -12,7 +12,10 @@ export class ConsumeHP extends SkillEffect {
   override start(skill: Skill): unknown {
     const userStats = skill.user.getComponent(Stats);
     const userActor = skill.user.getComponent(Actor);
-    if (!userStats || !userActor) return null;
+    if (!userStats || !userActor) {
+      skill.success = false;
+      return null;
+    }
     userActor.damage(((userStats.hp * this.percent) / 100) * skill.multiplier, DamageNumberType.NORMAL);
     this.spawnChildren(skill, skill.target);
     return null;
@@ -28,7 +31,10 @@ export class StealHP extends SkillEffect {
     const userStats = skill.user.getComponent(Stats);
     const targetStats = skill.target?.getComponent(Stats);
     const userActor = skill.user.getComponent(Actor);
-    if (!userStats || !targetStats || !userActor) return null;
+    if (!userStats || !targetStats || !userActor) {
+      skill.success = false;
+      return null;
+    }
     let damage = ((userStats.physAtt * this.power) / 100 - targetStats.physDef) * skill.multiplier;
     damage = Math.max(damage, 0);
     const amountToHeal = Math.min(damage, targetStats.hp);
@@ -48,13 +54,12 @@ export class UserHPScaling extends SkillEffect {
 
   override start(skill: Skill): unknown {
     const userStats = skill.user.getComponent(Stats);
-    if (!userStats) return null;
-    const children = [...this.childrenF(userStats.hp), ...this.children];
-    const world = skill.entity.world;
-    if (!world) return null;
-    for (const child of children) {
-      createChildSkill(world, skill, child, skill.target);
+    if (!userStats) {
+      skill.success = false;
+      return null;
     }
+    const children = [...this.childrenF(userStats.hp), ...this.children];
+    spawnEffectChildren(skill, children, skill.target);
     return null;
   }
 }

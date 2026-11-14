@@ -19,10 +19,16 @@ export class ApplyBuff extends SkillEffect {
   }
 
   override start(skill: Skill): unknown {
-    if (!skill.target) return null;
+    if (!skill.target) {
+      skill.success = false;
+      return null;
+    }
     const stats = skill.target.getComponent(Stats);
     const buffs = skill.target.getComponent(Buffs);
-    if (!stats || !buffs) return null;
+    if (!stats || !buffs) {
+      skill.success = false;
+      return null;
+    }
     const power = (this.flatPower + this.powerScaling(stats)) * skill.multiplier;
     const time = (this.flatTime + this.timeScaling(stats)) * skill.multiplier;
     buffs.applyBuff(this.buffdef, power, time, skill.user);

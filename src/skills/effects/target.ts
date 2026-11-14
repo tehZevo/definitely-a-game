@@ -1,5 +1,5 @@
 import { SkillEffect, createChildSkill } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import type { Entity } from '../../ecs';
 import type { Filter } from '../targetFilters';
 import { Actor } from '../../actor/actor';

@@ -1,5 +1,5 @@
 import { SkillEffect, spawnEffectChildren, type SkillEffectOptions } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
 import { DamageNumberType } from '../../ui/damageNumberType';

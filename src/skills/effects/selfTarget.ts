@@ -1,6 +1,6 @@
 import { Target } from './target';
 import type { SkillEffect } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import type { Entity } from '../../ecs';
 
 export class SelfTarget extends Target {

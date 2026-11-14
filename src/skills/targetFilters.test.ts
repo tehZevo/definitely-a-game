@@ -4,7 +4,7 @@ import { Position } from '../physics/position';
 import { Vector2 } from '../utils/vector';
 import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
-import { Skill } from './skill';
+import { Skill } from '../actor/skill';
 import { SkillEffect } from './effects/skillEffect';
 import { distanceFilter, teamFilter, angleFilter, angleDistanceDeg, ignoreEntitiesFilter } from './targetFilters';
 import { TargetType } from './targetType';

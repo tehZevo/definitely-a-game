@@ -1,6 +1,6 @@
 import type { Entity, World } from '../../ecs';
 import { Position } from '../../physics/position';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 
 export interface SkillEffectOptions {
   children?: SkillEffect | SkillEffect[];

@@ -4,7 +4,7 @@ import { Position } from '../../physics/position';
 import { Physics } from '../../physics/physics';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { Heal } from './heal';
 import { Push } from './push';
 import { Vector2 } from '../../utils/vector';

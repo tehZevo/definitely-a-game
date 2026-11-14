@@ -2,7 +2,7 @@ import { Action } from './action';
 import { Actor } from '../actor/actor';
 import { Stats } from '../actor/stats';
 import { Position } from '../physics/position';
-import { Skill } from '../skills/skill';
+import { Skill } from '../actor/skill';
 import type { SkillDef } from '../skills/skillDef';
 import { DT } from '../constants';
 

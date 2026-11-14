@@ -3,7 +3,7 @@ import type { Tileset } from '../tiles/tileset';
 import { CHUNK_SIZE } from '../constants';
 import type { Vector2 } from '../utils/vector';
 
-interface Rect {
+export interface Rect {
   x: number;
   y: number;
   w: number;

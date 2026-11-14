@@ -7,6 +7,7 @@ import { PlayerController } from './actor/playerController';
 import { createPlayerSprite } from './actor/playerSprite';
 import { SpriteRenderer } from './graphics/spriteRenderer';
 import { TileRenderer } from './graphics/tileRenderer';
+import { drawCollisionDebug } from './graphics/collisionDebug';
 import { Camera } from './graphics/camera';
 import { KeyboardInput } from './core/input';
 import { TouchJoystick } from './core/touchJoystick';
@@ -113,7 +114,11 @@ async function startGame(
   const uiManager = new UIManager(app.stage);
   world.createEntity([new GameMaster(resolved, game), uiManager]);
   const chunks = chunkTiles(dungeon.tiles);
-  world.createEntity([new TilePhysics(chunks)]);
+  const tilePhysics = new TilePhysics(chunks);
+  world.createEntity([tilePhysics]);
+  if (new URLSearchParams(window.location.search).has('debug')) {
+    drawCollisionDebug(tilePhysics, worldLayer);
+  }
   const spawnRoom = dungeon.rooms[0];
   const spawnX = spawnRoom.x * 8 + 4;
   const spawnY = spawnRoom.y * 8 + 4;

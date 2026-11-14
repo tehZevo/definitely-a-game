@@ -155,6 +155,8 @@ async function startGame(
     profile.baseStats.magDef,
   );
   stats.load(profile.stats);
+  stats.hp = stats.maxHp;
+  stats.mp = stats.maxMp;
   const player = world.createEntity([
     pos,
     new PlayerController(inputSource, defaultAttack),

@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Stats } from './stats';
+import { Equips } from '../items/equips';
+import { woodenShortsword } from '../data/items/weapons';
 
 describe('Stats', () => {
   it('stores initial values', () => {
@@ -44,5 +46,19 @@ describe('Stats', () => {
     target.load(source.snapshot());
 
     expect(target.snapshot()).toEqual(source.snapshot());
+  });
+
+  it('recalculates stats from equipped items', () => {
+    const stats = new Stats(75, 100, 25, 50, 100, 0, 0, 100, 0);
+    const equips = new Equips();
+    equips.equipWeapon(woodenShortsword);
+
+    stats.recalculate(equips);
+
+    expect(stats.maxHp).toBe(100);
+    expect(stats.maxMp).toBe(50);
+    expect(stats.physAtt).toBe(110);
+    expect(stats.hp).toBe(75);
+    expect(stats.mp).toBe(25);
   });
 });

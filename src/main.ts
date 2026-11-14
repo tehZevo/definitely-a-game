@@ -95,7 +95,7 @@ async function startGame(
   const world = new World();
   game.world = world;
   game.playerProfile = profile;
-  game.onTransition = (next) => startGame(app, game, profile, next);
+  game.onTransition = (next) => startGame(app, game, game.playerProfile ?? profile, next);
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
@@ -116,19 +116,20 @@ async function startGame(
     ? new CombinedInput(keyboard, touch)
     : keyboard;
   const facePaths = getFaceImagePaths(profile.face);
-  const stats = new Stats(
-    profile.stats.hp,
-    profile.stats.maxHp,
-    profile.stats.mp,
-    profile.stats.maxMp,
-    profile.stats.physAtt,
-    profile.stats.physDef,
-    profile.stats.critical,
-    profile.stats.magAtt,
-    profile.stats.magDef,
-  );
   const equips = new Equips();
   equips.load(profile.equips);
+  const stats = new Stats(
+    profile.baseStats.hp,
+    profile.baseStats.maxHp,
+    profile.baseStats.mp,
+    profile.baseStats.maxMp,
+    profile.baseStats.physAtt,
+    profile.baseStats.physDef,
+    profile.baseStats.critical,
+    profile.baseStats.magAtt,
+    profile.baseStats.magDef,
+  );
+  stats.load(profile.stats);
   const player = world.createEntity([
     pos,
     new Physics(),
@@ -182,6 +183,7 @@ async function startGame(
   const saveProfile = () => {
     game.playerProfile = {
       face: profile.face,
+      baseStats: stats.baseSnapshot(),
       stats: stats.snapshot(),
       equips: equips.save(),
     };

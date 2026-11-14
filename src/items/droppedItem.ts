@@ -7,6 +7,7 @@ import { Equips } from './equips';
 import { ItemDropper } from './itemDropper';
 import { Position } from '../physics/position';
 import { Sprite } from '../graphics/sprite';
+import { Stats } from '../actor/stats';
 
 function isWeapon(item: ItemDef): item is Weapon {
   return 'weaponType' in item;
@@ -51,6 +52,7 @@ export class DroppedItem extends Interactable {
     if (oldEquip) {
       dropper.drop(oldEquip, pos);
     }
+    entity.getComponent(Stats)?.recalculate(equips);
     this.entity.remove();
   }
 }

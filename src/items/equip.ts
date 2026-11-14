@@ -7,6 +7,8 @@ export interface EquipStats {
   mp: number;
   physAtt: number;
   physDef: number;
+  magAtt?: number;
+  magDef?: number;
 }
 
 export class Equip extends ItemDef {
@@ -23,6 +25,6 @@ export class Equip extends ItemDef {
   } = {}) {
     super(opts);
     this.grade = opts.grade ?? EquipGrade.UNKNOWN;
-    this.stats = opts.stats ?? { hp: 0, mp: 0, physAtt: 0, physDef: 0 };
+    this.stats = opts.stats ?? { hp: 0, mp: 0, physAtt: 0, physDef: 0, magAtt: 0, magDef: 0 };
   }
 }

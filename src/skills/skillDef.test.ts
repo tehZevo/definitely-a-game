@@ -11,6 +11,13 @@ describe('SkillDef', () => {
     expect(def.id).toBe('test');
     expect(def.rank).toBe(SkillRank.I);
     expect(def.mpCost).toBe(0);
+    expect(def.description).toBeNull();
+  });
+
+  it('stores a description', () => {
+    const effect = new SkillEffect();
+    const def = new SkillDef('test', effect, true, SkillRank.I, null, 0, 0, 0.5, null, null, null, 'Zaps an enemy.');
+    expect(def.description).toBe('Zaps an enemy.');
   });
 
   it('accepts an array of effects', () => {

@@ -25,4 +25,6 @@ export const magicBolt = new SkillDef(
   0.5,
   SkillSlot.ALPHA,
   'assets/skills/magic_bolt.png',
+  null,
+  'Fires a bolt of arcane energy at an enemy.',
 );

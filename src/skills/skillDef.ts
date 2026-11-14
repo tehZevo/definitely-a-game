@@ -19,6 +19,7 @@ export class SkillDef {
     public slot: SkillSlot | string | null = null,
     public icon: string | null = null,
     public miniIcon: string | null = null,
+    public description: string | null = null,
   ) {
     this.effects = Array.isArray(effects) ? effects : [effects];
   }

@@ -16,4 +16,6 @@ export const quadStrike = new SkillDef(
   0.5,
   SkillSlot.ALPHA,
   'assets/skills/quad_strike.png',
+  null,
+  'Strikes four times in a wide arc.',
 );

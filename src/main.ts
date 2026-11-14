@@ -216,6 +216,7 @@ async function boot(): Promise<void> {
     resolution: 1,
   });
   document.getElementById('app')?.appendChild(app.canvas);
+  app.stage.sortableChildren = true;
 
   const game = new Game();
   game.app = app;

@@ -3,6 +3,7 @@ import type { Entity } from '../ecs';
 import type { ItemDef } from '../items/itemDef';
 import type { Weapon } from './weapon';
 import type { Armor } from './armor';
+import { isSkillItem } from './skillItem';
 import { Loadout } from './loadout';
 import { ItemDropper } from './itemDropper';
 import { Position } from '../physics/position';
@@ -48,6 +49,9 @@ export class DroppedItem extends Interactable {
     } else if (isArmor(this.item)) {
       oldEquip = equips.unequipArmor(this.item.armorSlot);
       equips.equipArmor(this.item);
+    } else if (isSkillItem(this.item)) {
+      oldEquip = equips.unequipSkill(this.item.slot);
+      equips.equipSkill(this.item);
     }
 
     if (oldEquip) {

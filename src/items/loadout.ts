@@ -1,16 +1,20 @@
 import { Component } from '../ecs';
 import { WeaponSlot, ArmorSlot } from '../items/slots';
+import { SkillSlot } from '../skills/skillSlot';
 import type { Weapon } from '../items/weapon';
 import type { Armor } from '../items/armor';
+import type { SkillItem } from './skillItem';
 
 export interface LoadoutData {
   weapons: Partial<Record<WeaponSlot, Weapon>>;
   armor: Partial<Record<ArmorSlot, Armor>>;
+  skills?: Partial<Record<SkillSlot, SkillItem>>;
 }
 
 export class Loadout extends Component {
   weapons: Partial<Record<WeaponSlot, Weapon>> = {};
   armor: Partial<Record<ArmorSlot, Armor>> = {};
+  skills: Partial<Record<SkillSlot, SkillItem>> = {};
 
   equipWeapon(weapon: Weapon): void {
     this.weapons[weapon.slot] = weapon;
@@ -30,6 +34,20 @@ export class Loadout extends Component {
     const a = this.armor[slot];
     delete this.armor[slot];
     return a;
+  }
+
+  equipSkill(item: SkillItem): void {
+    this.skills[item.slot] = item;
+  }
+
+  unequipSkill(slot: SkillSlot): SkillItem | undefined {
+    const item = this.skills[slot];
+    delete this.skills[slot];
+    return item;
+  }
+
+  getSkill(slot: SkillSlot): SkillItem | undefined {
+    return this.skills[slot];
   }
 
   getWeapon(slot: WeaponSlot): Weapon | undefined {
@@ -66,6 +84,7 @@ export class Loadout extends Component {
     return [
       ...Object.values(this.weapons),
       ...Object.values(this.armor),
+      ...Object.values(this.skills),
     ].filter((item): item is NonNullable<typeof item> => item !== undefined);
   }
 
@@ -73,11 +92,13 @@ export class Loadout extends Component {
     return {
       weapons: { ...this.weapons },
       armor: { ...this.armor },
+      skills: { ...this.skills },
     };
   }
 
   load(data: LoadoutData): void {
     this.weapons = { ...data.weapons };
     this.armor = { ...data.armor };
+    this.skills = { ...(data.skills ?? {}) };
   }
 }

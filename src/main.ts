@@ -42,6 +42,7 @@ import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
 import { InteractTargeter } from './core/interactTargeter';
+import { loadClientConfig, saveClientConfig } from './core/clientConfig';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -185,13 +186,16 @@ async function startGame(
   const joystickOverlay = touch ? new JoystickOverlay(app.stage) : null;
 
   const saveProfile = () => {
-    game.playerProfile = {
+    const nextProfile: PlayerProfile = {
       name: profile.name,
       face: profile.face,
       baseStats: stats.baseSnapshot(),
       stats: stats.snapshot(),
       equips: equips.save(),
     };
+    game.playerProfile = nextProfile;
+    game.clientConfig.playerProfile = nextProfile;
+    saveClientConfig(game.clientConfig);
   };
   saveProfile();
 
@@ -224,6 +228,8 @@ async function boot(): Promise<void> {
   app.stage.sortableChildren = true;
 
   const game = new Game();
+  game.clientConfig = loadClientConfig();
+  game.playerProfile = game.clientConfig.playerProfile;
   game.app = app;
   game.worldLayer = new Container();
   game.worldLayer.eventMode = 'dynamic';
@@ -232,6 +238,10 @@ async function boot(): Promise<void> {
 
   const menu = new MainMenuState();
   menu.setOnStart(() => {
+    if (game.playerProfile) {
+      void startGame(app, game, game.playerProfile);
+      return;
+    }
     const charCreate = new CharCreateState();
     charCreate.setOnConfirm((profile) => {
       void startGame(app, game, profile);

@@ -23,6 +23,7 @@ export class DroppedItem extends Interactable {
   constructor(item: ItemDef) {
     super();
     this.item = item;
+    this.description = item.description;
   }
 
   override start(): void {

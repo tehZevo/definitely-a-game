@@ -1,6 +1,8 @@
 import { Assets, Container, Rectangle, Sprite as PixiSprite, Texture } from 'pixi.js';
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
+import { Interactable } from '../core/interactable';
+import { Tooltip } from '../ui/tooltip';
 import { Sprite } from './sprite';
 import { Shadow } from '../actor/shadow';
 import { assetUrl } from '../assets';
@@ -27,7 +29,10 @@ export class SpriteRenderer {
   private shadowTex: Texture | null = null;
   private shadowViews = new Map<Entity, PixiSprite>();
 
-  constructor(private stage: Container) {
+  constructor(
+    private stage: Container,
+    private tooltip: Tooltip | null = null,
+  ) {
     stage.sortableChildren = true;
   }
 
@@ -74,15 +79,28 @@ export class SpriteRenderer {
         for (const path of paths) await this.load(path);
       }
       const container = new Container();
+      container.eventMode = 'static';
       if (this.shadowTex && entity.getComponent(Shadow)) {
         const shadow = new PixiSprite(this.shadowTex);
+        shadow.eventMode = 'none';
         shadow.alpha = 0.5;
         shadow.y = 5;
         container.addChild(shadow);
         this.shadowViews.set(entity, shadow);
       }
       const built = this.build(sprite.frames[sprite.current] ?? []);
-      for (const layer of built.layers) container.addChild(layer.sprite);
+      for (const layer of built.layers) {
+        layer.sprite.eventMode = 'none';
+        container.addChild(layer.sprite);
+      }
+      if (this.tooltip) {
+        container.on('pointerover', () => {
+          const desc = entity.getComponent(Interactable)?.description;
+          const pos = entity.getComponent(Position);
+          if (desc && pos) this.tooltip?.show(desc, pos.x, pos.y - 16);
+        });
+        container.on('pointerout', () => this.tooltip?.hide());
+      }
       this.stage.addChild(container);
       this.views.set(entity, container);
       this.anims.set(entity, {

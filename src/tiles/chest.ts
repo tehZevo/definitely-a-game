@@ -10,6 +10,7 @@ export class Chest extends Interactable {
   constructor(items: ItemDef[] = []) {
     super();
     this.items = items;
+    this.description = 'A chest holding loot.';
   }
 
   override start(): void {

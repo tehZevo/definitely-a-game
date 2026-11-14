@@ -20,6 +20,7 @@ export class Equip extends ItemDef {
     rarity?: Rarity;
     icon?: string;
     miniIcon?: string;
+    description?: string | null;
     grade?: EquipGrade;
     stats?: EquipStats;
   } = {}) {

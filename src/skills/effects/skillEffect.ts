@@ -60,7 +60,7 @@ export class SkillEffect {
     return null;
   }
 
-  update(skill: Skill, state: unknown): unknown {
+  update(skill: Skill, state: unknown, _dt = 0): unknown {
     void skill;
     return state;
   }

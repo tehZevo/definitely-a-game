@@ -20,8 +20,8 @@ export class Skill extends Component {
     this.state = this.effect.start(this);
   }
 
-  override update(_dt = 0): void {
-    this.state = this.effect.update(this, this.state);
+  override update(dt = 0): void {
+    this.state = this.effect.update(this, this.state, dt);
     if (this.completed) {
       this.entity.remove();
       this.effect.remove(this, this.state);

@@ -1,5 +1,6 @@
 import { Component } from '../ecs';
 import { Position } from '../physics/position';
+import { Physics } from '../physics/physics';
 import type { ItemDef } from '../items/itemDef';
 import type { Loadout } from './loadout';
 import { DroppedItem } from './droppedItem';
@@ -28,6 +29,7 @@ export class ItemDropper extends Component {
     const offset = { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist };
     return world.createEntity([
       new Position(pos.x + offset.x, pos.y + offset.y),
+      new Physics(),
       new DroppedItem(item),
     ]);
   }

@@ -26,3 +26,24 @@ describe('MobDef', () => {
     expect(d.magDef).toBe(0);
   });
 });
+
+import { createMonsterWeapon } from '../items/monsterItems';
+import { MOOK } from './archetypes';
+
+describe('MobDef monster weapon', () => {
+  it('builds a weapon from difficulty and archetypes', () => {
+    const d = new MobDef('x', 'y.png', 20, 10, 0, [], [], 100, 0, [MOOK]);
+    expect(d.weapon.equipArchetype.PATT).toBe(2);
+    expect(d.weapon.primaryArchetype.STR).toBe(2);
+  });
+
+  it('uses the default difficulty of 5 as the base', () => {
+    expect(new MobDef('x', 'y.png').weapon.equipArchetype.MATT).toBe(5);
+  });
+
+  it('matches createMonsterWeapon for the same arguments', () => {
+    const d = new MobDef('x', 'y.png', 7, 10, 0, [], [], 100, 0, [MOOK]);
+    const expected = createMonsterWeapon(7, [MOOK]);
+    expect(d.weapon.equipArchetype.PDEF).toBe(expected.equipArchetype.PDEF);
+  });
+});

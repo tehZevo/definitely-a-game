@@ -1,23 +1,10 @@
-import { Equip, type EquipStats } from './equip';
-import { EquipGrade } from './equipGrade';
-import type { Rarity } from './rarity';
+import { Equip, type EquipOptions } from './equip';
 import { WeaponType, weaponSlot, type WeaponSlot } from './slots';
 
 export class Weapon extends Equip {
   weaponType: WeaponType;
 
-  constructor(opts: {
-    id?: string;
-    rarity?: Rarity;
-    icon?: string;
-    miniIcon?: string;
-    description?: string | null;
-    buffs?: string[];
-    set?: string | null;
-    grade?: EquipGrade;
-    stats?: EquipStats;
-    weaponType: WeaponType;
-  }) {
+  constructor(opts: EquipOptions & { weaponType: WeaponType }) {
     super(opts);
     this.weaponType = opts.weaponType;
   }

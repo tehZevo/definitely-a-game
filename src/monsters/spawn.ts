@@ -13,8 +13,6 @@ import { ItemDropper } from '../items/itemDropper';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot } from '../skills/skillSlot';
 import { defaultAttack } from '../data/skills/defaultAttack';
-import { Weapon } from '../items/weapon';
-import { Armor } from '../items/armor';
 
 export function spawnMob(
   world: World,
@@ -35,13 +33,7 @@ export function spawnMob(
   ];
 
   const equips = new Loadout();
-  for (const drop of def.drops) {
-    if (drop instanceof Weapon) {
-      equips.equipWeapon(drop);
-    } else if (drop instanceof Armor) {
-      equips.equipArmor(drop);
-    }
-  }
+  equips.equipWeapon(def.weapon);
   components.push(equips);
 
   const dropper = new ItemDropper();

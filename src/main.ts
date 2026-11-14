@@ -13,6 +13,7 @@ import { KeyboardInput } from './core/input';
 import { TouchJoystick } from './core/touchJoystick';
 import { CombinedInput } from './core/combinedInput';
 import { generateDungeon, type MapDef } from './maps/dfsGenerator';
+import { DevMapGenerator } from './maps/devMapGenerator';
 import { chunkTiles } from './maps/chunkTiles';
 import { Tileset } from './tiles/tileset';
 import { Tile } from './tiles/tile';
@@ -119,7 +120,9 @@ async function startGame(
   game.playerProfile = profile;
   game.onTransition = (next) => startGame(app, game, game.playerProfile ?? profile, next);
 
-  const dungeon = generateDungeon(resolved.opts);
+  const isDevMap = resolved.generator === 'dev';
+  const devGenerator = isDevMap ? new DevMapGenerator() : null;
+  const dungeon = devGenerator ? devGenerator.generate(resolved) : generateDungeon(resolved.opts);
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
   const tileRenderer = await TileRenderer.render(tileset, worldLayer);
 
@@ -197,11 +200,19 @@ async function startGame(
     new Stairs(nextMapFor(resolved)),
   ]);
 
-  const midRoom = dungeon.rooms[Math.floor(dungeon.rooms.length / 2)];
-  world.createEntity([
-    new Position(midRoom.x * 8 * 16 + 32, midRoom.y * 8 * 16 + 32),
-    new Chest([woodenShortsword, cottonRobe, quadStrikeSkill]),
-  ]);
+  if (devGenerator) {
+    devGenerator.createChests(world);
+  } else {
+    const midRoom = dungeon.rooms[Math.floor(dungeon.rooms.length / 2)];
+    const roomSize = resolved.opts.roomSize ?? 8;
+    world.createEntity([
+      new Position(
+        (midRoom.x * roomSize + roomSize / 2) * 16,
+        (midRoom.y * roomSize + roomSize / 2) * 16,
+      ),
+      new Chest([woodenShortsword, cottonRobe, quadStrikeSkill]),
+    ]);
+  }
 
   const tooltip = new Tooltip(app.stage);
   const particleRenderer = new ParticleRenderer(worldLayer);

@@ -1,9 +1,10 @@
-import { SkillDef } from '../../skills/skillDef';
+import { SkillDef, weaponFilterFor } from '../../skills/skillDef';
 import { Projectile } from '../../skills/effects/projectile';
 import { Damage } from '../../skills/effects/damage';
 import { TargetType } from '../../skills/targetType';
 import { SkillRank } from '../../skills/skillRank';
 import { SkillSlot } from '../../skills/skillSlot';
+import { CAN_CAST_MAGIC_PRIMARIES } from '../../items/slots';
 
 export const fireball = new SkillDef(
   'fireball',
@@ -27,4 +28,5 @@ export const fireball = new SkillDef(
   'assets/skills/fireball.png',
   null,
   'Launches a fiery projectile that detonates on impact.',
+  weaponFilterFor(CAN_CAST_MAGIC_PRIMARIES),
 );

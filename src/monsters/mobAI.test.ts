@@ -11,6 +11,8 @@ import { Skill } from '../actor/skill';
 import { SkillSlot } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
 import { defaultAttack } from '../data/skills/defaultAttack';
+import { MobDef } from './mobdef';
+import { Sprite } from '../graphics/sprite';
 
 function withPlayer(world: World, x: number, y: number): void {
   world.createEntity([new Position(x, y), new PlayerController(new FakeInput(0, 0))]);
@@ -67,5 +69,35 @@ describe('MobAI', () => {
 
     expect(mobActor.currentAction).not.toBeNull();
     expect(world.find(Skill).length).toBe(1);
+  });
+
+  it('targets the nearest player in range', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    withPlayer(world, 90, 0);
+    const mobPos = new Position(50, 0);
+    world.createEntity([mobPos, new Actor(), new MobAI()]);
+    world.update(1);
+    expect(mobPos.x).toBeGreaterThan(50);
+    expect(mobPos.x).toBeLessThan(90);
+  });
+
+  it('uses a random skill from the mob definition', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    const mobActor = new Actor();
+    const def = new MobDef('test', 'test.png', 5, 10, 0, [], [defaultAttack]);
+    world.createEntity([new Position(10, 0), new Stats(10, 10), mobActor, new MobAI(def)]);
+    world.update(1);
+    expect(mobActor.currentAction).not.toBeNull();
+  });
+
+  it('flips the sprite toward the target while moving', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    const sprite = new Sprite({ default: ['test.png'] });
+    world.createEntity([new Position(50, 0), new Actor(), new MobAI(), sprite]);
+    world.update(1);
+    expect(sprite.flip).toBe('x');
   });
 });

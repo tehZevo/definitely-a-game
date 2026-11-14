@@ -25,7 +25,7 @@ export function spawnMob(
     new Position(x, y),
     new Physics(),
     new Sprite({ default: [def.sprite] }),
-    new MobAI(),
+    new MobAI(def),
     new Stats(def.maxHp, def.maxHp, def.maxMp, def.maxMp, 100, 0, 0, def.magAtt, def.magDef),
     new Actor(),
     new Team(team),

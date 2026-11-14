@@ -5,6 +5,7 @@ import { ArmorSlot } from './slots';
 
 export class Armor extends Equip {
   armorSlot: ArmorSlot;
+  hideHair: boolean;
 
   constructor(opts: {
     id?: string;
@@ -17,8 +18,10 @@ export class Armor extends Equip {
     grade?: EquipGrade;
     stats?: EquipStats;
     armorSlot: ArmorSlot;
+    hideHair?: boolean;
   }) {
     super(opts);
     this.armorSlot = opts.armorSlot;
+    this.hideHair = opts.hideHair ?? false;
   }
 }

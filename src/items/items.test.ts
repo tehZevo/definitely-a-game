@@ -176,4 +176,14 @@ describe('Item data', () => {
     expect(leatherSuit.armorSlot).toBe(ArmorSlot.SUIT);
     expect(copperHelmet.armorSlot).toBe(ArmorSlot.HAT);
   });
+
+  it('hats can hide hair', () => {
+    const hat = new Armor({
+      id: 'metal_helm',
+      armorSlot: ArmorSlot.HAT,
+      hideHair: true,
+    });
+    expect(hat.hideHair).toBe(true);
+    expect(cottonHat.hideHair).toBe(false);
+  });
 });

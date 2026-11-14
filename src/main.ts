@@ -269,7 +269,7 @@ async function boot(): Promise<void> {
     width: LOGICAL_WIDTH,
     height: LOGICAL_HEIGHT,
     antialias: false,
-    resolution: 1,
+    resolution: 3,
   });
   const canvas = app.canvas;
   canvas.style.imageRendering = 'pixelated';

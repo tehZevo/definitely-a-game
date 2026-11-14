@@ -11,6 +11,7 @@ import {
   type FaceConfig,
   getFaceImagePaths,
 } from '../graphics/characterCreator';
+import { makePlayerProfile, type PlayerProfile } from './playerProfile';
 
 export class CharCreateState extends GameState {
   private container: PixiContainer | null = null;
@@ -21,15 +22,29 @@ export class CharCreateState extends GameState {
     hairColor: 'brown',
     eyeColor: 'blue',
   };
-  private onConfirm: ((config: FaceConfig) => void) | null = null;
+  private name = 'Player';
+  private onConfirm: ((profile: PlayerProfile) => void) | null = null;
   private label: Text | null = null;
 
-  setOnConfirm(cb: (config: FaceConfig) => void): void {
+  setOnConfirm(cb: (profile: PlayerProfile) => void): void {
     this.onConfirm = cb;
   }
 
   getConfig(): FaceConfig {
     return { ...this.config };
+  }
+
+  getName(): string {
+    return this.name;
+  }
+
+  setName(name: string): void {
+    this.name = name.trim() || 'Player';
+    this.syncLabel();
+  }
+
+  buildProfile(): PlayerProfile {
+    return makePlayerProfile(this.config, this.name);
   }
 
   enter(app: Application, _world: World, _worldLayer: Container): void {
@@ -55,12 +70,13 @@ export class CharCreateState extends GameState {
     this.container.addChild(this.label);
 
     const controls: Array<[string, () => void]> = [
+      ['[N]ame', () => this.promptName()],
       ['[G]ender', () => this.cycle('gender')],
       ['[S]kin', () => this.cycle('skinTone')],
       ['[H]air style', () => this.cycle('hairStyle')],
       ['hai[R] color', () => this.cycle('hairColor')],
       ['[E]ye color', () => this.cycle('eyeColor')],
-      ['[Start]', () => this.onConfirm?.(this.getConfig())],
+      ['[Start]', () => this.onConfirm?.(this.buildProfile())],
     ];
 
     controls.forEach(([label, handler], i) => {
@@ -105,11 +121,24 @@ export class CharCreateState extends GameState {
       const i = EYE_COLORS.indexOf(this.config.eyeColor);
       this.config.eyeColor = EYE_COLORS[(i + 1) % EYE_COLORS.length];
     }
-    this.label!.text = this.renderConfig();
+    this.syncLabel();
+  }
+
+  private promptName(): void {
+    if (typeof window === 'undefined') return;
+    const name = window.prompt('Character name', this.name);
+    if (name !== null) this.setName(name);
+  }
+
+  private syncLabel(): void {
+    if (this.label) {
+      this.label.text = this.renderConfig();
+    }
   }
 
   private renderConfig(): string {
     return [
+      `Name: ${this.name}`,
       `Gender: ${this.config.gender}`,
       `Skin: ${this.config.skinTone}`,
       `Hair: style ${this.config.hairStyle + 1}, ${this.config.hairColor}`,

@@ -8,6 +8,7 @@ export class ItemDef {
   miniIcon: string | null;
   rarity: Rarity;
   description: string | null;
+  buffs: string[];
 
   constructor(opts: {
     id?: string;
@@ -15,12 +16,14 @@ export class ItemDef {
     icon?: string;
     miniIcon?: string;
     description?: string | null;
+    buffs?: string[];
   } = {}) {
     this.id = opts.id ?? '';
     this.icon = opts.icon ?? 'assets/unknown.png';
     this.miniIcon = opts.miniIcon ?? null;
     this.rarity = opts.rarity ?? Rarity.COMMON;
     this.description = opts.description ?? null;
+    this.buffs = opts.buffs ?? [];
   }
 
   calcDropRate(): number {

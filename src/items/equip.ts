@@ -21,6 +21,7 @@ export class Equip extends ItemDef {
     icon?: string;
     miniIcon?: string;
     description?: string | null;
+    buffs?: string[];
     grade?: EquipGrade;
     stats?: EquipStats;
   } = {}) {

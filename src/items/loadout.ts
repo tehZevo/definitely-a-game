@@ -40,6 +40,14 @@ export class Loadout extends Component {
     return this.armor[slot];
   }
 
+  allBuffs(): string[] {
+    const items = [
+      ...Object.values(this.weapons),
+      ...Object.values(this.armor),
+    ].filter((item): item is NonNullable<typeof item> => item !== undefined);
+    return [...new Set(items.flatMap((item) => item.buffs))];
+  }
+
   save(): LoadoutData {
     return {
       weapons: { ...this.weapons },

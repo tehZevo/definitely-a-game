@@ -2,6 +2,7 @@ import { Assets, Container, Rectangle, Sprite as PixiSprite, Texture } from 'pix
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { Interactable } from '../core/interactable';
+import { INTERACT_CURSOR_SPRITE, INTERACT_CURSOR_Z_INDEX, InteractCursor } from '../core/interactCursor';
 import { Tooltip } from '../ui/tooltip';
 import { Sprite } from './sprite';
 import { Shadow } from '../actor/shadow';
@@ -70,6 +71,12 @@ export class SpriteRenderer {
       this.shadowTex.source.scaleMode = 'nearest';
     } catch {
       this.shadowTex = null;
+    }
+
+    try {
+      await this.load(INTERACT_CURSOR_SPRITE);
+    } catch {
+      // The cursor is optional at runtime; missing assets should not block the world.
     }
 
     for (const entity of world.find(Sprite)) {
@@ -144,7 +151,9 @@ export class SpriteRenderer {
       }
       view.x = Math.round(pos.x);
       view.y = Math.round(pos.y);
-      view.zIndex = Math.round(pos.y);
+      view.zIndex = entity.getComponent(InteractCursor)
+        ? INTERACT_CURSOR_Z_INDEX
+        : Math.round(pos.y);
     }
   }
 }

@@ -13,4 +13,9 @@ export class Sprite extends Component {
       this.current = name;
     }
   }
+
+  setSprite(path: string): void {
+    this.frames = { idle: [path] };
+    this.current = 'idle';
+  }
 }

@@ -13,6 +13,7 @@ export function findInRange<T extends Component>(
   const entities = world.find(ctor);
   const results: { entity: import('../ecs').Entity; dist: number }[] = [];
   for (const entity of entities) {
+    if (!entity.alive) continue;
     const pos = entity.getComponent(Position);
     if (!pos) continue;
     const dx = pos.x - x;

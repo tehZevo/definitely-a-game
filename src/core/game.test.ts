@@ -53,7 +53,7 @@ describe('Game', () => {
     resolve();
     await promise;
 
-    game.transition(new MapDef('forest', 'forest', 'dfs'));
+    game.transition(new MapDef('forest', undefined, 'dfs'));
     expect(calls).toEqual(['plains', 'forest']);
   });
 });

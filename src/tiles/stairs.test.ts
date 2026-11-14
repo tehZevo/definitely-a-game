@@ -20,7 +20,7 @@ describe('Stairs', () => {
   it('transitions through the GameMaster when interacted with', () => {
     const world = new World();
     const game = { transition: vi.fn() } as unknown as Game;
-    world.createEntity([new GameMaster(new MapDef('plains', 'grass', 'dfs'), game)]);
+    world.createEntity([new GameMaster(new MapDef('plains', undefined, 'dfs'), game)]);
 
     const stairsEntity = world.createEntity([new Position(0, 0), new Stairs('forest')]);
     const stairs = stairsEntity.getComponent(Stairs);

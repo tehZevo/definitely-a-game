@@ -10,7 +10,7 @@ describe('GameMaster', () => {
     const world = new World();
     const entity = world.createEntity([
       new TeamManager('player'),
-      new GameMaster(new MapDef('plains', 'grass', 'dfs')),
+      new GameMaster(new MapDef('plains', undefined, 'dfs')),
     ]);
     const teams = entity.getComponent(TeamManager);
 
@@ -20,7 +20,7 @@ describe('GameMaster', () => {
 
   it('delegates transitions to the game', () => {
     const game = { transition: vi.fn() } as unknown as Game;
-    const master = new GameMaster(new MapDef('plains', 'grass', 'dfs'), game);
+    const master = new GameMaster(new MapDef('plains', undefined, 'dfs'), game);
 
     master.transition('forest');
     expect(game.transition).toHaveBeenCalledWith('forest');

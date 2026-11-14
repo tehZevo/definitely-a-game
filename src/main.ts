@@ -65,7 +65,7 @@ import { MainMenuState } from './core/mainMenuState';
 import { CharCreateState } from './core/charCreateState';
 import { getFaceImagePaths, type FaceConfig } from './graphics/characterCreator';
 import { nextMapFor, resolveMap } from './data/maps';
-import { TILE_IMAGES } from './data/tilePalettes';
+import type { TilePalette } from './data/tilePalettes';
 import { preloadBitmapFont } from './ui/bitmapText';
 
 const DEFAULT_FACE: FaceConfig = {
@@ -78,7 +78,7 @@ const DEFAULT_FACE: FaceConfig = {
 
 function dungeonToTileset(
   tiles: Map<string, import('./tiles/tile').TileType>,
-  palette: string,
+  palette: TilePalette,
 ): Tileset {
   let maxX = 0;
   let maxY = 0;
@@ -89,13 +89,15 @@ function dungeonToTileset(
   }
   const width = maxX + 1;
   const height = maxY + 1;
-  const floorImg = TILE_IMAGES[palette] ?? TILE_IMAGES['grass'];
+
   const grid: Tile[][] = Array.from({ length: height }, () =>
     Array.from({ length: width }, () => new Tile('', false)),
   );
   for (const [key, tileType] of tiles) {
     const [x, y] = key.split(',').map(Number);
-    const img = tileType.startsWith('wall') ? 'assets/tiles/wall.png' : floorImg;
+    const img = tileType.startsWith('wall')
+      ? palette.walls[tileType === 'wall' ? 0 : 1]
+      : palette.floors[tileType === 'floor' ? 0 : 1];
     grid[y][x] = new Tile(img, tileType.startsWith('wall'));
   }
   return new Tileset(width, height, grid);

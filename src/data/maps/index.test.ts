@@ -10,7 +10,7 @@ describe('map registry', () => {
   });
 
   it('resolves a MapDef without copying it', () => {
-    const map = new MapDef('custom', 'grass', 'dfs');
+    const map = new MapDef('custom', undefined, 'dfs');
     expect(resolveMap(map)).toBe(map);
   });
 

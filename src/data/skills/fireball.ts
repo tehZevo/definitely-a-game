@@ -10,7 +10,7 @@ export const fireball = new SkillDef(
   new Projectile(
     TargetType.ENEMY,
     'assets/skills/fireball.png',
-    [new Damage(100)],
+    [new Damage(100, 1, true)],
     [],
     0.5,
     32,

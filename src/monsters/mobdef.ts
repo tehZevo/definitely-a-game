@@ -10,5 +10,7 @@ export class MobDef {
     public maxMp: number = 0,
     public drops: ItemDef[] = [],
     public skills: SkillDef[] = [],
+    public magAtt: number = 100,
+    public magDef: number = 0,
   ) {}
 }

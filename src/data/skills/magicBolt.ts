@@ -10,7 +10,7 @@ export const magicBolt = new SkillDef(
   new Projectile(
     TargetType.ENEMY,
     'assets/skills/magic_bolt.png',
-    [new Damage(80)],
+    [new Damage(80, 1, true)],
     [],
     0.5,
     32,

@@ -25,6 +25,7 @@ import { Shadow } from './actor/shadow';
 import { Physics } from './physics/physics';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
+import { magicBolt } from './data/skills/magicBolt';
 import { quadStrike } from './data/skills/quadStrike';
 import { SkillSlots } from './skills/skillSlots';
 import { SkillSlot } from './skills/skillSlot';
@@ -107,7 +108,7 @@ async function startGame(
     pos,
     new Physics(),
     new PlayerController(input, defaultAttack),
-    new Stats(100, 100, 50, 50),
+    new Stats(100, 100, 50, 50, 100, 0, 0, 100, 0),
     new Actor(),
     new Team(0),
     new Shadow(),
@@ -115,6 +116,7 @@ async function startGame(
       [SkillSlot.ALPHA]: defaultAttack,
       [SkillSlot.BETA]: fireball,
       [SkillSlot.GAMMA]: quadStrike,
+      [SkillSlot.DELTA]: magicBolt,
     }),
     new Sprite({
       idle: facePaths,

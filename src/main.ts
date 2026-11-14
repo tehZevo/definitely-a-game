@@ -26,6 +26,7 @@ import { Shadow } from './actor/shadow';
 import { SafeArea } from './actor/safeArea';
 import { Physics } from './physics/physics';
 import { Loadout } from './items/loadout';
+import { DroppedItemManager } from './items/droppedItemManager';
 import { ArmorSlot } from './items/slots';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
@@ -118,6 +119,7 @@ async function startGame(
   const chunks = chunkTiles(dungeon.tiles);
   const tilePhysics = new TilePhysics(chunks);
   world.createEntity([tilePhysics]);
+  world.createEntity([new DroppedItemManager()]);
   if (new URLSearchParams(window.location.search).has('debug')) {
     drawCollisionDebug(tilePhysics, worldLayer);
   }

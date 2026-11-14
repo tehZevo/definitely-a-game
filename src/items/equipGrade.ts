@@ -29,3 +29,24 @@ export function equipGradeIcon(grade: EquipGrade): string | null {
       return 'assets/icons/ss.png';
   }
 }
+
+export function equipGradeColor(grade: EquipGrade): number {
+  switch (grade) {
+    case EquipGrade.UNKNOWN:
+      return 0x808080;
+    case EquipGrade.E:
+      return 0xb0b0b0;
+    case EquipGrade.D:
+      return 0x78c878;
+    case EquipGrade.C:
+      return 0x50a0ff;
+    case EquipGrade.B:
+      return 0xc878ff;
+    case EquipGrade.A:
+      return 0xffa040;
+    case EquipGrade.S:
+      return 0xff5050;
+    case EquipGrade.SS:
+      return 0xffd700;
+  }
+}

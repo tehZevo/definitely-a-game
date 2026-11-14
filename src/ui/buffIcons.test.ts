@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   BUFF_ICON_SPACING,
+  BUFF_TIMER_ALPHA,
+  BUFF_TIMER_TINT,
   buffIconPosition,
   buffTimeRemaining,
   buffTimerFrameCount,
@@ -52,5 +54,13 @@ describe('buffIconPosition', () => {
   it('lays buffs out in a single row with a 1px gap', () => {
     expect(buffIconPosition(0)).toEqual({ x: 32, y: 32 });
     expect(buffIconPosition(1)).toEqual({ x: 32 + BUFF_ICON_SPACING, y: 32 });
+  });
+});
+
+describe('buff timer tint', () => {
+  it('renders the timer frame darkened over the icon', () => {
+    // The timer sprite is tinted black at 50% alpha so it reads over the buff icon.
+    expect(BUFF_TIMER_TINT).toBe(0x000000);
+    expect(BUFF_TIMER_ALPHA).toBe(0.5);
   });
 });

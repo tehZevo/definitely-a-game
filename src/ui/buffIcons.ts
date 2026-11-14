@@ -9,6 +9,8 @@ export const BUFF_ICON_SPACING = 9;
 export const BUFF_ICON_ORIGIN_X = 32;
 export const BUFF_ICON_ORIGIN_Y = 32;
 export const BUFF_TIMER_WIDTH = 8;
+export const BUFF_TIMER_TINT = 0x000000;
+export const BUFF_TIMER_ALPHA = 0.5;
 
 const BUFF_BG = 'assets/ui/buff_bg.png';
 const BUFF_TIMER = 'assets/ui/buff_timer.png';
@@ -96,7 +98,10 @@ export class BuffIcons {
 
       const frameCount = buffTimerFrameCount(this.timerSheet.width);
       const index = buffTimerFrameIndex(buffTimeRemaining(buff), frameCount);
-      slot.addChild(new Sprite(this.frame(index)));
+      const timer = new Sprite(this.frame(index));
+      timer.tint = BUFF_TIMER_TINT;
+      timer.alpha = BUFF_TIMER_ALPHA;
+      slot.addChild(timer);
 
       this.root.addChild(slot);
     }

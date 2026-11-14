@@ -13,6 +13,7 @@ export class Weapon extends Equip {
     miniIcon?: string;
     description?: string | null;
     buffs?: string[];
+    set?: string | null;
     grade?: EquipGrade;
     stats?: EquipStats;
     weaponType: WeaponType;

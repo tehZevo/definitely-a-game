@@ -28,6 +28,11 @@ describe('ItemDef', () => {
     const item = new ItemDef({ id: 'ring', buffs: ['bless'] });
     expect(item.buffs).toEqual(['bless']);
   });
+
+  it('stores item set id', () => {
+    const item = new ItemDef({ id: 'ring', set: 'copper' });
+    expect(item.set).toBe('copper');
+  });
 });
 
 describe('Rarity', () => {
@@ -116,6 +121,34 @@ describe('Loadout component', () => {
       }),
     );
     expect(equips.allBuffs()).toEqual(['bless', 'shared', 'regen']);
+  });
+
+  it('counts equipped item sets', () => {
+    const world = new World();
+    const entity = world.createEntity([new Position(0, 0), new Loadout()]);
+    const equips = entity.getComponent(Loadout)!;
+    equips.equipWeapon(
+      new Weapon({
+        id: 'copper_sword',
+        weaponType: WeaponType.SHORTSWORD,
+        set: 'copper',
+      }),
+    );
+    equips.equipArmor(
+      new Armor({
+        id: 'copper_helm',
+        armorSlot: ArmorSlot.HAT,
+        set: 'copper',
+      }),
+    );
+    equips.equipArmor(
+      new Armor({
+        id: 'linen_robe',
+        armorSlot: ArmorSlot.SUIT,
+        set: 'linen',
+      }),
+    );
+    expect(equips.itemSets()).toEqual({ copper: 2, linen: 1 });
   });
 });
 

@@ -13,6 +13,7 @@ export class Armor extends Equip {
     miniIcon?: string;
     description?: string | null;
     buffs?: string[];
+    set?: string | null;
     grade?: EquipGrade;
     stats?: EquipStats;
     armorSlot: ArmorSlot;

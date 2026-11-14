@@ -34,6 +34,8 @@ import { quadStrike } from './data/skills/quadStrike';
 import { SkillSlots } from './skills/skillSlots';
 import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
+import { BuffIcons } from './ui/buffIcons';
+import { Buffs } from './buffs/buffs';
 import { SkillBar } from './ui/skillBar';
 import { StatsScreen } from './ui/statsScreen';
 import { Tooltip } from './ui/tooltip';
@@ -152,6 +154,7 @@ async function startGame(
     new PlayerController(inputSource, defaultAttack),
     new Actor(),
     new Physics(),
+    new Buffs(),
     new InteractTargeter(),
     stats,
     new Team(0),
@@ -193,6 +196,7 @@ async function startGame(
   await spriteRenderer.preload(world);
 
   const hud = await Hud.create(app.stage, app.screen.height);
+  const buffIcons = await BuffIcons.create(app.stage);
   const damageNumbers = new DamageNumberRenderer(app.stage);
   await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
   const camera = new Camera(worldLayer);
@@ -234,6 +238,7 @@ async function startGame(
     spriteRenderer.update(world, dt);
     damageNumbers.update(world);
     hud.update(player);
+    buffIcons.update(player);
     if (touch && joystickOverlay) joystickOverlay.update(touch);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),

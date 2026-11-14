@@ -43,6 +43,7 @@ import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
+import { ConnectionState } from './core/connectionState';
 import { InteractTargeter } from './core/interactTargeter';
 import { loadClientConfig, saveClientConfig } from './core/clientConfig';
 import { LOGICAL_HEIGHT, LOGICAL_WIDTH, computeCanvasStyle } from './core/canvasLayout';
@@ -146,6 +147,7 @@ async function startGame(
     stats,
     new Team(0),
     new Shadow(),
+    new ConnectionState(true),
     new SkillSlots({
       [SkillSlot.ALPHA]: defaultAttack,
       [SkillSlot.BETA]: fireball,

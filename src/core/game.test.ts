@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { Application } from 'pixi.js';
-import { Container } from 'pixi.js';
+import type { Application, Container } from 'pixi.js';
 import { World } from '../ecs';
 import { MapDef } from '../maps/dfsGenerator';
 import { Game } from './game';
@@ -15,7 +14,7 @@ describe('Game', () => {
     let updates = 0;
 
     game.app = {} as Application;
-    game.worldLayer = new Container();
+    game.worldLayer = {} as Container;
     game.world = world;
     state.setUpdate(() => {
       updates += 1;

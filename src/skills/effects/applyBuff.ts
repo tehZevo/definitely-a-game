@@ -1,4 +1,4 @@
-import { SkillEffect } from './skillEffect';
+import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import type { BuffDef } from '../../buffs/buffDef';
 import { Stats } from '../../actor/stats';
@@ -13,8 +13,9 @@ export class ApplyBuff extends SkillEffect {
     public flatTime = 0,
     public powerScaling: (stats: Stats) => number = noScaling,
     public timeScaling: (stats: Stats) => number = noScaling,
+    options: SkillEffectOptions = {},
   ) {
-    super();
+    super(options);
   }
 
   override start(skill: Skill): unknown {
@@ -22,9 +23,10 @@ export class ApplyBuff extends SkillEffect {
     const stats = skill.target.getComponent(Stats);
     const buffs = skill.target.getComponent(Buffs);
     if (!stats || !buffs) return null;
-    const power = this.flatPower + this.powerScaling(stats);
-    const time = this.flatTime + this.timeScaling(stats);
+    const power = (this.flatPower + this.powerScaling(stats)) * skill.multiplier;
+    const time = (this.flatTime + this.timeScaling(stats)) * skill.multiplier;
     buffs.applyBuff(this.buffdef, power, time, skill.user);
+    this.spawnChildren(skill, skill.target);
     return null;
   }
 }

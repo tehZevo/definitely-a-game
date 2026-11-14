@@ -1,12 +1,12 @@
-import { SkillEffect } from './skillEffect';
+import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
 import { DAMAGE_SPREAD } from './damage';
 
 export class Heal extends SkillEffect {
-  constructor(public power = 100) {
-    super();
+  constructor(public power = 100, options: SkillEffectOptions = {}) {
+    super(options);
   }
 
   override start(skill: Skill): unknown {
@@ -14,7 +14,8 @@ export class Heal extends SkillEffect {
     const targetActor = skill.target?.getComponent(Actor);
     if (!userStats || !targetActor) return null;
     const healing = (userStats.physAtt * this.power) / 100;
-    targetActor.heal(healing * DAMAGE_SPREAD);
+    targetActor.heal(healing * DAMAGE_SPREAD * skill.multiplier);
+    this.spawnChildren(skill, skill.target);
     return null;
   }
 }

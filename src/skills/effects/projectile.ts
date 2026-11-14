@@ -1,5 +1,5 @@
-import { SkillEffect } from './skillEffect';
-import { Skill } from '../skill';
+import { SkillEffect, createChildSkill, type SkillEffectOptions } from './skillEffect';
+import type { Skill } from '../skill';
 import type { Entity } from '../../ecs';
 import { Position } from '../../physics/position';
 import { Actor } from '../../actor/actor';
@@ -26,8 +26,9 @@ export class Projectile extends SkillEffect {
     public radius = 1,
     public speed = 4,
     public maxTargets = 1,
+    options: SkillEffectOptions = {},
   ) {
-    super();
+    super(options);
   }
 
   override start(skill: Skill): ProjectileState {
@@ -78,10 +79,7 @@ export class Projectile extends SkillEffect {
     const pos = skill.entity.getComponent(Position);
     if (world && pos) {
       for (const child of this.onEnd) {
-        world.createEntity([
-          new Position(pos.x, pos.y),
-          new Skill(child, skill.user, skill.entity),
-        ]);
+        createChildSkill(world, skill, child);
       }
     }
     s.sprite?.remove();

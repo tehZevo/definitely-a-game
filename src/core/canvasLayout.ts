@@ -9,14 +9,12 @@ export interface CanvasStyle {
 }
 
 export function computeCanvasScale(windowWidth: number, windowHeight: number): number {
-  const scale = Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
-  return scale >= 1 ? Math.floor(scale) : scale;
+  return Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
 }
 
 export function computeCanvasStyle(windowWidth: number, windowHeight: number): CanvasStyle {
-  const scale = computeCanvasScale(windowWidth, windowHeight);
   return {
-    width: `${Math.round(LOGICAL_WIDTH * scale)}px`,
-    height: `${Math.round(LOGICAL_HEIGHT * scale)}px`,
+    width: `${windowWidth}px`,
+    height: `${windowHeight}px`,
   };
 }

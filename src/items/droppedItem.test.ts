@@ -7,7 +7,7 @@ import { Loadout } from './loadout';
 import { Position } from '../physics/position';
 import { Physics } from '../physics/physics';
 import { Weapon } from './weapon';
-import { WeaponSlot, WeaponType } from './slots';
+import { WeaponType } from './slots';
 import { ITEM_PUSH_DISTANCE, ITEM_PUSH_FORCE, TILE_SIZE } from '../constants';
 import { woodenShortsword } from '../data/items/weapons';
 

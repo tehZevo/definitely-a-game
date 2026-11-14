@@ -19,6 +19,7 @@ export const INTERACT_TARGET_DISTANCE = 0.5;
 export const DEFAULT_SKILL_USE_TIME = 0.5;
 export const PLAYER_MOVE_SPEED = 1;
 export const PLAYER_MOVE_SPEED_SCALE = 3;
+export const SHADOW_OFFSET_Y = 2;
 export const ENEMY_MOVE_SPEED = 1 / 4;
 export const ENEMY_MOVE_UPDATE_TIME = 1;
 export const ENEMY_MOVE_DIST_THRESH = 0.5;

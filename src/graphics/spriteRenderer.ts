@@ -93,7 +93,7 @@ export class SpriteRenderer {
         const shadow = new PixiSprite(this.shadowTex);
         shadow.eventMode = 'none';
         shadow.alpha = 0.5;
-        shadow.y = 5;
+        shadow.y = entity.getComponent(Shadow)!.offsetY;
         container.addChild(shadow);
         this.shadowViews.set(entity, shadow);
       }

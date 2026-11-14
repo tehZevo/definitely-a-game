@@ -6,6 +6,8 @@ import { INTERACT_CURSOR_SPRITE, INTERACT_CURSOR_Z_INDEX, InteractCursor } from 
 import { Tooltip } from '../ui/tooltip';
 import { Sprite } from './sprite';
 import { Shadow } from '../actor/shadow';
+import { Invulnerable } from '../actor/invulnerable';
+import { invulnerabilityAlpha } from './invulnerability';
 import { assetUrl } from '../assets';
 import { TILE_SIZE } from '../constants';
 import { ySortZ } from './ySort';
@@ -153,6 +155,7 @@ export class SpriteRenderer {
       }
       view.x = Math.round(pos.x);
       view.y = Math.round(pos.y);
+      view.alpha = invulnerabilityAlpha(entity.getComponent(Invulnerable)?.time ?? 0);
       view.zIndex = entity.getComponent(InteractCursor)
         ? INTERACT_CURSOR_Z_INDEX
         : ySortZ(pos.y, TILE_SIZE);

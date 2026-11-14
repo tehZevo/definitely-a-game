@@ -186,6 +186,7 @@ async function startGame(
 
   const saveProfile = () => {
     game.playerProfile = {
+      name: profile.name,
       face: profile.face,
       baseStats: stats.baseSnapshot(),
       stats: stats.snapshot(),
@@ -232,8 +233,8 @@ async function boot(): Promise<void> {
   const menu = new MainMenuState();
   menu.setOnStart(() => {
     const charCreate = new CharCreateState();
-    charCreate.setOnConfirm((face) => {
-      void startGame(app, game, face);
+    charCreate.setOnConfirm((profile) => {
+      void startGame(app, game, profile);
     });
     game.setState(charCreate);
   });

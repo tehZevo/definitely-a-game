@@ -14,13 +14,20 @@ describe('player profile', () => {
   it('creates a default profile from a face', () => {
     const profile = makePlayerProfile(face);
 
+    expect(profile.name).toBe('Player');
     expect(profile.face).toBe(face);
     expect(profile.baseStats).toBe(DEFAULT_STATS);
     expect(profile.stats).toBe(DEFAULT_STATS);
   });
 
+  it('uses a provided character name', () => {
+    const profile = makePlayerProfile(face, 'Zevo');
+
+    expect(profile.name).toBe('Zevo');
+  });
+
   it('reuses an existing profile when the face matches', () => {
-    const profile = makePlayerProfile(face);
+    const profile = makePlayerProfile(face, 'Zevo');
 
     expect(resolvePlayerProfile(face, profile)).toBe(profile);
   });

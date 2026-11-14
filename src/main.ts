@@ -59,7 +59,12 @@ import { GameMaster } from './core/gameMaster';
 import { ConnectionState } from './core/connectionState';
 import { InteractTargeter } from './core/interactTargeter';
 import { loadClientConfig, saveClientConfig } from './core/clientConfig';
-import { CANVAS_RESOLUTION, LOGICAL_HEIGHT, LOGICAL_WIDTH, computeCanvasScale } from './core/canvasLayout';
+import {
+  CANVAS_RESOLUTION,
+  LOGICAL_HEIGHT,
+  LOGICAL_WIDTH,
+  computeCanvasStyle,
+} from './core/canvasLayout';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -293,9 +298,11 @@ async function boot(): Promise<void> {
   canvas.style.outline = 'none';
   canvas.focus();
   const applyCanvasSize = () => {
-    const scale = computeCanvasScale(window.innerWidth, window.innerHeight);
-    canvas.style.width = `${LOGICAL_WIDTH * scale}px`;
-    canvas.style.height = `${LOGICAL_HEIGHT * scale}px`;
+    const style = computeCanvasStyle(window.innerWidth, window.innerHeight);
+    app.renderer.resolution = style.scale;
+    app.renderer.resize(LOGICAL_WIDTH, LOGICAL_HEIGHT);
+    canvas.style.width = style.width;
+    canvas.style.height = style.height;
   };
   applyCanvasSize();
   window.addEventListener('resize', applyCanvasSize);

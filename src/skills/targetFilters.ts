@@ -3,6 +3,8 @@ import type { Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
+import { TilePhysics } from '../tiles/tilePhysics';
+import { hasLineOfSight } from '../tiles/lineOfSight';
 import { TargetType } from './targetType';
 
 export type Filter = (skill: Skill) => (actor: Entity) => boolean;
@@ -29,6 +31,17 @@ export function teamFilter(targetType: TargetType): Filter {
 export function ignoreEntitiesFilter(entities: Entity[]): Filter {
   const set = new Set(entities);
   return (_skill) => (actor) => !set.has(actor);
+}
+
+export function lineOfSightFilter(): Filter {
+  return (skill) => (actor) => {
+    const from = skill.entity.getComponent(Position);
+    const to = actor.getComponent(Position);
+    if (!from || !to) return false;
+    const physics = skill.entity.world?.findComponent(TilePhysics);
+    if (!physics) return true;
+    return hasLineOfSight(physics, from.x, from.y, to.x, to.y);
+  };
 }
 
 export function angleDistanceDeg(a: number, b: number): number {

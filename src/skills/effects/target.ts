@@ -2,6 +2,7 @@ import { SkillEffect, createChildSkill } from './skillEffect';
 import type { Skill } from '../../actor/skill';
 import type { Entity } from '../../ecs';
 import type { Filter } from '../targetFilters';
+import { lineOfSightFilter } from '../targetFilters';
 import { Actor } from '../../actor/actor';
 import { Position } from '../../physics/position';
 
@@ -69,6 +70,7 @@ export class Target extends SkillEffect {
   filters: Filter[];
   maxTargets: number | null;
   order: TargetOrder;
+  requiresLos: boolean;
 
   constructor(
     filters: Filter | Filter[] = [],
@@ -76,11 +78,14 @@ export class Target extends SkillEffect {
     children: SkillEffect | SkillEffect[] = [],
     multiplier = 1,
     order: TargetOrder = TargetOrder.NEAREST,
+    requiresLos = false,
   ) {
     super({ children, multiplier });
-    this.filters = Array.isArray(filters) ? filters : [filters];
+    const baseFilters = Array.isArray(filters) ? filters : [filters];
+    this.filters = requiresLos ? [...baseFilters, lineOfSightFilter()] : baseFilters;
     this.maxTargets = maxTargets;
     this.order = order;
+    this.requiresLos = requiresLos;
   }
 
   override start(skill: Skill): unknown {

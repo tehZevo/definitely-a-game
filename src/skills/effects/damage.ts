@@ -2,6 +2,10 @@ import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../../actor/skill';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
+import { Physics } from '../../physics/physics';
+import { Position } from '../../physics/position';
+import { Vector2 } from '../../utils/vector';
+import { KNOCKBACK_FORCE } from '../../constants';
 
 export const DAMAGE_SPREAD = 0.5;
 
@@ -28,10 +32,11 @@ export class Damage extends SkillEffect {
   }
 
   override start(skill: Skill): unknown {
+    const target = skill.target;
     const userStats = skill.user.getComponent(Stats);
-    const targetStats = skill.target?.getComponent(Stats);
-    const targetActor = skill.target?.getComponent(Actor);
-    if (!userStats || !targetStats || !targetActor) {
+    const targetStats = target?.getComponent(Stats);
+    const targetActor = target?.getComponent(Actor);
+    if (!target || !userStats || !targetStats || !targetActor) {
       skill.success = false;
       return null;
     }
@@ -41,7 +46,19 @@ export class Damage extends SkillEffect {
       return [damage * skill.multiplier, isCrit] as [number, boolean];
     });
     targetActor.damageHits(hits);
-    this.spawnChildren(skill, skill.target);
+    const totalDamage = hits.reduce((sum, [damage]) => sum + damage, 0);
+    if (totalDamage > targetStats.maxHp * 0.1) {
+      const targetPhysics = target.getComponent(Physics);
+      const userPos = skill.user.getComponent(Position);
+      const targetPos = target.getComponent(Position);
+      if (targetPhysics && userPos && targetPos) {
+        const dir = new Vector2(targetPos.x - userPos.x, targetPos.y - userPos.y);
+        if (dir.length() > 0) {
+          targetPhysics.applyForce(dir.normalize().scale(KNOCKBACK_FORCE));
+        }
+      }
+    }
+    this.spawnChildren(skill, target);
     return null;
   }
 }

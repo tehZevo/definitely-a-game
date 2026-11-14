@@ -2,6 +2,7 @@ import type { FaceConfig } from '../graphics/characterCreator';
 import type { StatsData } from '../actor/stats';
 import type { LoadoutData } from '../items/loadout';
 import { Loadout } from '../items/loadout';
+import { cottonRobe } from '../data/items/armor';
 
 export interface PlayerProfile {
   name: string;
@@ -23,7 +24,13 @@ export const DEFAULT_STATS: StatsData = {
   magDef: 0,
 };
 
-export const DEFAULT_LOADOUT: LoadoutData = new Loadout().save();
+export function defaultLoadout(): Loadout {
+  const loadout = new Loadout();
+  loadout.equipArmor(cottonRobe);
+  return loadout;
+}
+
+export const DEFAULT_LOADOUT: LoadoutData = defaultLoadout().save();
 
 export function makePlayerProfile(
   face: FaceConfig,

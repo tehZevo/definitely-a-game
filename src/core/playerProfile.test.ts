@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_STATS, makePlayerProfile, resolvePlayerProfile } from './playerProfile';
+import { DEFAULT_LOADOUT, DEFAULT_STATS, makePlayerProfile, resolvePlayerProfile } from './playerProfile';
+import { Loadout } from '../items/loadout';
+import { ArmorSlot } from '../items/slots';
 import type { FaceConfig } from '../graphics/characterCreator';
 
 const face: FaceConfig = {
@@ -18,6 +20,13 @@ describe('player profile', () => {
     expect(profile.face).toBe(face);
     expect(profile.baseStats).toBe(DEFAULT_STATS);
     expect(profile.stats).toBe(DEFAULT_STATS);
+  });
+
+  it('starts with a cotton robe equipped', () => {
+    const loadout = new Loadout();
+    loadout.load(DEFAULT_LOADOUT);
+
+    expect(loadout.getArmor(ArmorSlot.BODY)?.id).toBe('cotton_robe');
   });
 
   it('uses a provided character name', () => {

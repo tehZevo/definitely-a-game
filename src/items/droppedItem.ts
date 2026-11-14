@@ -3,7 +3,7 @@ import type { Entity } from '../ecs';
 import type { ItemDef } from '../items/itemDef';
 import type { Weapon } from './weapon';
 import type { Armor } from './armor';
-import { Equips } from './equips';
+import { Loadout } from './loadout';
 import { ItemDropper } from './itemDropper';
 import { Position } from '../physics/position';
 import { Sprite } from '../graphics/sprite';
@@ -36,7 +36,7 @@ export class DroppedItem extends Interactable {
   }
 
   override interact(entity: Entity): void {
-    const equips = entity.getComponent(Equips);
+    const equips = entity.getComponent(Loadout);
     const dropper = entity.getComponent(ItemDropper);
     const pos = entity.getComponent(Position);
     if (!equips || !dropper || !pos) return;

@@ -8,7 +8,7 @@ import { Actor } from '../actor/actor';
 import { Team } from '../actor/team';
 import { Shadow } from '../actor/shadow';
 import { Physics } from '../physics/physics';
-import { Equips } from '../items/equips';
+import { Loadout } from '../items/loadout';
 import { ItemDropper } from '../items/itemDropper';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot } from '../skills/skillSlot';
@@ -34,7 +34,7 @@ export function spawnMob(
     new Shadow(),
   ];
 
-  const equips = new Equips();
+  const equips = new Loadout();
   for (const drop of def.drops) {
     if (drop instanceof Weapon) {
       equips.equipWeapon(drop);

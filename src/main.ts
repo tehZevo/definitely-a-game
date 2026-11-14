@@ -23,7 +23,7 @@ import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { Shadow } from './actor/shadow';
 import { Physics } from './physics/physics';
-import { Equips } from './items/equips';
+import { Loadout } from './items/loadout';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
 import { magicBolt } from './data/skills/magicBolt';
@@ -123,7 +123,7 @@ async function startGame(
     ? new CombinedInput(keyboard, touch)
     : keyboard;
   const facePaths = getFaceImagePaths(profile.face);
-  const equips = new Equips();
+  const equips = new Loadout();
   equips.load(profile.equips);
   const stats = new Stats(
     profile.baseStats.hp,

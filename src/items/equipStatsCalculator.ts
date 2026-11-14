@@ -1,7 +1,7 @@
 import type { StatsData } from '../actor/stats';
 import type { Equip, EquipStats } from './equip';
 import { EquipGrade } from './equipGrade';
-import type { Equips } from './equips';
+import type { Loadout } from './loadout';
 import { ArmorSlot } from './slots';
 import { Weapon } from './weapon';
 import { Armor } from './armor';
@@ -63,7 +63,7 @@ export function scaledEquipStats(equip: Equip): Required<EquipStats> {
   return scaleEquipStats(equip.stats, partMultiplierForEquip(equip) * gradeMultiplier(equip.grade));
 }
 
-export function sumScaledEquipStats(equips: Equips): Required<EquipStats> {
+export function sumScaledEquipStats(equips: Loadout): Required<EquipStats> {
   const total: Required<EquipStats> = { hp: 0, mp: 0, physAtt: 0, physDef: 0, magAtt: 0, magDef: 0 };
   const all: Equip[] = [];
 
@@ -87,7 +87,7 @@ export function sumScaledEquipStats(equips: Equips): Required<EquipStats> {
   return total;
 }
 
-export function calculateStatsFromEquips(base: StatsData, equips: Equips): StatsData {
+export function calculateStatsFromLoadout(base: StatsData, equips: Loadout): StatsData {
   const equipStats = sumScaledEquipStats(equips);
   const maxHp = base.maxHp + equipStats.hp;
   const maxMp = base.maxMp + equipStats.mp;

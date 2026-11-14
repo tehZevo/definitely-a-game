@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
-import { Equips } from '../items/equips';
+import { Loadout } from '../items/loadout';
 import { WeaponSlot, ArmorSlot, WeaponType, weaponHandedness, Handedness, SWINGABLE_PRIMARIES } from '../items/slots';
 import { Rarity, rarityColor, rarityDropRate } from '../items/rarity';
 import { EquipGrade, equipGradeIcon } from '../items/equipGrade';
@@ -60,11 +60,11 @@ describe('Weapon', () => {
   });
 });
 
-describe('Equips component', () => {
+describe('Loadout component', () => {
   it('equip and unequip weapon', () => {
     const world = new World();
-    const entity = world.createEntity([new Position(0, 0), new Equips()]);
-    const equips = entity.getComponent(Equips)!;
+    const entity = world.createEntity([new Position(0, 0), new Loadout()]);
+    const equips = entity.getComponent(Loadout)!;
     equips.equipWeapon(woodenShortsword);
     expect(equips.getWeapon(WeaponSlot.PRIMARY)).toBe(woodenShortsword);
     equips.unequipWeapon(WeaponSlot.PRIMARY);
@@ -73,8 +73,8 @@ describe('Equips component', () => {
 
   it('equip and unequip armor', () => {
     const world = new World();
-    const entity = world.createEntity([new Position(0, 0), new Equips()]);
-    const equips = entity.getComponent(Equips)!;
+    const entity = world.createEntity([new Position(0, 0), new Loadout()]);
+    const equips = entity.getComponent(Loadout)!;
     equips.equipArmor(cottonHat);
     expect(equips.getArmor(ArmorSlot.HAT)).toBe(cottonHat);
     equips.unequipArmor(ArmorSlot.HAT);
@@ -83,8 +83,8 @@ describe('Equips component', () => {
 
   it('replaces existing equipment in same slot', () => {
     const world = new World();
-    const entity = world.createEntity([new Position(0, 0), new Equips()]);
-    const equips = entity.getComponent(Equips)!;
+    const entity = world.createEntity([new Position(0, 0), new Loadout()]);
+    const equips = entity.getComponent(Loadout)!;
     equips.equipWeapon(woodenShortsword);
     equips.equipWeapon(copperLongsword);
     expect(equips.getWeapon(WeaponSlot.PRIMARY)).toBe(copperLongsword);

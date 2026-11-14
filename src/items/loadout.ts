@@ -3,12 +3,12 @@ import { WeaponSlot, ArmorSlot } from '../items/slots';
 import type { Weapon } from '../items/weapon';
 import type { Armor } from '../items/armor';
 
-export interface EquipsData {
+export interface LoadoutData {
   weapons: Partial<Record<WeaponSlot, Weapon>>;
   armor: Partial<Record<ArmorSlot, Armor>>;
 }
 
-export class Equips extends Component {
+export class Loadout extends Component {
   weapons: Partial<Record<WeaponSlot, Weapon>> = {};
   armor: Partial<Record<ArmorSlot, Armor>> = {};
 
@@ -40,14 +40,14 @@ export class Equips extends Component {
     return this.armor[slot];
   }
 
-  save(): EquipsData {
+  save(): LoadoutData {
     return {
       weapons: { ...this.weapons },
       armor: { ...this.armor },
     };
   }
 
-  load(data: EquipsData): void {
+  load(data: LoadoutData): void {
     this.weapons = { ...data.weapons };
     this.armor = { ...data.armor };
   }

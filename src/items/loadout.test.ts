@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { woodenShortsword } from '../data/items/weapons';
 import { cottonRobe } from '../data/items/armor';
-import { Equips } from './equips';
+import { Loadout } from './loadout';
 import { WeaponSlot, ArmorSlot } from './slots';
 
-describe('Equips', () => {
+describe('Loadout', () => {
   it('saves and loads equipped items', () => {
-    const source = new Equips();
+    const source = new Loadout();
     source.equipWeapon(woodenShortsword);
     source.equipArmor(cottonRobe);
 
-    const target = new Equips();
+    const target = new Loadout();
     target.load(source.save());
 
     expect(target.getWeapon(WeaponSlot.PRIMARY)).toBe(woodenShortsword);

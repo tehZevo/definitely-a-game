@@ -8,7 +8,7 @@ import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../consta
 import { Actor } from './actor';
 import { Stats } from './stats';
 import { Sprite } from '../graphics/sprite';
-import { Equips } from '../items/equips';
+import { Loadout } from '../items/loadout';
 import { Skill } from '../actor/skill';
 import { SkillSlot, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
@@ -80,7 +80,7 @@ describe('PlayerController', () => {
 
   it('uses the equipped weapon speed for attack cooldowns', () => {
     const world = new World();
-    const equips = new Equips();
+    const equips = new Loadout();
     equips.equipWeapon(woodenLongsword);
     const controller = new PlayerController(new FakeInput(0, 0, true), defaultAttack);
     world.createEntity([new Position(0, 0), controller, new Actor(), new Physics(), new Stats(100, 100, 100, 100), equips]);

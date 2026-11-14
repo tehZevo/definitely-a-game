@@ -2,7 +2,7 @@ import { Assets, Container, Sprite as PixiSprite, Texture } from 'pixi.js';
 import { assetUrl } from '../assets';
 import { SkillDef } from '../skills/skillDef';
 import { SkillSlots } from '../skills/skillSlots';
-import { SkillSlot, SKILL_SLOTS, SKILL_SLOT_KEYS } from '../skills/skillSlot';
+import { SkillSlot, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import { skillRankIcon } from '../skills/skillRank';
 import { Tooltip } from './tooltip';
 
@@ -38,7 +38,7 @@ export class SkillBar {
     const bar = new SkillBar(slots, screenH);
     bar.slotBg = await Assets.load<Texture>(assetUrl('assets/ui/slot_bg.png'));
     bar.tooltip = new Tooltip(stage);
-    const defs: [SkillSlot, SkillDef | null][] = SKILL_SLOTS.map((s) => [
+    const defs: [SkillSlot, SkillDef | null][] = bar.slots.visibleSlots().map((s) => [
       s,
       bar.slots.get(s),
     ]);

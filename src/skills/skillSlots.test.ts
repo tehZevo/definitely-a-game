@@ -31,4 +31,15 @@ describe('SkillSlots', () => {
     slots.set(SkillSlot.BETA, null);
     expect(slots.get(SkillSlot.BETA)).toBeNull();
   });
+
+  it('shows only slots up to the highest assigned slot', () => {
+    const slots = new SkillSlots({ [SkillSlot.BETA]: def });
+
+    expect(slots.highestSlot()).toBe(SkillSlot.BETA);
+    expect(slots.visibleSlots()).toEqual([SkillSlot.ALPHA, SkillSlot.BETA]);
+  });
+
+  it('shows no slots when empty', () => {
+    expect(new SkillSlots().visibleSlots()).toEqual([]);
+  });
 });

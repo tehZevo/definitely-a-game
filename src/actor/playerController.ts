@@ -55,7 +55,10 @@ export class PlayerController extends Component {
     this.attackTimer = Math.max(0, this.attackTimer - dt);
     if (this.attackTimer === 0) {
       const skill = this.getPressedSkill();
-      if (skill) {
+      if (skill && (!actor || !actor.isOnCooldown(skill.id))) {
+        if (actor && skill.cooldown !== null) {
+          actor.setCooldown(skill.id, skill.cooldown);
+        }
         if (actor) {
           actor.act(new UseSkill(skill));
         } else if (this.entity.world) {

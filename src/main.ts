@@ -32,6 +32,7 @@ import { SkillSlots } from './skills/skillSlots';
 import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
 import { SkillBar } from './ui/skillBar';
+import { Tooltip } from './ui/tooltip';
 import { DamageNumberRenderer } from './ui/damageNumberRenderer';
 import { JoystickOverlay } from './ui/joystickOverlay';
 import { Stairs } from './tiles/stairs';
@@ -171,7 +172,8 @@ async function startGame(
     new Chest([woodenShortsword, cottonRobe]),
   ]);
 
-  const spriteRenderer = new SpriteRenderer(worldLayer);
+  const tooltip = new Tooltip(app.stage);
+  const spriteRenderer = new SpriteRenderer(worldLayer, tooltip);
   await spriteRenderer.preload(world);
 
   const hud = new Hud(app.stage);
@@ -221,7 +223,7 @@ async function boot(): Promise<void> {
   const game = new Game();
   game.app = app;
   game.worldLayer = new Container();
-  game.worldLayer.eventMode = 'none';
+  game.worldLayer.eventMode = 'dynamic';
   game.worldLayer.sortableChildren = true;
   app.stage.addChild(game.worldLayer);
 

@@ -11,6 +11,7 @@ export class Armor extends Equip {
     rarity?: Rarity;
     icon?: string;
     miniIcon?: string;
+    description?: string | null;
     grade?: EquipGrade;
     stats?: EquipStats;
     armorSlot: ArmorSlot;

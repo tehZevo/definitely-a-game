@@ -9,6 +9,7 @@ export class Stairs extends Interactable {
 
   constructor(public mapdef: MapDef | string) {
     super();
+    this.description = 'Stairs to another area.';
   }
 
   override start(): void {

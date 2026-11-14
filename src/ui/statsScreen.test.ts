@@ -5,7 +5,7 @@ import { Position } from '../physics/position';
 import { Stats } from '../actor/stats';
 import { Loadout } from '../items/loadout';
 import { UIManager } from './uiManager';
-import { StatsScreen, statsScreenLines } from './statsScreen';
+import { StatsScreen, statsScreenColumns, statsScreenLines } from './statsScreen';
 
 describe('StatsScreen', () => {
   it('renders the calculated secondary stats', () => {
@@ -42,5 +42,20 @@ describe('StatsScreen', () => {
     screen.handleKeys(new Set(['Enter']));
 
     expect(uiManager.focusStack).toEqual([]);
+  });
+});
+
+describe('statsScreenColumns', () => {
+  it('includes equip and primary columns alongside secondary', () => {
+    const world = new World();
+    const stats = new Stats(75, 100, 25, 50, 110, 8, 5, 100, 0);
+    stats.recalculate(new Loadout());
+    const player = world.createEntity([new Position(0, 0), stats]);
+
+    const columns = statsScreenColumns(player);
+
+    expect(columns.left.slice(0, 5)).toEqual(['Equip:', 'PATT: 1', 'MATT: 1', 'PDEF: 1', 'MDEF: 1']);
+    expect(columns.left.slice(6)).toEqual(['Primary:', 'STR: 10', 'VIT: 10', 'DEX: 10', 'AGI: 10', 'INT: 10', 'WIS: 10']);
+    expect(columns.right[0]).toBe('Secondary:');
   });
 });

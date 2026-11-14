@@ -1,4 +1,6 @@
 import { Component } from '../ecs';
+import { calculateStatsFromEquips } from '../items/equipStatsCalculator';
+import type { Equips } from '../items/equips';
 
 export interface StatsData {
   hp: number;
@@ -15,6 +17,7 @@ export interface StatsData {
 export class Stats extends Component {
   moveSpeed = 120;
   moveSpeedMultiplier = 1;
+  base: StatsData;
 
   constructor(
     public hp: number,
@@ -28,6 +31,7 @@ export class Stats extends Component {
     public magDef = 0,
   ) {
     super();
+    this.base = this.snapshot();
   }
 
   addHp(amount: number): void {
@@ -52,6 +56,10 @@ export class Stats extends Component {
     };
   }
 
+  baseSnapshot(): StatsData {
+    return { ...this.base };
+  }
+
   load(data: StatsData): void {
     this.hp = data.hp;
     this.maxHp = data.maxHp;
@@ -62,5 +70,19 @@ export class Stats extends Component {
     this.critical = data.critical;
     this.magAtt = data.magAtt;
     this.magDef = data.magDef;
+  }
+
+  setBase(base: StatsData, equips: Equips): void {
+    this.base = { ...base };
+    this.recalculate(equips);
+  }
+
+  recalculate(equips: Equips): void {
+    const calculated = calculateStatsFromEquips(this.base, equips);
+    const hp = this.hp;
+    const mp = this.mp;
+    this.load(calculated);
+    this.hp = Math.max(0, Math.min(this.maxHp, hp));
+    this.mp = Math.max(0, Math.min(this.maxMp, mp));
   }
 }

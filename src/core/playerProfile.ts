@@ -5,6 +5,7 @@ import { Equips } from '../items/equips';
 
 export interface PlayerProfile {
   face: FaceConfig;
+  baseStats: StatsData;
   stats: StatsData;
   equips: EquipsData;
 }
@@ -27,12 +28,13 @@ export function makePlayerProfile(
   face: FaceConfig,
   stats: StatsData = DEFAULT_STATS,
   equips: EquipsData = DEFAULT_EQUIPS,
+  baseStats: StatsData = DEFAULT_STATS,
 ): PlayerProfile {
-  return { face, stats, equips };
+  return { face, baseStats, stats, equips };
 }
 
 export function isPlayerProfile(value: PlayerProfile | FaceConfig): value is PlayerProfile {
-  return 'stats' in value && 'equips' in value;
+  return 'baseStats' in value && 'stats' in value && 'equips' in value;
 }
 
 export function resolvePlayerProfile(

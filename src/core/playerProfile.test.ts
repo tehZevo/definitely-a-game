@@ -15,6 +15,7 @@ describe('player profile', () => {
     const profile = makePlayerProfile(face);
 
     expect(profile.face).toBe(face);
+    expect(profile.baseStats).toBe(DEFAULT_STATS);
     expect(profile.stats).toBe(DEFAULT_STATS);
   });
 

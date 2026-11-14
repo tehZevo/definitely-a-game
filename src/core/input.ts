@@ -8,6 +8,10 @@ export interface InputSource {
   isPressed(code: string): boolean;
 }
 
+export function normalizeKeyCode(code: string): string {
+  return code === 'NumpadEnter' ? 'Enter' : code;
+}
+
 const KEY_MAP: Record<string, Axis> = {
   ArrowLeft: { x: -1, y: 0 },
   KeyA: { x: -1, y: 0 },
@@ -43,7 +47,11 @@ export class KeyboardInput implements InputSource {
   }
 
   isPressed(code: string): boolean {
-    return this.keys.has(code);
+    const wanted = normalizeKeyCode(code);
+    for (const key of this.keys) {
+      if (normalizeKeyCode(key) === wanted) return true;
+    }
+    return false;
   }
 }
 

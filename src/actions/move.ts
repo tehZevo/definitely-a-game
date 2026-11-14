@@ -37,7 +37,7 @@ export class Move extends Action {
         this.dir.x < -0.5 ? new Vector2(-1, 0) : null;
       if (lookDir) actor.lookDir = lookDir;
       actor.moveDir = this.dir;
-      const force = this.dir.scale(stats.moveSpeed * stats.moveSpeedMultiplier);
+      const force = this.dir.scale(stats.moveSpeed);
       phys.applyForce(force);
       if (sprite) {
         const animName = actor.lookDir.y > 0 ? 'walk_down' : actor.lookDir.y < 0 ? 'walk_up' : 'walk_right';

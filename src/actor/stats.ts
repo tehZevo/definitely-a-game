@@ -16,7 +16,6 @@ export interface StatsData {
 
 export class Stats extends Component {
   moveSpeed = 120;
-  moveSpeedMultiplier = 1;
   base: StatsData;
 
   constructor(

@@ -33,6 +33,7 @@ import { fireball } from './data/skills/fireball';
 import { magicBolt } from './data/skills/magicBolt';
 import { quadStrike } from './data/skills/quadStrike';
 import { SkillSlots } from './skills/skillSlots';
+import { SkillSlotLoader } from './skills/skillSlotLoader';
 import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
 import { BuffIcons } from './ui/buffIcons';
@@ -170,6 +171,7 @@ async function startGame(
       [SkillSlot.GAMMA]: quadStrike,
       [SkillSlot.DELTA]: magicBolt,
     }),
+    new SkillSlotLoader(),
     equips,
     createPlayerSprite(facePaths),
   ]);
@@ -201,7 +203,7 @@ async function startGame(
   const hud = await Hud.create(app.stage, app.screen.height);
   const buffIcons = await BuffIcons.create(app.stage);
   const damageNumbers = new DamageNumberRenderer(app.stage);
-  await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
+  const skillBar = await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
   const camera = new Camera(worldLayer);
   const joystickOverlay = touch ? new JoystickOverlay(app.stage) : null;
 
@@ -242,6 +244,7 @@ async function startGame(
     damageNumbers.update(world);
     hud.update(player);
     buffIcons.update(player);
+    skillBar.update();
     if (touch && joystickOverlay) joystickOverlay.update(touch);
     camera.follow(
       new Vector2(Math.round(pos.x), Math.round(pos.y)),

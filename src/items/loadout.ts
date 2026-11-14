@@ -1,4 +1,5 @@
 import { Component } from '../ecs';
+import { LoadoutListener } from '../actor/loadoutListener';
 import { WeaponSlot, ArmorSlot } from '../items/slots';
 import { SkillSlot } from '../skills/skillSlot';
 import type { Weapon } from '../items/weapon';
@@ -18,6 +19,7 @@ export class Loadout extends Component {
 
   equipWeapon(weapon: Weapon): void {
     this.weapons[weapon.slot] = weapon;
+    this.alertListeners();
   }
 
   unequipWeapon(slot: WeaponSlot): Weapon | undefined {
@@ -28,6 +30,7 @@ export class Loadout extends Component {
 
   equipArmor(armor: Armor): void {
     this.armor[armor.armorSlot] = armor;
+    this.alertListeners();
   }
 
   unequipArmor(slot: ArmorSlot): Armor | undefined {
@@ -38,6 +41,7 @@ export class Loadout extends Component {
 
   equipSkill(item: SkillItem): void {
     this.skills[item.slot] = item;
+    this.alertListeners();
   }
 
   unequipSkill(slot: SkillSlot): SkillItem | undefined {
@@ -80,6 +84,13 @@ export class Loadout extends Component {
     return counts;
   }
 
+  alertListeners(): void {
+    if (!this.entity) return;
+    for (const listener of this.entity.find(LoadoutListener)) {
+      listener.onLoadoutChanged(this);
+    }
+  }
+
   private equippedItems() {
     return [
       ...Object.values(this.weapons),
@@ -100,5 +111,6 @@ export class Loadout extends Component {
     this.weapons = { ...data.weapons };
     this.armor = { ...data.armor };
     this.skills = { ...(data.skills ?? {}) };
+    this.alertListeners();
   }
 }

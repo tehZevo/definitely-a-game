@@ -22,6 +22,7 @@ import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { Shadow } from './actor/shadow';
+import { SafeArea } from './actor/safeArea';
 import { Physics } from './physics/physics';
 import { Loadout } from './items/loadout';
 import { defaultAttack } from './data/skills/defaultAttack';
@@ -147,6 +148,7 @@ async function startGame(
     stats,
     new Team(0),
     new Shadow(),
+    new SafeArea(),
     new ConnectionState(true),
     new SkillSlots({
       [SkillSlot.ALPHA]: defaultAttack,

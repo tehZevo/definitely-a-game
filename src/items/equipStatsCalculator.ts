@@ -1,14 +1,11 @@
+import { Stats } from '../stats/stats';
 import type { StatsData } from '../actor/stats';
-import type { Equip, EquipStats } from './equip';
+import type { Equip } from './equip';
 import { EquipGrade } from './equipGrade';
 import type { Loadout } from './loadout';
 import { ArmorSlot } from './slots';
 import { Weapon } from './weapon';
 import { Armor } from './armor';
-
-function int(value: number): number {
-  return Math.floor(value);
-}
 
 export function partMultiplierForEquip(equip: Equip): number {
   if (equip instanceof Weapon) return 0.2;
@@ -48,23 +45,45 @@ export function gradeMultiplier(grade: EquipGrade): number {
   }
 }
 
-export function scaleEquipStats(stats: EquipStats, multiplier: number): Required<EquipStats> {
+export function scaledEquipStats(equip: Equip): Required<import('./equip').EquipStats> {
+  const multiplier = partMultiplierForEquip(equip) * gradeMultiplier(equip.grade);
   return {
-    hp: int(stats.hp * multiplier),
-    mp: int(stats.mp * multiplier),
-    physAtt: int(stats.physAtt * multiplier),
-    physDef: int(stats.physDef * multiplier),
-    magAtt: int((stats.magAtt ?? 0) * multiplier),
-    magDef: int((stats.magDef ?? 0) * multiplier),
+    hp: Math.floor(equip.stats.hp * multiplier),
+    mp: Math.floor(equip.stats.mp * multiplier),
+    physAtt: Math.floor(equip.stats.physAtt * multiplier),
+    physDef: Math.floor(equip.stats.physDef * multiplier),
+    magAtt: Math.floor((equip.stats.magAtt ?? 0) * multiplier),
+    magDef: Math.floor((equip.stats.magDef ?? 0) * multiplier),
   };
 }
 
-export function scaledEquipStats(equip: Equip): Required<EquipStats> {
-  return scaleEquipStats(equip.stats, partMultiplierForEquip(equip) * gradeMultiplier(equip.grade));
+export function scaledArchetypeStats(equip: Equip): Stats {
+  const multiplier = partMultiplierForEquip(equip) * gradeMultiplier(equip.grade);
+  const primary = equip.primaryArchetype.multiply(multiplier);
+  const equipStats = equip.equipArchetype.multiply(multiplier);
+  return new Stats(equipStats, primary);
 }
 
-export function sumScaledEquipStats(equips: Loadout): Required<EquipStats> {
-  const total: Required<EquipStats> = { hp: 0, mp: 0, physAtt: 0, physDef: 0, magAtt: 0, magDef: 0 };
+export function sumScaledArchetypeStats(equips: Loadout): Stats {
+  let total = new Stats();
+  const all: Equip[] = [];
+
+  for (const weapon of Object.values(equips.weapons)) {
+    if (weapon) all.push(weapon);
+  }
+  for (const armor of Object.values(equips.armor)) {
+    if (armor) all.push(armor);
+  }
+
+  for (const equip of all) {
+    total = total.add(scaledArchetypeStats(equip));
+  }
+
+  return total;
+}
+
+export function sumScaledEquipStats(equips: Loadout): Required<import('./equip').EquipStats> {
+  const total: Required<import('./equip').EquipStats> = { hp: 0, mp: 0, physAtt: 0, physDef: 0, magAtt: 0, magDef: 0 };
   const all: Equip[] = [];
 
   for (const weapon of Object.values(equips.weapons)) {

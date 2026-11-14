@@ -22,5 +22,6 @@
 
 ## Build approach
 - Build iteratively: one focused change per PR.
+- Port feature by feature, not file by file. Each PR should deliver a coherent feature (e.g. "stat scaling from equipped gear"), not a single ported file. Do not open PRs that port a single file unless it is utility groundwork that multiple features depend on.
 - First PR: scaffold (Vite + TS + PixiJS + Vitest) + GitHub Actions (test + deploy to Pages).
 - Then port systems in order: ECS core -> renderer -> input/movement -> actors/stats -> skills/items -> world gen -> UI.

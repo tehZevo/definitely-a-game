@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { Stats } from './stats';
 import { Loadout } from '../items/loadout';
 import { woodenShortsword } from '../data/items/weapons';
+import { PrimaryStats } from '../stats/primaryStats';
+import { EquipStats } from '../stats/equipStats';
 
 describe('Stats', () => {
   it('stores initial values', () => {
@@ -54,15 +56,15 @@ describe('Stats', () => {
   });
 
   it('recalculates stats from equipped items', () => {
-    const stats = new Stats(75, 100, 25, 50, 100, 0, 0, 100, 0);
+    const stats = new Stats(75, 100, 25, 50, 100, 0, 0, 100, 0, new PrimaryStats(7, 7, 7, 7, 7, 7), new EquipStats(1, 1, 1, 1));
     const equips = new Loadout();
     equips.equipWeapon(woodenShortsword);
 
     stats.recalculate(equips);
 
-    expect(stats.maxHp).toBe(100);
-    expect(stats.maxMp).toBe(50);
-    expect(stats.physAtt).toBe(110);
+    expect(stats.maxHp).toBe(99); // 50 base + 7^2
+    expect(stats.maxMp).toBe(79); // 30 base + 7^2
+    expect(stats.physAtt).toBe(21); // 1 * (7*2 + 7*1)
     expect(stats.hp).toBe(75);
     expect(stats.mp).toBe(25);
   });

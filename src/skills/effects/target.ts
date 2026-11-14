@@ -94,3 +94,9 @@ export class Target extends SkillEffect {
     return targets;
   }
 }
+
+export class SelfTarget extends Target {
+  constructor(children: SkillEffect | SkillEffect[] = [], multiplier = 1) {
+    super([(skill) => (actor) => actor === skill.user], 1, children, multiplier);
+  }
+}

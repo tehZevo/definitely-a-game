@@ -1,4 +1,5 @@
-import { Container, Text } from 'pixi.js';
+import { Container } from 'pixi.js';
+import { BitmapText } from './bitmapText';
 import type { Entity } from '../ecs';
 import { Stats } from '../actor/stats';
 import { DEFAULT_KEY_MAP } from '../core/keyMap';
@@ -27,18 +28,14 @@ export function statsScreenLines(player: Entity): string[] {
 
 export class StatsScreen extends Screen {
   container = new Container();
-  text: Text;
+  text: BitmapText;
 
   constructor(player: Entity, uiManager: UIManager) {
     super();
     this.uiManager = uiManager;
-    this.text = new Text({
+    this.text = new BitmapText({
       text: statsScreenLines(player).join('\n'),
-      style: {
-        fontFamily: 'monospace',
-        fontSize: 10,
-        fill: 0xffffff,
-      },
+      style: { fontSize: 8, fill: 0xffffff },
     });
     this.container.addChild(this.text);
     this.container.x = 32;

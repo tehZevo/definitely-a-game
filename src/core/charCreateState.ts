@@ -1,7 +1,8 @@
 import { GameState } from './gameState';
 import type { World } from '../ecs';
 import type { Application, Container } from 'pixi.js';
-import { Container as PixiContainer, Text } from 'pixi.js';
+import { Container as PixiContainer } from 'pixi.js';
+import { BitmapText } from '../ui/bitmapText';
 import {
   GENDERS,
   SKIN_TONES,
@@ -24,7 +25,7 @@ export class CharCreateState extends GameState {
   };
   private name = 'Player';
   private onConfirm: ((profile: PlayerProfile) => void) | null = null;
-  private label: Text | null = null;
+  private label: BitmapText | null = null;
 
   setOnConfirm(cb: (profile: PlayerProfile) => void): void {
     this.onConfirm = cb;
@@ -52,18 +53,18 @@ export class CharCreateState extends GameState {
     void _worldLayer;
     this.container = new PixiContainer();
     this.container.eventMode = 'static';
-    const title = new Text({
+    const title = new BitmapText({
       text: 'Character Creator',
-      style: { fontFamily: 'monospace', fontSize: 32, fill: 0xffffff },
+      style: { fontSize: 32, fill: 0xffffff },
     });
     title.anchor.set(0.5);
     title.x = app.screen.width / 2;
     title.y = 40;
     this.container.addChild(title);
 
-    this.label = new Text({
+    this.label = new BitmapText({
       text: this.renderConfig(),
-      style: { fontFamily: 'monospace', fontSize: 16, fill: 0xcccccc },
+      style: { fontSize: 16, fill: 0xcccccc },
     });
     this.label.x = app.screen.width / 2 - 120;
     this.label.y = 90;
@@ -80,9 +81,9 @@ export class CharCreateState extends GameState {
     ];
 
     controls.forEach(([label, handler], i) => {
-      const t = new Text({
+      const t = new BitmapText({
         text: label,
-        style: { fontFamily: 'monospace', fontSize: 18, fill: 0x88ccff },
+        style: { fontSize: 18, fill: 0x88ccff },
       });
       t.x = app.screen.width / 2 - 80;
       t.y = 180 + i * 30;

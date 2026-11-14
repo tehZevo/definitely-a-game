@@ -1,15 +1,15 @@
-import { Container, Text } from 'pixi.js';
+import { Container } from 'pixi.js';
+import { BitmapText } from './bitmapText';
 
 export class Tooltip {
   private container = new Container();
-  private text: Text;
+  private text: BitmapText;
 
   constructor(stage: Container) {
-    this.text = new Text({
+    this.text = new BitmapText({
       text: '',
       style: {
-        fontFamily: 'monospace',
-        fontSize: 10,
+        fontSize: 8,
         fill: 0xffffff,
         wordWrap: true,
         wordWrapWidth: 160,

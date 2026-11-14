@@ -1,11 +1,12 @@
-import { Container, Text } from 'pixi.js';
+import { Container } from 'pixi.js';
+import { BitmapText } from './bitmapText';
 import { World, type Entity } from '../ecs';
 import { Position } from '../physics/position';
 import { DamageNumber, DAMAGE_NUMBER_TIME } from './damageNumber';
 import { damageNumberColor } from './damageNumberType';
 
 export class DamageNumberRenderer {
-  private views = new Map<Entity, Text>();
+  private views = new Map<Entity, BitmapText>();
 
   constructor(private stage: Container) {}
 
@@ -16,9 +17,9 @@ export class DamageNumberRenderer {
       if (!comp || !pos) continue;
       let text = this.views.get(entity);
       if (!text) {
-        text = new Text({
+        text = new BitmapText({
           text: comp.number,
-          style: { fontFamily: 'monospace', fontSize: 16, fontWeight: 'bold' },
+          style: { fontSize: 16 },
         });
         this.views.set(entity, text);
         this.stage.addChild(text);

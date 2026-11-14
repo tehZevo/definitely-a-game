@@ -1,4 +1,5 @@
-import type { Container as PixiContainer, Text as PixiText, Texture } from 'pixi.js';
+import type { Container as PixiContainer, Texture } from 'pixi.js';
+import { BitmapText } from './bitmapText';
 import { assetUrl } from '../assets';
 import { UIComponent } from './uiComponent';
 import { KeyHandler } from '../core/keyHandler';
@@ -15,8 +16,8 @@ export class TextField extends UIComponent implements KeyHandler {
   maxLength: number | null;
   text: string;
   private view: PixiContainer | null = null;
-  private textLabel: PixiText | null = null;
-  private hintLabel: PixiText | null = null;
+  private textLabel: BitmapText | null = null;
+  private hintLabel: BitmapText | null = null;
 
   constructor(
     onSubmit: (text: string) => void,
@@ -54,7 +55,7 @@ export class TextField extends UIComponent implements KeyHandler {
 
   async render(parent: PixiContainer): Promise<PixiContainer> {
     this.view?.destroy({ children: true });
-    const { Assets, Container, Sprite: PixiSprite, Text } = await import('pixi.js');
+    const { Assets, Container, Sprite: PixiSprite } = await import('pixi.js');
     const container = new Container();
     const [box, keyboardTexture] = await Promise.all([
       Assets.load<Texture>(assetUrl('assets/ui/box.png')),
@@ -69,9 +70,9 @@ export class TextField extends UIComponent implements KeyHandler {
     bg.height = height;
     container.addChild(bg);
 
-    const label = new Text({
+    const label = new BitmapText({
       text: this.displayValue(),
-      style: { fontFamily: 'monospace', fontSize: 16, fill: 0xffffff },
+      style: { fontSize: 16, fill: 0xffffff },
     });
     label.eventMode = 'none';
     label.x = PADDING;
@@ -87,9 +88,9 @@ export class TextField extends UIComponent implements KeyHandler {
     keyboard.y = height - ICON_SIZE - 4;
     container.addChild(keyboard);
 
-    const hint = new Text({
+    const hint = new BitmapText({
       text: this.hintText(),
-      style: { fontFamily: 'monospace', fontSize: 12, fill: 0xc8c8c8 },
+      style: { fontSize: 12, fill: 0xc8c8c8 },
     });
     hint.eventMode = 'none';
     hint.x = PADDING;

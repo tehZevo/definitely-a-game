@@ -1,4 +1,5 @@
-import type { Container as PixiContainer, Text as PixiText, Texture } from 'pixi.js';
+import type { Container as PixiContainer, Texture } from 'pixi.js';
+import { BitmapText } from './bitmapText';
 import { assetUrl } from '../assets';
 import { UIComponent } from './uiComponent';
 import { KeyHandler } from '../core/keyHandler';
@@ -13,7 +14,7 @@ export class Carousel extends UIComponent implements KeyHandler {
   on_change: (index: number) => void;
   size: number;
   private view: PixiContainer | null = null;
-  private label: PixiText | null = null;
+  private label: BitmapText | null = null;
 
   constructor(
     labels: string[],
@@ -43,7 +44,7 @@ export class Carousel extends UIComponent implements KeyHandler {
 
   async render(parent: PixiContainer): Promise<PixiContainer> {
     this.view?.destroy({ children: true });
-    const { Assets, Container, Sprite: PixiSprite, Text } = await import('pixi.js');
+    const { Assets, Container, Sprite: PixiSprite } = await import('pixi.js');
     const container = new Container();
     const [bgTexture, borderTexture] = await Promise.all([
       Assets.load<Texture>(assetUrl('assets/ui/slot_bg.png')),
@@ -59,9 +60,9 @@ export class Carousel extends UIComponent implements KeyHandler {
     bg.height = height;
     container.addChild(bg);
 
-    const label = new Text({
+    const label = new BitmapText({
       text: this.displayValue(),
-      style: { fontFamily: 'monospace', fontSize: 16, fill: 0xffffff },
+      style: { fontSize: 16, fill: 0xffffff },
     });
     label.eventMode = 'none';
     label.x = PADDING;

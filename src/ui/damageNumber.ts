@@ -1,6 +1,6 @@
 import { Component } from '../ecs';
 import { Position } from '../physics/position';
-import { DamageNumberType } from './damageNumberType';
+import { DamageNumberType, damageNumberIcon } from './damageNumberType';
 
 export const DAMAGE_NUMBER_TIME = 1;
 export const DAMAGE_NUMBER_HEIGHT = 16;
@@ -19,7 +19,9 @@ export class DamageNumber extends Component {
     public stack = 0,
   ) {
     super();
-    this.number = String(Math.round(rawNumber));
+    const icon = damageNumberIcon(damageType);
+    const value = String(Math.round(rawNumber));
+    this.number = icon ? `${icon} ${value}` : value;
     this.delay = stack * DAMAGE_NUMBER_STACK_DELAY;
   }
 

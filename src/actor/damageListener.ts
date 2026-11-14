@@ -1,5 +1,6 @@
 import { Component } from '../ecs';
+import type { Entity } from '../ecs';
 
 export class DamageListener extends Component {
-  onDamage(attacker: import('../ecs').Entity, amount: number): void;
+  onDamage(_attacker: Entity, _amount: number): void {}
 }

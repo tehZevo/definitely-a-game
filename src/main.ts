@@ -136,11 +136,11 @@ async function startGame(
   stats.load(profile.stats);
   const player = world.createEntity([
     pos,
-    new Physics(),
     new PlayerController(inputSource, defaultAttack),
+    new Actor(),
+    new Physics(),
     new InteractTargeter(),
     stats,
-    new Actor(),
     new Team(0),
     new Shadow(),
     new SkillSlots({

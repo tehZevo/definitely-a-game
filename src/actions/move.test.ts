@@ -4,7 +4,7 @@ import { Position } from '../physics/position';
 import { Physics } from '../physics/physics';
 import { Actor } from '../actor/actor';
 import { Vector2 } from '../utils/vector';
-import { PLAYER_MOVE_SPEED, TILE_SIZE } from '../constants';
+import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
 import { Move } from './move';
 
 describe('Move', () => {
@@ -17,7 +17,7 @@ describe('Move', () => {
     actor.act(new Move(new Vector2(1, 0)));
     actor.currentAction?.update();
 
-    expect(physics.force.x).toBeCloseTo(PLAYER_MOVE_SPEED * TILE_SIZE);
+    expect(physics.force.x).toBeCloseTo(PLAYER_MOVE_SPEED * PLAYER_MOVE_SPEED_SCALE * TILE_SIZE);
     expect(physics.force.y).toBeCloseTo(0);
   });
 });

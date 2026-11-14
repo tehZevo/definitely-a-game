@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
+import { Physics } from '../physics/physics';
 import { FakeInput } from '../core/input';
 import { PlayerController } from './playerController';
 import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
+import { Actor } from './actor';
+import { Stats } from './stats';
 import { Sprite } from '../graphics/sprite';
 import { Equips } from '../items/equips';
 import { Skill } from '../skills/skill';
@@ -23,7 +26,7 @@ describe('PlayerController', () => {
     const world = new World();
     const pos = new Position(0, 0);
     const ctrl = new PlayerController(new FakeInput(1, 0));
-    world.createEntity([pos, ctrl]);
+    world.createEntity([pos, ctrl, new Actor(), new Physics()]);
     world.update(1);
     expect(pos.x).toBeCloseTo(ctrl.speed);
     expect(pos.y).toBeCloseTo(0);
@@ -33,7 +36,7 @@ describe('PlayerController', () => {
     const world = new World();
     const pos = new Position(0, 0);
     const ctrl = new PlayerController(new FakeInput(1, 1));
-    world.createEntity([pos, ctrl]);
+    world.createEntity([pos, ctrl, new Actor(), new Physics()]);
     world.update(1);
     expect(Math.hypot(pos.x, pos.y)).toBeCloseTo(ctrl.speed);
   });
@@ -41,7 +44,7 @@ describe('PlayerController', () => {
   it('does not move with no input', () => {
     const world = new World();
     const pos = new Position(5, 7);
-    world.createEntity([pos, new PlayerController(new FakeInput(0, 0))]);
+    world.createEntity([pos, new PlayerController(new FakeInput(0, 0)), new Actor(), new Physics()]);
     world.update(1);
     expect(pos.x).toBe(5);
     expect(pos.y).toBe(7);
@@ -53,6 +56,8 @@ describe('PlayerController', () => {
     world.createEntity([
       new Position(0, 0),
       new PlayerController(new FakeInput(1, 0)),
+      new Actor(),
+      new Physics(),
       sprite,
     ]);
     world.update(1);
@@ -65,6 +70,8 @@ describe('PlayerController', () => {
     world.createEntity([
       new Position(0, 0),
       new PlayerController(new FakeInput(0, 0)),
+      new Actor(),
+      new Physics(),
       sprite,
     ]);
     world.update(1);
@@ -76,7 +83,7 @@ describe('PlayerController', () => {
     const equips = new Equips();
     equips.equipWeapon(woodenLongsword);
     const controller = new PlayerController(new FakeInput(0, 0, true), defaultAttack);
-    world.createEntity([new Position(0, 0), controller, equips]);
+    world.createEntity([new Position(0, 0), controller, new Actor(), new Physics(), new Stats(100, 100, 100, 100), equips]);
 
     world.update(0.1);
 
@@ -87,7 +94,7 @@ describe('PlayerController', () => {
     const world = new World();
     const slots = new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack });
     const controller = new PlayerController(new FakeInput(0, 0, false, [SKILL_SLOT_KEYS[SkillSlot.ALPHA]]));
-    world.createEntity([new Position(0, 0), controller, slots]);
+    world.createEntity([new Position(0, 0), controller, new Actor(), new Physics(), new Stats(100, 100, 100, 100), slots]);
 
     world.update(0.1);
 

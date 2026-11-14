@@ -1,7 +1,8 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
-import { Position } from '../physics/position';
 import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
+import { Move } from '../actions/move';
+import { UseSkill } from '../actions/useSkill';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
 import { Equips } from '../items/equips';
@@ -48,31 +49,29 @@ export class PlayerController extends Component {
   override update(dt = 0): void {
     const axis = this.input.getAxis();
     const raw = new Vector2(axis.x, axis.y);
-    const len = raw.length();
-    const sprite = this.entity.getComponent(Sprite);
     const actor = this.entity.getComponent(Actor);
-    if (len === 0) {
-      sprite?.setAnimation('idle');
-    } else {
-      sprite?.setAnimation('walk');
-      const dir = raw.scale(1 / len);
-      const pos = this.entity.getComponent(Position);
-      if (pos) {
-        pos.x += dir.x * this.speed * dt;
-        pos.y += dir.y * this.speed * dt;
-      }
-      if (actor) {
-        actor.lookDir = dir;
-        actor.moveDir = dir;
-      }
-    }
+    const sprite = this.entity.getComponent(Sprite);
+
     this.attackTimer = Math.max(0, this.attackTimer - dt);
     if (this.attackTimer === 0) {
       const skill = this.getPressedSkill();
-      if (skill && this.entity.world) {
-        useSkill(this.entity.world, skill, this.entity);
+      if (skill) {
+        if (actor) {
+          actor.act(new UseSkill(skill));
+        } else if (this.entity.world) {
+          useSkill(this.entity.world, skill, this.entity);
+        }
         this.attackTimer = getSkillUseTime(skill, this.entity.getComponent(Equips));
+        return;
       }
     }
+
+    if (raw.length() === 0) {
+      sprite?.setAnimation('idle');
+      actor?.act(new Move(null));
+      return;
+    }
+
+    actor?.act(new Move(raw.normalize()));
   }
 }

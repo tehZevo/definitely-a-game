@@ -2,9 +2,11 @@ import { GameState } from './gameState';
 import type { World } from '../ecs';
 import type { Application, Container } from 'pixi.js';
 import { Container as PixiContainer, Text } from 'pixi.js';
+import { MenuBackground } from '../ui/menuBackground';
 
 export class MainMenuState extends GameState {
   private container: PixiContainer | null = null;
+  private background: MenuBackground | null = null;
   private onStart: (() => void) | null = null;
   private onSkip: (() => void) | null = null;
 
@@ -21,6 +23,8 @@ export class MainMenuState extends GameState {
     void _worldLayer;
     this.container = new PixiContainer();
     this.container.eventMode = 'static';
+    this.background = new MenuBackground(app.screen.width, app.screen.height);
+    this.container.addChild(this.background.container);
 
     const title = new Text({
       text: 'A Game Maybe',
@@ -58,12 +62,13 @@ export class MainMenuState extends GameState {
     app.stage.addChild(this.container);
   }
 
-  update(_dt: number): void {
-    void _dt;
+  update(dt: number): void {
+    this.background?.update(dt);
   }
 
   exit(): void {
     this.container?.destroy({ children: true });
     this.container = null;
+    this.background = null;
   }
 }

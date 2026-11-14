@@ -22,10 +22,12 @@ export class MobAI extends Component {
 
     const to = new Vector2(target.x - pos.x, target.y - pos.y);
     const dist = to.length();
-    if (dist <= this.stopRange || dist > this.aggroRange) return;
+    if (dist === 0 || dist > this.aggroRange) return;
 
     const dir = to.scale(1 / dist);
     if (actor) actor.lookDir = dir;
+    if (dist <= this.stopRange) return;
+
     const step = Math.min(this.speed * dt, dist - this.stopRange);
     pos.x += dir.x * step;
     pos.y += dir.y * step;

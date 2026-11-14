@@ -26,6 +26,7 @@ export class Stats extends Component {
   baseEquip: EquipStats;
   flatModifiers: Record<string, FullStats> = {};
   scalingModifiers: Record<string, FullStats> = {};
+  moveSpeedMultiplier = 1;
   private _calculated: FullStats;
 
   constructor(

@@ -12,6 +12,9 @@ import { SkillSlot } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
 import { defaultAttack } from '../data/skills/defaultAttack';
 import { MobDef } from './mobdef';
+import { Physics } from '../physics/physics';
+import { Move } from '../actions/move';
+import { ENEMY_MOVE_SPEED } from '../constants';
 import { Sprite } from '../graphics/sprite';
 
 function withPlayer(world: World, x: number, y: number): void {
@@ -99,5 +102,30 @@ describe('MobAI', () => {
     world.createEntity([new Position(50, 0), new Actor(), new MobAI(), sprite]);
     world.update(1);
     expect(sprite.flip).toBe('x');
+  });
+});
+describe('MobAI movement', () => {
+  it('uses the Move action when the mob has physics', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    const mobActor = new Actor();
+    world.createEntity([
+      new Position(50, 0),
+      new Stats(10, 10),
+      new Physics(),
+      mobActor,
+      new MobAI(),
+    ]);
+    world.update(1);
+    expect(mobActor.currentAction).toBeInstanceOf(Move);
+  });
+
+  it('slows mobs via the move speed multiplier', () => {
+    const world = new World();
+    withPlayer(world, 0, 0);
+    const stats = new Stats(10, 10);
+    world.createEntity([new Position(50, 0), stats, new Physics(), new Actor(), new MobAI()]);
+    world.update(0);
+    expect(stats.moveSpeedMultiplier).toBe(ENEMY_MOVE_SPEED);
   });
 });

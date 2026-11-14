@@ -86,6 +86,18 @@ export class Actor extends Component {
   healMp(amount: number): void {
     const stats = this.entity.getComponent(Stats);
     if (!stats) return;
+    const before = stats.mp;
     stats.addMp(amount);
+    const actual = Math.max(0, Math.round(stats.mp - before));
+    if (actual > 0) this.spawnNumber(actual, DamageNumberType.MANA_RESTORE);
+  }
+
+  drainMp(amount: number): void {
+    const stats = this.entity.getComponent(Stats);
+    if (!stats) return;
+    const before = stats.mp;
+    stats.addMp(-amount);
+    const actual = Math.max(0, Math.round(before - stats.mp));
+    if (actual > 0) this.spawnNumber(actual, DamageNumberType.MANA);
   }
 }

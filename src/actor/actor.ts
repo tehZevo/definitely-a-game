@@ -1,6 +1,7 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
+import { IN_COMBAT_TIME } from '../constants';
 import { Stats } from './stats';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
@@ -15,16 +16,67 @@ export class Actor extends Component {
   inCombat = false;
   combatTimer = 0;
   currentAction: Action | null = null;
+  nextAction: Action | null = null;
 
-  act(action: Action): void {
+  get busy(): boolean {
+    return this.currentAction !== null && !this.currentAction.interruptible;
+  }
+
+  act(action: Action, force = false): void {
+    if (force || this.currentAction === null || this.currentAction.interruptible) {
+      this.startAction(action);
+      return;
+    }
+    this.nextAction = action;
+  }
+
+  override update(dt = 0): void {
+    this.updateCombat(dt);
+
+    const stats = this.entity.getComponent(Stats);
+    if (this.alive && stats && stats.hp <= 0) {
+      this.alive = false;
+      this.onDeath();
+      return;
+    }
+    if (!this.alive) return;
+
+    this.updateAction(dt);
+  }
+
+  private startAction(action: Action): void {
     this.currentAction = action;
     action.register(this.entity);
     action.start();
   }
 
+  private updateCombat(dt: number): void {
+    if (!this.inCombat) return;
+    this.combatTimer -= dt;
+    if (this.combatTimer <= 0) {
+      this.inCombat = false;
+      this.combatTimer = 0;
+    }
+  }
+
+  private updateAction(dt: number): void {
+    if (this.currentAction) {
+      this.currentAction.update(dt);
+      if (!this.currentAction.active) {
+        this.currentAction = null;
+      }
+    }
+
+    if (this.currentAction === null && this.nextAction) {
+      const next = this.nextAction;
+      this.nextAction = null;
+      this.startAction(next);
+    }
+  }
+
   enterCombat(): void {
     this.inCombat = true;
-    this.combatTimer = 0;
+    this.combatTimer = IN_COMBAT_TIME;
   }
 
   damage(amount: number, damageType: DamageNumberType = DamageNumberType.NORMAL): void {

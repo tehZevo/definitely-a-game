@@ -1,10 +1,35 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
+import { Action } from '../actions/action';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
 import { Stats } from './stats';
 import { Actor } from './actor';
+
+class TestAction extends Action {
+  constructor(
+    private duration: number,
+    interruptible = false,
+  ) {
+    super();
+    this.interruptible = interruptible;
+    this.active = true;
+  }
+
+  override start(): void {
+    this.active = true;
+  }
+
+  override update(dt = 0): void {
+    this.duration -= dt;
+    if (this.duration <= 0) this.active = false;
+  }
+
+  override serialize(): Record<string, unknown> {
+    return {};
+  }
+}
 
 describe('Actor', () => {
   it('damage reduces hp and kills at 0', () => {
@@ -62,5 +87,53 @@ describe('Actor', () => {
     const number = numbers[0].getComponent(DamageNumber)!;
     expect(number.number).toBe('- 12');
     expect(number.damageType).toBe(DamageNumberType.MANA);
+  });
+
+  it('updates and clears a finished action', () => {
+    const world = new World();
+    const actor = new Actor();
+    world.createEntity([new Position(0, 0), new Stats(100, 100), actor]);
+
+    const action = new TestAction(1);
+    actor.act(action);
+
+    world.update(0.5);
+    expect(actor.currentAction).toBe(action);
+    expect(action.active).toBe(true);
+
+    world.update(0.5);
+    expect(actor.currentAction).toBeNull();
+  });
+
+  it('queues a non-interruptible next action', () => {
+    const world = new World();
+    const actor = new Actor();
+    world.createEntity([new Position(0, 0), new Stats(100, 100), actor]);
+
+    const first = new TestAction(1);
+    const second = new TestAction(1);
+    actor.act(first);
+    actor.act(second);
+
+    expect(actor.currentAction).toBe(first);
+    expect(actor.nextAction).toBe(second);
+
+    world.update(1);
+    expect(actor.currentAction).toBe(second);
+    expect(actor.nextAction).toBeNull();
+  });
+
+  it('replaces an interruptible action immediately', () => {
+    const world = new World();
+    const actor = new Actor();
+    world.createEntity([new Position(0, 0), new Stats(100, 100), actor]);
+
+    const first = new TestAction(1, true);
+    const second = new TestAction(1, true);
+    actor.act(first);
+    actor.act(second);
+
+    expect(actor.currentAction).toBe(second);
+    expect(actor.nextAction).toBeNull();
   });
 });

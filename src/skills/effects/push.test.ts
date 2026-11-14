@@ -10,11 +10,11 @@ import { Push } from './push';
 import { Vector2 } from '../../utils/vector';
 
 describe('Heal', () => {
-  it('heals target based on user physAtt', () => {
+  it('heals target based on user magAtt', () => {
     const world = new World();
     const user = world.createEntity([
       new Position(0, 0),
-      new Stats(50, 100, 0, 0, 200, 0, 0),
+      new Stats(50, 100, 0, 0, 0, 0, 0, 200),
       new Actor(),
     ]);
     const target = world.createEntity([

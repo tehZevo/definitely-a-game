@@ -3,6 +3,7 @@ import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
 import { IN_COMBAT_TIME } from '../constants';
 import { Stats } from './stats';
+import { DamageListener } from './damageListener';
 import { SafeArea } from './safeArea';
 import { DeathAnimation } from './deathAnimation';
 import { DamageNumber } from '../ui/damageNumber';
@@ -116,6 +117,9 @@ export class Actor extends Component {
     if (this.entity.getComponent(SafeArea)?.active) return;
     stats.addHp(-amount);
     this.spawnNumber(amount, damageType);
+    for (const listener of this.entity.find(DamageListener)) {
+      listener.onDamage(this.entity, amount);
+    }
     if (stats.hp <= 0) {
       this.alive = false;
       this.onDeath();

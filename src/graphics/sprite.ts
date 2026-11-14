@@ -3,7 +3,7 @@ import { Component } from '../ecs';
 export class Sprite extends Component {
   current: string;
 
-  constructor(public frames: Record<string, string[]>, current?: string) {
+  constructor(public frames: Record<string, string[]> = {}, current?: string) {
     super();
     this.current = current ?? Object.keys(frames)[0] ?? '';
   }

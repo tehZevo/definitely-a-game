@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
+import { Actor } from '../actor/actor';
 import { PlayerController } from '../actor/playerController';
 import { FakeInput } from '../core/input';
 import { MobAI } from './mobAI';
+import { Vector2 } from '../utils/vector';
 
 function withPlayer(world: World, x: number, y: number): void {
   world.createEntity([new Position(x, y), new PlayerController(new FakeInput(0, 0))]);
@@ -14,17 +16,19 @@ describe('MobAI', () => {
     const world = new World();
     withPlayer(world, 0, 0);
     const mobPos = new Position(50, 0);
-    world.createEntity([mobPos, new MobAI()]);
+    const mobActor = new Actor();
+    world.createEntity([mobPos, mobActor, new MobAI()]);
     world.update(1);
     expect(mobPos.x).toBeLessThan(50);
     expect(mobPos.x).toBeGreaterThan(0);
+    expect(mobActor.lookDir).toEqual(new Vector2(-1, 0));
   });
 
   it('does not move when the player is out of range', () => {
     const world = new World();
     withPlayer(world, 0, 0);
     const mobPos = new Position(500, 0);
-    world.createEntity([mobPos, new MobAI()]);
+    world.createEntity([mobPos, new Actor(), new MobAI()]);
     world.update(1);
     expect(mobPos.x).toBe(500);
   });
@@ -33,7 +37,7 @@ describe('MobAI', () => {
     const world = new World();
     withPlayer(world, 0, 0);
     const mobPos = new Position(5, 0);
-    world.createEntity([mobPos, new MobAI()]);
+    world.createEntity([mobPos, new Actor(), new MobAI()]);
     world.update(1);
     expect(mobPos.x).toBe(5);
   });

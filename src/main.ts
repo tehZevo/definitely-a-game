@@ -221,6 +221,7 @@ async function boot(): Promise<void> {
   game.app = app;
   game.worldLayer = new Container();
   game.worldLayer.eventMode = 'none';
+  game.worldLayer.sortableChildren = true;
   app.stage.addChild(game.worldLayer);
 
   const menu = new MainMenuState();

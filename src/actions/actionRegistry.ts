@@ -3,6 +3,7 @@ import { Move } from './move';
 import { UseSkill } from './useSkill';
 import { Attack } from './attack';
 import { Interact } from './interact';
+import { LookAt } from './lookAt';
 import { Vector2 } from '../utils/vector';
 import { getSkill } from '../data/registry';
 
@@ -18,6 +19,10 @@ const actionRegistry: Record<string, (data: Record<string, unknown>) => Action> 
   },
   Attack: () => new Attack(),
   Interact: () => new Interact(),
+  LookAt: (data) => {
+    const dir = data.dir as { x: number; y: number };
+    return new LookAt(new Vector2(dir.x, dir.y));
+  },
 };
 
 export function getActionRegistry(): Record<string, (data: Record<string, unknown>) => Action> {

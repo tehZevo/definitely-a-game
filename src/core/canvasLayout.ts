@@ -6,9 +6,10 @@ export const LOGICAL_HEIGHT = SCREEN_HEIGHT_TILES * TILE_SIZE;
 export interface CanvasStyle {
   width: string;
   height: string;
+  scale: number;
 }
 
-export const MAX_CANVAS_SCALE = 4;
+export const MAX_CANVAS_SCALE = 8;
 
 export function computeCanvasScale(windowWidth: number, windowHeight: number): number {
   const fit = Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
@@ -20,5 +21,6 @@ export function computeCanvasStyle(windowWidth: number, windowHeight: number): C
   return {
     width: `${LOGICAL_WIDTH * scale}px`,
     height: `${LOGICAL_HEIGHT * scale}px`,
+    scale,
   };
 }

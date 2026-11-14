@@ -59,7 +59,7 @@ import { GameMaster } from './core/gameMaster';
 import { ConnectionState } from './core/connectionState';
 import { InteractTargeter } from './core/interactTargeter';
 import { loadClientConfig, saveClientConfig } from './core/clientConfig';
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH, MAX_CANVAS_SCALE, computeCanvasStyle } from './core/canvasLayout';
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, computeCanvasScale, computeCanvasStyle } from './core/canvasLayout';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -280,19 +280,24 @@ async function startGame(
 async function boot(): Promise<void> {
   await preloadBitmapFont();
   const app = new Application();
+  const initialScale = computeCanvasScale(window.innerWidth, window.innerHeight);
   await app.init({
-    background: '#1099bb',
+    background: '#000000',
     width: LOGICAL_WIDTH,
     height: LOGICAL_HEIGHT,
     antialias: false,
-    resolution: MAX_CANVAS_SCALE,
+    resolution: initialScale,
   });
   const canvas = app.canvas;
   canvas.style.imageRendering = 'pixelated';
+  canvas.tabIndex = 0;
+  canvas.style.outline = 'none';
+  canvas.focus();
   const applyCanvasSize = () => {
     const style = computeCanvasStyle(window.innerWidth, window.innerHeight);
     canvas.style.width = style.width;
     canvas.style.height = style.height;
+    app.renderer.resize(LOGICAL_WIDTH, LOGICAL_HEIGHT, style.scale);
   };
   applyCanvasSize();
   window.addEventListener('resize', applyCanvasSize);

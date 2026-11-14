@@ -24,6 +24,7 @@ describe('canvasLayout', () => {
     expect(computeCanvasStyle(1000, 740)).toEqual({
       width: `${LOGICAL_WIDTH * 3}px`,
       height: `${LOGICAL_HEIGHT * 3}px`,
+      scale: 3,
     });
   });
 });

@@ -27,6 +27,8 @@ import { SafeArea } from './actor/safeArea';
 import { Physics } from './physics/physics';
 import { Loadout } from './items/loadout';
 import { DroppedItemManager } from './items/droppedItemManager';
+import { ParticleSystem } from './particles/particleSystem';
+import { ParticleRenderer } from './particles/particleRenderer';
 import { ArmorSlot } from './items/slots';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
@@ -125,6 +127,7 @@ async function startGame(
   const tilePhysics = new TilePhysics(chunks);
   world.createEntity([tilePhysics]);
   world.createEntity([new DroppedItemManager()]);
+  world.createEntity([new ParticleSystem()]);
   if (new URLSearchParams(window.location.search).has('debug')) {
     drawCollisionDebug(tilePhysics, worldLayer);
   }
@@ -204,6 +207,8 @@ async function startGame(
   ]);
 
   const tooltip = new Tooltip(app.stage);
+  const particleRenderer = new ParticleRenderer(worldLayer);
+  await particleRenderer.preload(['assets/particles/fire.png', 'assets/particles/slash.png']);
   const spriteRenderer = new SpriteRenderer(worldLayer, tooltip);
   await spriteRenderer.preload(world);
 
@@ -248,6 +253,7 @@ async function startGame(
 
     tileRenderer.update(pos);
     spriteRenderer.update(world, dt);
+    particleRenderer.update(world);
     damageNumbers.update(world);
     hud.update(player);
     buffIcons.update(player);

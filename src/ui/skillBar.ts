@@ -18,16 +18,19 @@ function slotPos(slot: SkillSlot, screenH: number): { x: number; y: number } {
 
 export class SkillBar {
   private container = new Container();
+  private slotsRoot = new Container();
   private slotBg: Texture | null = null;
   private iconCache = new Map<string, Texture>();
-  private children: PixiSprite[] = [];
   private tooltip: Tooltip | null = null;
+  private signature = '';
 
   private constructor(
     private slots: SkillSlots,
     private screenH: number,
   ) {
     this.container.eventMode = 'dynamic';
+    this.container.zIndex = 100;
+    this.container.addChild(this.slotsRoot);
   }
 
   static async create(
@@ -38,57 +41,73 @@ export class SkillBar {
     const bar = new SkillBar(slots, screenH);
     bar.slotBg = await Assets.load<Texture>(assetUrl('assets/ui/slot_bg.png'));
     bar.tooltip = new Tooltip(stage);
-    const defs: [SkillSlot, SkillDef | null][] = bar.slots.visibleSlots().map((s) => [
-      s,
-      bar.slots.get(s),
+    stage.addChild(bar.container);
+    await bar.render();
+    return bar;
+  }
+
+  update(): void {
+    if (this.currentSignature() === this.signature) return;
+    void this.render();
+  }
+
+  private currentSignature(): string {
+    return this.slots
+      .visibleSlots()
+      .map((slot) => `${slot}:${this.slots.get(slot)?.id ?? ''}`)
+      .join('|');
+  }
+
+  private async render(): Promise<void> {
+    this.signature = this.currentSignature();
+    this.slotsRoot.removeChildren();
+
+    const defs: [SkillSlot, SkillDef | null][] = this.slots.visibleSlots().map((slot) => [
+      slot,
+      this.slots.get(slot),
     ]);
+
     for (const [slot, def] of defs) {
-      const { x, y } = slotPos(slot, bar.screenH);
+      const { x, y } = slotPos(slot, this.screenH);
       const slotContainer = new Container();
       slotContainer.x = x;
       slotContainer.y = y;
       slotContainer.eventMode = 'static';
-      bar.container.addChild(slotContainer);
+      this.slotsRoot.addChild(slotContainer);
 
-      const bg = new PixiSprite(bar.slotBg);
+      const bg = new PixiSprite(this.slotBg!);
       bg.eventMode = 'none';
       slotContainer.addChild(bg);
-      bar.children.push(bg);
 
-      if (def) {
-        if (def.icon) {
-          const icon = await bar.loadIcon(def.icon);
-          if (icon) {
-            const s = new PixiSprite(icon);
-            s.eventMode = 'none';
-            s.x = 4;
-            s.y = 4;
-            slotContainer.addChild(s);
-            bar.children.push(s);
-          }
-        }
-        const rank = await bar.loadIcon(skillRankIcon(def.rank));
-        if (rank) {
-          const s = new PixiSprite(rank);
-          s.eventMode = 'none';
-          s.tint = skillRankColor(def.rank);
-          s.x = 16;
-          s.y = 16;
-          slotContainer.addChild(s);
-          bar.children.push(s);
-        }
+      if (!def) continue;
 
-        const text = def.description ?? bar.keyFor(slot);
-        slotContainer.on('pointerover', () => bar.tooltip?.show(text, x, y - 24));
-        slotContainer.on('pointerout', () => bar.tooltip?.hide());
+      const icon = await this.loadIcon(def.icon);
+      if (icon) {
+        const s = new PixiSprite(icon);
+        s.eventMode = 'none';
+        s.x = 4;
+        s.y = 4;
+        slotContainer.addChild(s);
       }
+
+      const rank = await this.loadIcon(skillRankIcon(def.rank));
+      if (rank) {
+        const s = new PixiSprite(rank);
+        s.eventMode = 'none';
+        s.tint = skillRankColor(def.rank);
+        s.x = 16;
+        s.y = 16;
+        slotContainer.addChild(s);
+      }
+
+      const text = def.description ?? this.keyFor(slot);
+      slotContainer.on('pointerover', () => this.tooltip?.show(text, x, y - 24));
+      slotContainer.on('pointerout', () => this.tooltip?.hide());
     }
-    bar.container.zIndex = 100;
-    stage.addChild(bar.container);
-    return bar;
   }
 
-  private async loadIcon(path: string): Promise<Texture | null> {
+  private async loadIcon(path: string | null): Promise<Texture | null> {
+    if (!path) return null;
     const cached = this.iconCache.get(path);
     if (cached) return cached;
     try {

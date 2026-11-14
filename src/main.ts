@@ -4,7 +4,7 @@ import { World } from './ecs';
 import { Vector2 } from './utils/vector';
 import { Position } from './physics/position';
 import { PlayerController } from './actor/playerController';
-import { Sprite } from './graphics/sprite';
+import { createPlayerSprite } from './actor/playerSprite';
 import { SpriteRenderer } from './graphics/spriteRenderer';
 import { TileRenderer } from './graphics/tileRenderer';
 import { Camera } from './graphics/camera';
@@ -153,10 +153,7 @@ async function startGame(
       [SkillSlot.DELTA]: magicBolt,
     }),
     equips,
-    new Sprite({
-      idle: facePaths,
-      walk: facePaths,
-    }),
+    createPlayerSprite(facePaths),
   ]);
 
   const mobRooms = dungeon.rooms.slice(1);

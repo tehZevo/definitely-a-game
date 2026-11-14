@@ -1,6 +1,7 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
+import { Actor } from '../actor/actor';
 import { PlayerController } from '../actor/playerController';
 
 export class MobAI extends Component {
@@ -11,6 +12,7 @@ export class MobAI extends Component {
   override update(dt = 0): void {
     const world = this.entity.world;
     const pos = this.entity.getComponent(Position);
+    const actor = this.entity.getComponent(Actor);
     if (!world || !pos) return;
 
     const players = world.find(PlayerController);
@@ -23,6 +25,7 @@ export class MobAI extends Component {
     if (dist <= this.stopRange || dist > this.aggroRange) return;
 
     const dir = to.scale(1 / dist);
+    if (actor) actor.lookDir = dir;
     const step = Math.min(this.speed * dt, dist - this.stopRange);
     pos.x += dir.x * step;
     pos.y += dir.y * step;

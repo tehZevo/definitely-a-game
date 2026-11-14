@@ -16,6 +16,10 @@ export class Physics extends Component {
     this.force = this.force.add(force);
   }
 
+  canMoveTo(x: number, y: number): boolean {
+    return !this.collidesAt(x, y);
+  }
+
   private collidesAt(x: number, y: number): boolean {
     const world = this.entity.world;
     if (!world) return false;
@@ -26,11 +30,7 @@ export class Physics extends Component {
     const hw = this.width / 2;
     const hh = this.height / 2;
     for (const r of rects) {
-      const rx = r.x / TILE_SIZE;
-      const ry = r.y / TILE_SIZE;
-      const rw = r.w / TILE_SIZE;
-      const rh = r.h / TILE_SIZE;
-      if (x + hw > rx && x - hw < rx + rw && y + hh > ry && y - hh < ry + rh) {
+      if (pos.x + hw > r.x && pos.x - hw < r.x + r.w && pos.y + hh > r.y && pos.y - hh < r.y + r.h) {
         return true;
       }
     }

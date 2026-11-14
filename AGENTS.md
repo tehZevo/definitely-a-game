@@ -12,6 +12,10 @@
 - Tests: Vitest.
 - Live site: https://tehzevo.github.io/definitely-a-game/ (deployed from `master` via GitHub Actions).
 
+## Visual style
+- Everything in the game renders to a pixel-perfect canvas: integer canvas scale, `imageRendering: pixelated`, nearest-neighbor textures, and the 8x8 bitmap font (`assets/ui/font.png`).
+- Use the shared `BitmapText` component (`src/ui/bitmapText.ts`) for all text; never use antialiased `Text`.
+
 ## Git rules
 - Default branch is `master` (NOT `main`).
 - Commit author: `tehZevo <tehZevo@users.noreply.github.com>`.

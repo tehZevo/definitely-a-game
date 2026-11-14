@@ -19,3 +19,17 @@ describe('map registry', () => {
     expect(nextMapFor('plains')).toBe(allMaps[(index + 1) % allMaps.length]);
   });
 });
+
+describe('map generation options', () => {
+  it('gives plains large rooms and a small floor', () => {
+    expect(resolveMap('plains').opts).toEqual({ roomSize: 20, floorSize: 2, doorWidth: 1 });
+  });
+
+  it('gives forest medium rooms', () => {
+    expect(resolveMap('forest').opts).toEqual({ roomSize: 8, floorSize: 3, doorWidth: 1 });
+  });
+
+  it('gives maze small rooms and a large floor', () => {
+    expect(resolveMap('maze').opts).toEqual({ roomSize: 6, floorSize: 6, doorWidth: 1 });
+  });
+});

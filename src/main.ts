@@ -17,8 +17,8 @@ import { chunkTiles } from './maps/chunkTiles';
 import { Tileset } from './tiles/tileset';
 import { Tile } from './tiles/tile';
 import { TilePhysics } from './tiles/tilePhysics';
-import { spawnMob } from './monsters/spawn';
-import { greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime } from './data/mobs/slimes';
+import { Spawner } from './tiles/spawner';
+import { slime } from './data/mobs/slimes';
 import { Stats } from './actor/stats';
 import { Actor } from './actor/actor';
 import { Team } from './actor/team';
@@ -188,12 +188,11 @@ async function startGame(
     createPlayerSprite(facePaths),
   ]);
 
-  const mobRooms = dungeon.rooms.slice(1);
-  const mobs = [greenSlime, slime, redSlime, brownSlime, darkSlime, pinkSlime];
-  for (let i = 0; i < mobRooms.length; i++) {
-    const room = mobRooms[i];
-    const mobType = mobs[i % mobs.length];
-    spawnMob(world, mobType, room.x * 8 * 16 + 64, room.y * 8 * 16 + 64);
+  for (const spawner of dungeon.spawners) {
+    world.createEntity([
+      new Position(spawner.x * 16, spawner.y * 16),
+      new Spawner(slime, 5, 4, 2, 4),
+    ]);
   }
 
   const lastRoom = dungeon.rooms[dungeon.rooms.length - 1];

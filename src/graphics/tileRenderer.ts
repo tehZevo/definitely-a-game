@@ -1,6 +1,7 @@
 import { Assets, Container, Sprite as PixiSprite, Texture } from 'pixi.js';
 import { Tileset } from '../tiles/tileset';
 import { assetUrl } from '../assets';
+import { TILE_SIZE } from '../constants';
 
 export class TileRenderer {
   static async render(tileset: Tileset, parent: Container): Promise<void> {
@@ -11,13 +12,14 @@ export class TileRenderer {
         if (!tile || !tile.imagePath) continue;
         let tex = cache.get(tile.imagePath);
         if (!tex) {
-          tex = await Assets.load<Texture>(assetUrl(tile.imagePath));
-          tex.source.scaleMode = 'nearest';
+          const loaded = await Assets.load<Texture>(assetUrl(tile.imagePath));
+          loaded.source.scaleMode = 'nearest';
+          tex = loaded;
           cache.set(tile.imagePath, tex);
         }
         const sprite = new PixiSprite(tex);
-        sprite.x = x * tex.width;
-        sprite.y = y * tex.height;
+        sprite.x = x * TILE_SIZE;
+        sprite.y = y * TILE_SIZE;
         parent.addChild(sprite);
       }
     }

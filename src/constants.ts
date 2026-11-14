@@ -42,3 +42,4 @@ export const CONFIG_PATH = 'settings.json';
 export const PHYS_REPORT_RATE = 1 / 4;
 export const REPORT_POS_ERROR_THRESH = 1;
 export const REPORT_VEL_ERROR_THRESH = 0.1;
+export const KNOCKBACK_FORCE = 10;

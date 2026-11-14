@@ -7,7 +7,9 @@ import { PlayState } from './playState';
 
 describe('Game', () => {
   it('starts without a player profile', () => {
-    expect(new Game().playerProfile).toBeNull();
+    const game = new Game();
+    expect(game.playerProfile).toBeNull();
+    expect(game.clientConfig.playerProfile).toBeNull();
   });
 
   it('updates the world and current state', () => {

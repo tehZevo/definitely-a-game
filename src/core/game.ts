@@ -3,6 +3,7 @@ import type { Application, Container } from 'pixi.js';
 import type { MapDef } from '../maps/dfsGenerator';
 import type { PlayerProfile } from './playerProfile';
 import type { GameState } from './gameState';
+import { DEFAULT_CLIENT_CONFIG, type ClientConfig } from './clientConfig';
 
 export class Game {
   world: World;
@@ -10,6 +11,7 @@ export class Game {
   worldLayer: Container | null = null;
   currentState: GameState | null = null;
   playerProfile: PlayerProfile | null = null;
+  clientConfig: ClientConfig = DEFAULT_CLIENT_CONFIG;
   onTransition: ((mapdef: MapDef | string) => void | Promise<void>) | null = null;
   private transitioning = false;
 

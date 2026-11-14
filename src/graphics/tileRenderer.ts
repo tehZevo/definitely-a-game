@@ -3,6 +3,7 @@ import { Tileset } from '../tiles/tileset';
 import { assetUrl } from '../assets';
 import { TILE_SIZE } from '../constants';
 import type { Position } from '../physics/position';
+import { ySortZ } from './ySort';
 
 const BEHIND_ALPHA = 0.5;
 const NORMAL_ALPHA = 1;
@@ -42,7 +43,7 @@ export class TileRenderer {
         const sprite = new PixiSprite(tex);
         sprite.x = x * TILE_SIZE;
         sprite.y = y * TILE_SIZE;
-        sprite.zIndex = y * TILE_SIZE - (tile.solid ? 0 : 1);
+        sprite.zIndex = ySortZ(y * TILE_SIZE, TILE_SIZE);
         parent.addChild(sprite);
 
         if (tile.solid) {

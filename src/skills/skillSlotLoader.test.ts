@@ -60,7 +60,35 @@ describe('SkillSlotLoader', () => {
 
     loadout.equipSkill(new SkillItem({ skilldef: slash }));
 
-    expect(slots.get(SkillSlot.ALPHA)).toBe(defaultAttack);
+    expect(slots.get(SkillSlot.BETA)).toBe(slash);
+    expect(slots.get(SkillSlot.ALPHA)).toBeNull();
+  });
+});
+
+describe('SkillSlotLoader clearing', () => {
+  it('clears a skill slot when its skill item is unequipped', () => {
+    const world = new World();
+    const player = world.createEntity([new SkillSlotLoader(), new SkillSlots(), new Loadout()]);
+    const loadout = player.getComponent(Loadout)!;
+    const slots = player.getComponent(SkillSlots)!;
+
+    loadout.equipSkill(new SkillItem({ skilldef: slash }));
+    expect(slots.get(SkillSlot.BETA)).toBe(slash);
+
+    loadout.equipSkill(new SkillItem({ skilldef: defaultAttack, slot: SkillSlot.BETA }));
+    expect(slots.get(SkillSlot.BETA)).toBe(defaultAttack);
+  });
+
+  it('clears slots with no equipped skill item', () => {
+    const world = new World();
+    const player = world.createEntity([new SkillSlotLoader(), new SkillSlots(), new Loadout()]);
+    const loadout = player.getComponent(Loadout)!;
+    const slots = player.getComponent(SkillSlots)!;
+    slots.set(SkillSlot.GAMMA, defaultAttack);
+
+    loadout.equipSkill(new SkillItem({ skilldef: slash }));
+
+    expect(slots.get(SkillSlot.BETA)).toBe(slash);
     expect(slots.get(SkillSlot.GAMMA)).toBeNull();
   });
 });

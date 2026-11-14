@@ -56,7 +56,7 @@ import { GameMaster } from './core/gameMaster';
 import { ConnectionState } from './core/connectionState';
 import { InteractTargeter } from './core/interactTargeter';
 import { loadClientConfig, saveClientConfig } from './core/clientConfig';
-import { LOGICAL_HEIGHT, LOGICAL_WIDTH, computeCanvasStyle } from './core/canvasLayout';
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, MAX_CANVAS_SCALE, computeCanvasStyle } from './core/canvasLayout';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -269,7 +269,7 @@ async function boot(): Promise<void> {
     width: LOGICAL_WIDTH,
     height: LOGICAL_HEIGHT,
     antialias: false,
-    resolution: 3,
+    resolution: MAX_CANVAS_SCALE,
   });
   const canvas = app.canvas;
   canvas.style.imageRendering = 'pixelated';

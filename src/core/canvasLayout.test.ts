@@ -1,19 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { computeCanvasScale, computeCanvasStyle, LOGICAL_HEIGHT, LOGICAL_WIDTH } from './canvasLayout';
+import {
+  computeCanvasScale,
+  computeCanvasStyle,
+  LOGICAL_HEIGHT,
+  LOGICAL_WIDTH,
+  MAX_CANVAS_SCALE,
+} from './canvasLayout';
 
 describe('canvasLayout', () => {
-  it('scales up when the window is larger than the logical canvas', () => {
-    expect(computeCanvasScale(1920, 1080)).toBeCloseTo(Math.min(1920 / LOGICAL_WIDTH, 1080 / LOGICAL_HEIGHT));
+  it('uses an integer scale that fits the window', () => {
+    expect(computeCanvasScale(1000, 740)).toBe(3);
   });
 
-  it('scales down when the window is smaller than the logical canvas', () => {
-    expect(computeCanvasScale(128, 96)).toBeCloseTo(0.5);
+  it('caps the scale at the maximum', () => {
+    expect(computeCanvasScale(3840, 2160)).toBe(MAX_CANVAS_SCALE);
   });
 
-  it('fills the window with the canvas', () => {
-    expect(computeCanvasStyle(375, 667)).toEqual({
-      width: '375px',
-      height: '667px',
+  it('never scales below one', () => {
+    expect(computeCanvasScale(128, 96)).toBe(1);
+  });
+
+  it('sizes the canvas from the logical size and scale', () => {
+    expect(computeCanvasStyle(1000, 740)).toEqual({
+      width: `${LOGICAL_WIDTH * 3}px`,
+      height: `${LOGICAL_HEIGHT * 3}px`,
     });
   });
 });

@@ -3,8 +3,8 @@ import { ySortZ } from './ySort';
 import { TILE_SIZE } from '../constants';
 
 describe('ySortZ', () => {
-  it('sorts by the bottom edge of the drawn object', () => {
-    expect(ySortZ(80, 16)).toBe(64);
+  it('sorts by the bottom edge of the drawn object in tile space', () => {
+    expect(ySortZ(80, 16)).toBe(4);
   });
 
   it('keeps a tile and a same-height sprite at the same y equal', () => {

@@ -13,10 +13,10 @@ export interface KeyMap {
 
 export const DEFAULT_KEY_MAP: KeyMap = {
   movement: {
-    up: ['ArrowUp', 'KeyW'],
-    down: ['ArrowDown', 'KeyS'],
-    left: ['ArrowLeft', 'KeyA'],
-    right: ['ArrowRight', 'KeyD'],
+    up: ['ArrowUp'],
+    down: ['ArrowDown'],
+    left: ['ArrowLeft'],
+    right: ['ArrowRight'],
   },
   attack: ['Space', 'KeyZ'],
   skillSlots: SKILL_SLOT_KEYS,

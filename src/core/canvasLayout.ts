@@ -8,13 +8,17 @@ export interface CanvasStyle {
   height: string;
 }
 
+export const MAX_CANVAS_SCALE = 4;
+
 export function computeCanvasScale(windowWidth: number, windowHeight: number): number {
-  return Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
+  const fit = Math.min(windowWidth / LOGICAL_WIDTH, windowHeight / LOGICAL_HEIGHT);
+  return Math.max(1, Math.min(MAX_CANVAS_SCALE, Math.floor(fit)));
 }
 
 export function computeCanvasStyle(windowWidth: number, windowHeight: number): CanvasStyle {
+  const scale = computeCanvasScale(windowWidth, windowHeight);
   return {
-    width: `${windowWidth}px`,
-    height: `${windowHeight}px`,
+    width: `${LOGICAL_WIDTH * scale}px`,
+    height: `${LOGICAL_HEIGHT * scale}px`,
   };
 }

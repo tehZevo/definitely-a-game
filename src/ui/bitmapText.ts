@@ -111,16 +111,16 @@ export class BitmapText extends Container {
   }
 
   get width(): number {
-    const lines = this.wrapLines(this._text, this.scale);
-    return Math.max(0, ...lines.map((line) => line.length * GLYPH_SIZE * this.scale));
+    const lines = this.wrapLines(this._text, this.glyphScale);
+    return Math.max(0, ...lines.map((line) => line.length * GLYPH_SIZE * this.glyphScale));
   }
 
   get height(): number {
-    const lines = this.wrapLines(this._text, this.scale);
-    return lines.length * GLYPH_SIZE * this.scale;
+    const lines = this.wrapLines(this._text, this.glyphScale);
+    return lines.length * GLYPH_SIZE * this.glyphScale;
   }
 
-  private get scale(): number {
+  private get glyphScale(): number {
     return Math.max(1, Math.round(this._fontSize / GLYPH_SIZE));
   }
 
@@ -147,7 +147,7 @@ export class BitmapText extends Container {
 
   private layout(): void {
     this.content.removeChildren();
-    const s = this.scale;
+    const s = this.glyphScale;
     const lines = this.wrapLines(this._text, s);
     const maxWidth = Math.max(0, ...lines.map((line) => line.length * GLYPH_SIZE * s));
     const totalHeight = lines.length * GLYPH_SIZE * s;

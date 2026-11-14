@@ -31,7 +31,7 @@ export class DevMapGenerator extends FloorGenerator {
   generate(_mapdef: MapDef): DungeonResult {
     const rooms = [{ x: 0, y: 0, north: false, south: false, east: false, west: false }];
     const tiles = roomsToTiles(rooms, 16, 0, 0);
-    const result: DungeonResult = { rooms, tiles: new Map<string, TileType>(), spawners: [] };
+    const result: DungeonResult = { rooms, tiles: new Map<string, TileType>(), spawners: [], stairs: { x: 8, y: 8 }, playerSpawn: { x: 2, y: 2 } };
     for (const [key, tile] of tiles) {
       result.tiles.set(key, tile);
     }

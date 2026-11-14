@@ -133,10 +133,7 @@ async function startGame(
   if (new URLSearchParams(window.location.search).has('debug')) {
     drawCollisionDebug(tilePhysics, worldLayer);
   }
-  const spawnRoom = dungeon.rooms[0];
-  const spawnX = spawnRoom.x * 8 + 4;
-  const spawnY = spawnRoom.y * 8 + 4;
-  const pos = new Position(spawnX * 16, spawnY * 16);
+  const pos = new Position(dungeon.playerSpawn.x * 16, dungeon.playerSpawn.y * 16);
   const keyboard = new KeyboardInput(window);
   const touch = 'ontouchstart' in window
     ? new TouchJoystick(app.canvas)
@@ -195,9 +192,8 @@ async function startGame(
     ]);
   }
 
-  const lastRoom = dungeon.rooms[dungeon.rooms.length - 1];
   world.createEntity([
-    new Position(lastRoom.x * 8 * 16 + 64, lastRoom.y * 8 * 16 + 64),
+    new Position(dungeon.stairs.x * 16, dungeon.stairs.y * 16),
     new Stairs(nextMapFor(resolved)),
   ]);
 

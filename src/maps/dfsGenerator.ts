@@ -16,6 +16,7 @@ export class MapDef {
     public palette: TilePalette = grassWalls.add(grassFloors),
     public generator: string,
     public opts: Partial<DFSOptions> = {},
+    public nextMaps: string[] = [],
   ) {}
 }
 
@@ -23,6 +24,8 @@ export interface DungeonResult {
   rooms: Room[];
   tiles: Map<string, TileType>;
   spawners: SpawnerPlacement[];
+  stairs: SpawnerPlacement;
+  playerSpawn: SpawnerPlacement;
 }
 
 export interface DFSOptions {
@@ -175,5 +178,20 @@ export function generateDungeon(opts: Partial<DFSOptions> = {}): DungeonResult {
       });
     }
   }
-  return { rooms, tiles, spawners };
+  const stairsRoom = rooms[Math.floor(Math.random() * rooms.length)];
+  const spawnRoom = rooms[Math.floor(Math.random() * rooms.length)];
+  return {
+    rooms,
+    tiles,
+    spawners,
+    stairs: roomCenter(stairsRoom, options.roomSize),
+    playerSpawn: roomCenter(spawnRoom, options.roomSize),
+  };
+}
+
+function roomCenter(room: Room, roomSize: number): SpawnerPlacement {
+  return {
+    x: room.x * roomSize + roomSize / 2,
+    y: room.x * roomSize + roomSize / 2,
+  };
 }

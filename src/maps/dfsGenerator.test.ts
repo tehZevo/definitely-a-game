@@ -14,4 +14,11 @@ describe('generateDungeon spawners', () => {
     const result = generateDungeon({ spawnerChance: 0 });
     expect(result.spawners.length).toBe(0);
   });
+
+  it('places stairs and player spawn at room centers', () => {
+    const result = generateDungeon({ roomSize: 8, floorSize: 2, spawnerChance: 0 });
+    expect(result.stairs.x % 4).toBe(0);
+    expect(result.stairs.y % 4).toBe(0);
+    expect(result.playerSpawn.x % 4).toBe(0);
+  });
 });

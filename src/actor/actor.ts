@@ -4,6 +4,7 @@ import { Position } from '../physics/position';
 import { IN_COMBAT_TIME } from '../constants';
 import { Stats } from './stats';
 import { SafeArea } from './safeArea';
+import { DeathAnimation } from './deathAnimation';
 import { DamageNumber } from '../ui/damageNumber';
 import { DamageNumberType } from '../ui/damageNumberType';
 import { Sprite } from '../graphics/sprite';
@@ -32,6 +33,15 @@ export class Actor extends Component {
   }
 
   override update(dt = 0): void {
+    const deathAnimation = this.entity.getComponent(DeathAnimation);
+    if (deathAnimation) {
+      deathAnimation.update(dt);
+      if (deathAnimation.finished) {
+        this.entity.remove();
+      }
+      return;
+    }
+
     this.updateCombat(dt);
 
     const stats = this.entity.getComponent(Stats);
@@ -102,18 +112,22 @@ export class Actor extends Component {
           new Position(pos.x, pos.y),
           new Sprite({ default: ['assets/player/ghost.png'] }),
         ]);
-      } else {
-        world.createEntity([
-          new Position(pos.x, pos.y),
-          new Sprite({ default: ['assets/player/tombstone.png'] }),
-        ]);
-        const dropper = this.entity.getComponent(ItemDropper);
-        if (dropper) {
-          for (const item of dropper.getDropList()) {
-            dropper.drop(item, pos);
-          }
+        this.entity.remove();
+        return;
+      }
+
+      world.createEntity([
+        new Position(pos.x, pos.y),
+        new Sprite({ default: ['assets/player/tombstone.png'] }),
+      ]);
+      const dropper = this.entity.getComponent(ItemDropper);
+      if (dropper) {
+        for (const item of dropper.getDropList()) {
+          dropper.drop(item, pos);
         }
       }
+      this.entity.addComponent(new DeathAnimation());
+      return;
     }
     this.entity.remove();
   }

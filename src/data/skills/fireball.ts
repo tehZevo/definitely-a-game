@@ -25,4 +25,6 @@ export const fireball = new SkillDef(
   0.5,
   SkillSlot.ALPHA,
   'assets/skills/fireball.png',
+  null,
+  'Launches a fiery projectile that detonates on impact.',
 );

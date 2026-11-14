@@ -4,6 +4,7 @@ import { SkillDef } from '../skills/skillDef';
 import { SkillSlots } from '../skills/skillSlots';
 import { SkillSlot, SKILL_SLOTS, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import { skillRankIcon } from '../skills/skillRank';
+import { Tooltip } from './tooltip';
 
 const SLOT = 24;
 const GAP = 2;
@@ -20,11 +21,14 @@ export class SkillBar {
   private slotBg: Texture | null = null;
   private iconCache = new Map<string, Texture>();
   private children: PixiSprite[] = [];
+  private tooltip: Tooltip | null = null;
 
   private constructor(
     private slots: SkillSlots,
     private screenH: number,
-  ) {}
+  ) {
+    this.container.eventMode = 'dynamic';
+  }
 
   static async create(
     stage: Container,
@@ -33,38 +37,52 @@ export class SkillBar {
   ): Promise<SkillBar> {
     const bar = new SkillBar(slots, screenH);
     bar.slotBg = await Assets.load<Texture>(assetUrl('assets/ui/slot_bg.png'));
+    bar.tooltip = new Tooltip(stage);
     const defs: [SkillSlot, SkillDef | null][] = SKILL_SLOTS.map((s) => [
       s,
       bar.slots.get(s),
     ]);
     for (const [slot, def] of defs) {
       const { x, y } = slotPos(slot, bar.screenH);
+      const slotContainer = new Container();
+      slotContainer.x = x;
+      slotContainer.y = y;
+      slotContainer.eventMode = 'static';
+      bar.container.addChild(slotContainer);
+
       const bg = new PixiSprite(bar.slotBg);
-      bg.x = x;
-      bg.y = y;
-      bar.container.addChild(bg);
+      bg.eventMode = 'none';
+      slotContainer.addChild(bg);
       bar.children.push(bg);
+
       if (def) {
         if (def.icon) {
           const icon = await bar.loadIcon(def.icon);
           if (icon) {
             const s = new PixiSprite(icon);
-            s.x = x + 4;
-            s.y = y + 4;
-            bar.container.addChild(s);
+            s.eventMode = 'none';
+            s.x = 4;
+            s.y = 4;
+            slotContainer.addChild(s);
             bar.children.push(s);
           }
         }
         const rank = await bar.loadIcon(skillRankIcon(def.rank));
         if (rank) {
           const s = new PixiSprite(rank);
-          s.x = x + 16;
-          s.y = y + 16;
-          bar.container.addChild(s);
+          s.eventMode = 'none';
+          s.x = 16;
+          s.y = 16;
+          slotContainer.addChild(s);
           bar.children.push(s);
         }
+
+        const text = def.description ?? bar.keyFor(slot);
+        slotContainer.on('pointerover', () => bar.tooltip?.show(text, x, y - 24));
+        slotContainer.on('pointerout', () => bar.tooltip?.hide());
       }
     }
+    bar.container.zIndex = 100;
     stage.addChild(bar.container);
     return bar;
   }

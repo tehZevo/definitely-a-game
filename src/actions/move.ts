@@ -1,6 +1,7 @@
 import { Action } from './action';
 import { Actor } from '../actor/actor';
 import { Physics } from '../physics/physics';
+import { Position } from '../physics/position';
 import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
 import { Sprite } from '../graphics/sprite';
 import { Vector2 } from '../utils/vector';
@@ -25,8 +26,9 @@ export class Move extends Action {
     if (!this.active || !this.entity) return;
     const actor = this.entity.getComponent(Actor);
     const phys = this.entity.getComponent(Physics);
+    const pos = this.entity.getComponent(Position);
     const sprite = this.entity.getComponent(Sprite);
-    if (!actor || !phys) return;
+    if (!actor || !phys || !pos) return;
 
     if (this.dir) {
       const lookDir =
@@ -38,7 +40,8 @@ export class Move extends Action {
       actor.moveDir = this.dir;
       const force = this.dir.scale(PLAYER_MOVE_SPEED * PLAYER_MOVE_SPEED_SCALE * TILE_SIZE);
       phys.applyForce(force);
-      sprite?.setAnimation('walk');
+      const canMove = phys.canMoveTo(pos.x + this.dir.x * 0.01, pos.y + this.dir.y * 0.01);
+      sprite?.setAnimation(canMove ? 'walk' : 'idle');
     }
   }
 

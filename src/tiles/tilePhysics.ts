@@ -1,6 +1,6 @@
 import { Component } from '../ecs';
 import type { Tileset } from '../tiles/tileset';
-import { CHUNK_SIZE, PHYS_SCALE } from '../constants';
+import { CHUNK_SIZE } from '../constants';
 import type { Vector2 } from '../utils/vector';
 
 interface Rect {
@@ -41,10 +41,10 @@ function buildRects(cx: number, cy: number, chunk: Tileset): Rect[] {
           }
         }
         rects.push({
-          x: (cx * CHUNK_SIZE + x) * PHYS_SCALE,
-          y: (cy * CHUNK_SIZE + y) * PHYS_SCALE,
-          w: w * PHYS_SCALE,
-          h: h * PHYS_SCALE,
+          x: cx * CHUNK_SIZE + x,
+          y: cy * CHUNK_SIZE + y,
+          w,
+          h,
         });
       }
     }

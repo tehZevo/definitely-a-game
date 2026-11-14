@@ -5,6 +5,7 @@ import { TILE_SIZE } from '../constants';
 
 export class TileRenderer {
   static async render(tileset: Tileset, parent: Container): Promise<void> {
+    parent.sortableChildren = true;
     const cache = new Map<string, Texture>();
     for (let y = 0; y < tileset.height; y++) {
       for (let x = 0; x < tileset.width; x++) {
@@ -20,6 +21,7 @@ export class TileRenderer {
         const sprite = new PixiSprite(tex);
         sprite.x = x * TILE_SIZE;
         sprite.y = y * TILE_SIZE;
+        sprite.zIndex = y * TILE_SIZE - (tile.solid ? 0 : 1);
         parent.addChild(sprite);
       }
     }

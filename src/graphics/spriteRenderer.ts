@@ -27,7 +27,9 @@ export class SpriteRenderer {
   private shadowTex: Texture | null = null;
   private shadowViews = new Map<Entity, PixiSprite>();
 
-  constructor(private stage: Container) {}
+  constructor(private stage: Container) {
+    stage.sortableChildren = true;
+  }
 
   private async load(path: string): Promise<Texture[]> {
     let frames = this.cache.get(path);
@@ -124,6 +126,7 @@ export class SpriteRenderer {
       }
       view.x = Math.round(pos.x);
       view.y = Math.round(pos.y);
+      view.zIndex = Math.round(pos.y);
     }
   }
 }

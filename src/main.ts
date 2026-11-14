@@ -41,6 +41,7 @@ import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
+import { InteractTargeter } from './core/interactTargeter';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -135,6 +136,7 @@ async function startGame(
     pos,
     new Physics(),
     new PlayerController(inputSource, defaultAttack),
+    new InteractTargeter(),
     stats,
     new Actor(),
     new Team(0),

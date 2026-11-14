@@ -22,6 +22,8 @@ export interface StatsData {
 export class Stats extends Component {
   primary: PrimaryStats;
   equip: EquipStats;
+  basePrimary: PrimaryStats;
+  baseEquip: EquipStats;
   flatModifiers: Record<string, FullStats> = {};
   scalingModifiers: Record<string, FullStats> = {};
   private _calculated: FullStats;
@@ -40,8 +42,10 @@ export class Stats extends Component {
     equip?: EquipStats,
   ) {
     super();
-    this.primary = primary ?? PrimaryStats.Base();
-    this.equip = equip ?? EquipStats.One();
+    this.basePrimary = primary ?? PrimaryStats.Base();
+    this.baseEquip = equip ?? EquipStats.One();
+    this.primary = this.basePrimary.clone();
+    this.equip = this.baseEquip.clone();
     this._calculated = new FullStats(this.equip, this.primary);
   }
 
@@ -105,6 +109,14 @@ export class Stats extends Component {
     };
   }
 
+  basePrimaryStats(): PrimaryStats {
+    return this.basePrimary.clone();
+  }
+
+  baseEquipStats(): EquipStats {
+    return this.baseEquip.clone();
+  }
+
   load(data: StatsData): void {
     this.hp = data.hp;
     this.maxHp = data.maxHp;
@@ -118,6 +130,8 @@ export class Stats extends Component {
   }
 
   setBase(primary: PrimaryStats, equip: EquipStats): void {
+    this.basePrimary = primary.clone();
+    this.baseEquip = equip.clone();
     this.primary = primary.clone();
     this.equip = equip.clone();
     this.recalculate();
@@ -129,9 +143,12 @@ export class Stats extends Component {
     const weaponType = equips?.primaryWeapon?.weaponType ?? WeaponType.SHORTSWORD;
     const archetypeStats = equips ? sumScaledArchetypeStats(equips) : new FullStats();
 
+    this.primary = this.basePrimary.add(archetypeStats.primary);
+    this.equip = this.baseEquip.add(archetypeStats.equip);
+
     const result = calculateStats(
-      this.primary,
-      this.equip,
+      this.basePrimary,
+      this.baseEquip,
       archetypeStats.primary,
       archetypeStats.equip,
       flat,

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { World } from '../../ecs';
 import { Position } from '../../physics/position';
 import { Skill } from '../skill';
-import { SkillEffect, createChildSkill } from './skillEffect';
+import { SkillEffect, createChildSkill, spawnEffectChildren } from './skillEffect';
 
 class MarkerEffect extends SkillEffect {}
 
@@ -25,6 +25,7 @@ describe('SkillEffect', () => {
     expect(childSkill.parent).toBe(parentEntity);
     expect(childSkill.target).toBe(target);
     expect(childSkill.multiplier).toBe(6);
+    expect(childSkill.success).toBe(true);
     expect(childPos.x).toBe(3);
     expect(childPos.y).toBe(4);
   });
@@ -43,5 +44,18 @@ describe('SkillEffect', () => {
     expect(created.length).toBe(2);
     expect(world.find(Skill).length).toBe(3);
     expect(created.map((entity) => entity.getComponent(Skill)!.multiplier)).toEqual([8, 12]);
+  });
+
+  it('does not spawn children when the parent skill failed', () => {
+    const world = new World();
+    const user = world.createEntity([new Position(0, 0)]);
+    const parentEffect = new SkillEffect({ children: [new MarkerEffect()], success: false });
+    const parentEntity = world.createEntity([new Position(0, 0), new Skill(parentEffect, user)]);
+    const parentSkill = parentEntity.getComponent(Skill)!;
+
+    expect(parentSkill.success).toBe(false);
+    expect(parentEffect.spawnChildren(parentSkill)).toEqual([]);
+    expect(spawnEffectChildren(parentSkill, [new MarkerEffect()])).toEqual([]);
+    expect(world.find(Skill).length).toBe(1);
   });
 });

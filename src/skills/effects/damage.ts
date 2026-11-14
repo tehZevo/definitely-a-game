@@ -31,7 +31,10 @@ export class Damage extends SkillEffect {
     const userStats = skill.user.getComponent(Stats);
     const targetStats = skill.target?.getComponent(Stats);
     const targetActor = skill.target?.getComponent(Actor);
-    if (!userStats || !targetStats || !targetActor) return null;
+    if (!userStats || !targetStats || !targetActor) {
+      skill.success = false;
+      return null;
+    }
     const critRatio = userStats.critical / 100;
     const hits = Array.from({ length: this.hits }, () => {
       const [damage, isCrit] = this.calculateHit(userStats, targetStats, critRatio);

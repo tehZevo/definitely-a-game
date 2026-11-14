@@ -42,6 +42,8 @@ export class Target extends SkillEffect {
   }
 
   override start(skill: Skill): unknown {
-    return applyTarget(skill, this.filters, this.maxTargets, this.children);
+    const targets = applyTarget(skill, this.filters, this.maxTargets, this.children);
+    skill.success = targets.length > 0;
+    return targets;
   }
 }

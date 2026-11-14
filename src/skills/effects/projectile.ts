@@ -1,4 +1,4 @@
-import { SkillEffect, createChildSkill, type SkillEffectOptions } from './skillEffect';
+import { SkillEffect, spawnEffectChildren, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import type { Entity } from '../../ecs';
 import { Position } from '../../physics/position';
@@ -75,13 +75,7 @@ export class Projectile extends SkillEffect {
 
   override remove(skill: Skill, state: unknown): void {
     const s = state as ProjectileState;
-    const world = skill.entity.world;
-    const pos = skill.entity.getComponent(Position);
-    if (world && pos) {
-      for (const child of this.onEnd) {
-        createChildSkill(world, skill, child);
-      }
-    }
+    spawnEffectChildren(skill, this.onEnd);
     s.sprite?.remove();
   }
 }

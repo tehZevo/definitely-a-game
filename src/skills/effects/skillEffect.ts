@@ -5,6 +5,7 @@ import { Skill } from '../skill';
 export interface SkillEffectOptions {
   children?: SkillEffect | SkillEffect[];
   multiplier?: number;
+  success?: boolean;
 }
 
 function normalizeChildren(children?: SkillEffect | SkillEffect[]): SkillEffect[] {
@@ -18,26 +19,40 @@ export function createChildSkill(
   child: SkillEffect,
   target?: Entity,
   multiplier = parentSkill.multiplier * child.multiplier,
+  success = child.success,
 ): Entity {
   const sourcePos = target?.getComponent(Position) ?? parentSkill.entity.getComponent(Position);
   const pos = sourcePos ? new Position(sourcePos.x, sourcePos.y) : new Position(0, 0);
-  return world.createEntity([pos, new Skill(child, parentSkill.user, parentSkill.entity, target, multiplier)]);
+  return world.createEntity([
+    pos,
+    new Skill(child, parentSkill.user, parentSkill.entity, target, multiplier, success),
+  ]);
+}
+
+export function spawnEffectChildren(
+  skill: Skill,
+  children: SkillEffect[],
+  target?: Entity,
+): Entity[] {
+  if (!skill.success) return [];
+  const world = skill.entity?.world;
+  if (!world) return [];
+  return children.map((child) => createChildSkill(world, skill, child, target));
 }
 
 export class SkillEffect {
   children: SkillEffect[];
   multiplier: number;
+  success: boolean;
 
   constructor(options: SkillEffectOptions = {}) {
     this.children = normalizeChildren(options.children);
     this.multiplier = options.multiplier ?? 1;
+    this.success = options.success ?? true;
   }
 
   spawnChildren(skill: Skill, target?: Entity): Entity[] {
-    if (!skill.entity) return [];
-    const world = skill.entity.world;
-    if (!world) return [];
-    return this.children.map((child) => createChildSkill(world, skill, child, target));
+    return spawnEffectChildren(skill, this.children, target);
   }
 
   start(skill: Skill): unknown {

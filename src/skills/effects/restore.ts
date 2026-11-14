@@ -11,7 +11,10 @@ export class RestoreHealth extends SkillEffect {
   override start(skill: Skill): unknown {
     const stats = skill.user.getComponent(Stats);
     const targetActor = skill.target?.getComponent(Actor);
-    if (!stats || !targetActor) return null;
+    if (!stats || !targetActor) {
+      skill.success = false;
+      return null;
+    }
     const missingHp = Math.max(stats.maxHp - stats.hp, 0);
     const amountToHeal = Math.min(missingHp, (stats.maxHp * this.percent) / 100) * skill.multiplier;
     if (amountToHeal > 0) {
@@ -30,7 +33,10 @@ export class RestoreMana extends SkillEffect {
   override start(skill: Skill): unknown {
     const stats = skill.user.getComponent(Stats);
     const targetActor = skill.target?.getComponent(Actor);
-    if (!stats || !targetActor) return null;
+    if (!stats || !targetActor) {
+      skill.success = false;
+      return null;
+    }
     const missingMp = Math.max(stats.maxMp - stats.mp, 0);
     const amountToHeal = Math.min(missingMp, (stats.maxMp * this.percent) / 100) * skill.multiplier;
     if (amountToHeal > 0) {

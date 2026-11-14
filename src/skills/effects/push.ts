@@ -14,11 +14,17 @@ export class Push extends SkillEffect {
   }
 
   override start(skill: Skill): unknown {
-    if (!skill.target) return null;
+    if (!skill.target) {
+      skill.success = false;
+      return null;
+    }
     const parentPos = skill.parent?.getComponent(Position);
     const targetPos = skill.target.getComponent(Position);
     const targetPhysics = skill.target.getComponent(Physics);
-    if (!parentPos || !targetPos || !targetPhysics) return null;
+    if (!parentPos || !targetPos || !targetPhysics) {
+      skill.success = false;
+      return null;
+    }
 
     const dx = targetPos.x - parentPos.x;
     const dy = targetPos.y - parentPos.y;

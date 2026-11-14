@@ -22,6 +22,12 @@ class MultiplierEffect extends SkillEffect {
   }
 }
 
+class FailedEffect extends SkillEffect {
+  constructor() {
+    super({ success: false });
+  }
+}
+
 describe('Skill', () => {
   it('runs the effect on start and removes the entity when complete', () => {
     const world = new World();
@@ -47,5 +53,18 @@ describe('Skill', () => {
     const user = world.createEntity([new Position(0, 0)]);
     const skill = new Skill(new MultiplierEffect(), user, undefined, undefined, 3);
     expect(skill.multiplier).toBe(3);
+  });
+
+  it('uses the effect success by default', () => {
+    const world = new World();
+    const user = world.createEntity([new Position(0, 0)]);
+    expect(new Skill(new CountingEffect(), user).success).toBe(true);
+    expect(new Skill(new FailedEffect(), user).success).toBe(false);
+  });
+
+  it('allows an explicit success value to override the effect default', () => {
+    const world = new World();
+    const user = world.createEntity([new Position(0, 0)]);
+    expect(new Skill(new CountingEffect(), user, undefined, undefined, 1, false).success).toBe(false);
   });
 });

@@ -31,12 +31,21 @@ export class EmitParticles extends SkillEffect {
 
   override start(skill: Skill): unknown {
     const world = skill.entity.world;
-    if (!world) return null;
+    if (!world) {
+      skill.success = false;
+      return null;
+    }
     const pos = skill.entity.getComponent(Position);
-    if (!pos) return null;
+    if (!pos) {
+      skill.success = false;
+      return null;
+    }
 
     const system = world.findComponent(ParticleSystem);
-    if (!system) return null;
+    if (!system) {
+      skill.success = false;
+      return null;
+    }
 
     const origin = new Vector2(pos.x + 0.5, pos.y + 0.5);
     const count = Math.max(1, Math.round(this.perTick * skill.multiplier));

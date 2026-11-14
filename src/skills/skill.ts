@@ -11,6 +11,7 @@ export class Skill extends Component {
     public parent?: Entity,
     public target?: Entity,
     public multiplier = effect.multiplier,
+    public success = effect.success,
   ) {
     super();
   }

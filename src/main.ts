@@ -1,5 +1,6 @@
 import './style.css';
 import { Application, Container } from 'pixi.js';
+import { World } from './ecs';
 import { Vector2 } from './utils/vector';
 import { Position } from './physics/position';
 import { PlayerController } from './actor/playerController';
@@ -10,7 +11,7 @@ import { Camera } from './graphics/camera';
 import { KeyboardInput } from './core/input';
 import { TouchJoystick } from './core/touchJoystick';
 import { CombinedInput } from './core/combinedInput';
-import { generateDungeon } from './maps/dfsGenerator';
+import { generateDungeon, type MapDef } from './maps/dfsGenerator';
 import { chunkTiles } from './maps/chunkTiles';
 import { Tileset } from './tiles/tileset';
 import { Tile } from './tiles/tile';
@@ -36,10 +37,12 @@ import { Chest } from './tiles/chest';
 import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
+import { GameMaster } from './core/gameMaster';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
 import { CharCreateState } from './core/charCreateState';
 import { getFaceImagePaths, type FaceConfig } from './graphics/characterCreator';
+import { nextMapFor, resolveMap } from './data/maps';
 import { TILE_IMAGES } from './data/tilePalettes';
 
 function dungeonToTileset(
@@ -67,14 +70,25 @@ function dungeonToTileset(
   return new Tileset(width, height, grid);
 }
 
-async function startGame(app: Application, game: Game, face: FaceConfig): Promise<void> {
+async function startGame(
+  app: Application,
+  game: Game,
+  face: FaceConfig,
+  mapdef: MapDef | string = 'plains',
+): Promise<void> {
+  const resolved = resolveMap(mapdef);
   const worldLayer = game.worldLayer!;
+  worldLayer.removeChildren();
+
+  const world = new World();
+  game.world = world;
+  game.onTransition = (next) => startGame(app, game, face, next);
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
-  const tileset = dungeonToTileset(dungeon.tiles, 'grass');
+  const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
   await TileRenderer.render(tileset, worldLayer);
 
-  const world = game.world;
+  world.createEntity([new GameMaster(resolved, game)]);
   const chunks = chunkTiles(dungeon.tiles);
   world.createEntity([new TilePhysics(chunks)]);
   const spawnRoom = dungeon.rooms[0];
@@ -119,7 +133,7 @@ async function startGame(app: Application, game: Game, face: FaceConfig): Promis
   const lastRoom = dungeon.rooms[dungeon.rooms.length - 1];
   world.createEntity([
     new Position(lastRoom.x * 8 * 16 + 64, lastRoom.y * 8 * 16 + 64),
-    new Stairs('plains'),
+    new Stairs(nextMapFor(resolved)),
   ]);
 
   const midRoom = dungeon.rooms[Math.floor(dungeon.rooms.length / 2)];

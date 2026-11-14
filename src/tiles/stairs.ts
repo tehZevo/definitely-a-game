@@ -1,8 +1,12 @@
-import { TileEntity } from './tileEntity';
+import { Interactable } from '../core/interactable';
+import { GameMaster } from '../core/gameMaster';
+import type { Entity } from '../ecs';
 import type { MapDef } from '../maps/dfsGenerator';
 import { Sprite } from '../graphics/sprite';
 
-export class Stairs extends TileEntity {
+export class Stairs extends Interactable {
+  override solid = false;
+
   constructor(public mapdef: MapDef | string) {
     super();
   }
@@ -14,5 +18,10 @@ export class Stairs extends TileEntity {
       sprite.frames = { default: ['assets/tiles/stairs.png'] };
       sprite.current = 'default';
     }
+  }
+
+  override interact(_entity: Entity): void {
+    void _entity;
+    this.entity.world?.findComponent(GameMaster)?.transition(this.mapdef);
   }
 }

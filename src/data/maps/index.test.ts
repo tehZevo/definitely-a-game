@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MapDef } from '../../maps/dfsGenerator';
 import { getMap } from '../registry';
-import { allMaps, nextMapFor, resolveMap } from './index';
+import { nextMapFor, resolveMap } from './index';
 
 describe('map registry', () => {
   it('registers known maps', () => {
@@ -14,9 +14,10 @@ describe('map registry', () => {
     expect(resolveMap(map)).toBe(map);
   });
 
-  it('cycles through known maps', () => {
-    const index = allMaps.findIndex((map) => map.id === 'plains');
-    expect(nextMapFor('plains')).toBe(allMaps[(index + 1) % allMaps.length]);
+  it('follows the world map', () => {
+    expect(nextMapFor('plains')).toBe(resolveMap('maze'));
+    expect(nextMapFor('forest')).toBe(resolveMap('plains'));
+    expect(nextMapFor('maze')).toBe(resolveMap('forest'));
   });
 });
 

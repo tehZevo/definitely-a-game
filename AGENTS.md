@@ -3,6 +3,7 @@
 ## Project
 - `definitely-a-game`: TypeScript port of [a-game-maybe](https://github.com/tehZevo/a-game-maybe) (Python/pygame top-down 2D action-RPG).
 - Goal: run natively in the browser, deploy via GitHub Pages. No pygbag.
+- Current goal: feature parity with the Python game except multiplayer and the desktop app.
 - The Python repo is the reference; read it via `gh api repos/tehZevo/a-game-maybe/...` (not vendored here).
 
 ## Stack

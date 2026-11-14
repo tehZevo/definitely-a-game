@@ -4,6 +4,9 @@ import { Position } from '../physics/position';
 import { FakeInput } from '../core/input';
 import { PlayerController } from './playerController';
 import { Sprite } from '../graphics/sprite';
+import { Equips } from '../items/equips';
+import { woodenLongsword } from '../data/items/weapons';
+import { defaultAttack } from '../data/skills/defaultAttack';
 
 describe('PlayerController', () => {
   it('moves by speed along the input axis', () => {
@@ -56,5 +59,17 @@ describe('PlayerController', () => {
     ]);
     world.update(1);
     expect(sprite.current).toBe('idle');
+  });
+
+  it('uses the equipped weapon speed for attack cooldowns', () => {
+    const world = new World();
+    const equips = new Equips();
+    equips.equipWeapon(woodenLongsword);
+    const controller = new PlayerController(new FakeInput(0, 0, true), defaultAttack);
+    world.createEntity([new Position(0, 0), controller, equips]);
+
+    world.update(0.1);
+
+    expect((controller as unknown as { attackTimer: number }).attackTimer).toBeCloseTo(0.55);
   });
 });

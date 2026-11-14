@@ -35,6 +35,7 @@ import {
   copperShield,
 } from '../items/weapons';
 import { bless } from '../skills/bless';
+import { MOOK } from '../../monsters/archetypes';
 
 export const slime = new MobDef(
   'slime',
@@ -44,6 +45,9 @@ export const slime = new MobDef(
   0,
   [cottonHat, cottonRobe, cottonGloves, cottonShoes, woodenShield],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const greenSlime = new MobDef(
@@ -54,6 +58,9 @@ export const greenSlime = new MobDef(
   0,
   [linenHat, linenRobe, linenGloves, linenShoes],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const brownSlime = new MobDef(
@@ -64,6 +71,9 @@ export const brownSlime = new MobDef(
   0,
   [woodenHelmet, woodenSuit, woodenGloves, woodenBoots, woodenShortsword, woodenLongsword, woodenShield],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const redSlime = new MobDef(
@@ -74,6 +84,9 @@ export const redSlime = new MobDef(
   0,
   [copperHelmet, copperSuit, copperGloves, copperBoots, copperShortsword, copperLongsword, copperShield],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const darkSlime = new MobDef(
@@ -84,6 +97,9 @@ export const darkSlime = new MobDef(
   0,
   [leatherHat, leatherSuit, leatherGloves, leatherShoes],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const pinkSlime = new MobDef(
@@ -94,6 +110,9 @@ export const pinkSlime = new MobDef(
   0,
   [hideHat, hideSuit, hideGloves, hideShoes],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const purpleSlime = new MobDef(
@@ -104,6 +123,9 @@ export const purpleSlime = new MobDef(
   0,
   [linenHat, linenRobe],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 export const goldSlime = new MobDef(
@@ -114,6 +136,9 @@ export const goldSlime = new MobDef(
   0,
   [copperHelmet, copperSuit, copperShortsword],
   [testEnemySkill],
+  100,
+  0,
+  [MOOK],
 );
 
 void bless;

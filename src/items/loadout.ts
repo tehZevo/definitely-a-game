@@ -41,11 +41,24 @@ export class Loadout extends Component {
   }
 
   allBuffs(): string[] {
-    const items = [
+    const items = this.equippedItems();
+    return [...new Set(items.flatMap((item) => item.buffs))];
+  }
+
+  itemSets(): Record<string, number> {
+    const counts: Record<string, number> = {};
+    for (const item of this.equippedItems()) {
+      if (!item.set) continue;
+      counts[item.set] = (counts[item.set] ?? 0) + 1;
+    }
+    return counts;
+  }
+
+  private equippedItems() {
+    return [
       ...Object.values(this.weapons),
       ...Object.values(this.armor),
     ].filter((item): item is NonNullable<typeof item> => item !== undefined);
-    return [...new Set(items.flatMap((item) => item.buffs))];
   }
 
   save(): LoadoutData {

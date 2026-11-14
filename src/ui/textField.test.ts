@@ -19,4 +19,18 @@ describe('TextField', () => {
     field.handleKeys(new Set(['Enter']));
     expect(submitted).toEqual(['zevo']);
   });
+
+  it('shows the keyboard hint', () => {
+    const field = new TextField(() => {}, 'zevo', 10);
+    expect(field.hintText()).toBe('Enter: Confirm; Esc: Cancel');
+  });
+
+  it('cancels on Escape', () => {
+    let cancelled = false;
+    const field = new TextField(() => {}, 'zevo', 10, null, () => {
+      cancelled = true;
+    });
+    field.handleKeys(new Set(['Escape']));
+    expect(cancelled).toBe(true);
+  });
 });

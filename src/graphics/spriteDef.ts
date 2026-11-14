@@ -1,5 +1,14 @@
 import { Vector2 } from '../utils/vector';
 
+export type FlipMode = 'none' | 'x' | 'y' | 'both';
+
+export function flipScales(flip: FlipMode): { x: 1 | -1; y: 1 | -1 } {
+  return {
+    x: flip === 'x' || flip === 'both' ? -1 : 1,
+    y: flip === 'y' || flip === 'both' ? -1 : 1,
+  };
+}
+
 export class Layer {
   imagePath: string;
   frameWidth: number;
@@ -63,19 +72,34 @@ export class SpriteDef {
   id: string;
   animations: Record<string, Animation>;
   origin: Vector2;
+  flip: FlipMode;
 
-  constructor(id: string, animations: Record<string, Animation> = {}, origin?: [number, number]) {
+  constructor(
+    id: string,
+    animations: Record<string, Animation> = {},
+    origin?: [number, number],
+    flip: FlipMode = 'none',
+  ) {
     this.id = id;
     this.animations = animations;
     this.origin = origin ? new Vector2(origin[0], origin[1]) : new Vector2(0, 0);
+    this.flip = flip;
   }
 }
 
 export class SimpleSprite extends SpriteDef {
-  constructor(id: string, imagePath: string, frameWidth: number, numFrames: number, offset?: [number, number], loop = false) {
+  constructor(
+    id: string,
+    imagePath: string,
+    frameWidth: number,
+    numFrames: number,
+    offset?: [number, number],
+    loop = false,
+    flip: FlipMode = 'none',
+  ) {
     const offsets = offset ? Array.from({ length: numFrames }, () => new Vector2(offset[0], offset[1])) : undefined;
     const layer = new Layer(imagePath, frameWidth, numFrames, offsets);
     const anim = new Animation([layer], undefined, loop);
-    super(id, { default: anim });
+    super(id, { default: anim }, undefined, flip);
   }
 }

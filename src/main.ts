@@ -38,6 +38,8 @@ import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
 import { BuffIcons } from './ui/buffIcons';
 import { Buffs } from './buffs/buffs';
+import { HPRecovery } from './actor/hpRecovery';
+import { MPRecovery } from './actor/mpRecovery';
 import { SkillBar } from './ui/skillBar';
 import { StatsScreen } from './ui/statsScreen';
 import { Tooltip } from './ui/tooltip';
@@ -159,6 +161,8 @@ async function startGame(
     new Actor(),
     new Physics(),
     new Buffs(),
+    new HPRecovery(),
+    new MPRecovery(),
     new InteractTargeter(),
     stats,
     new Team(0),

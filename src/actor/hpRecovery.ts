@@ -1,10 +1,7 @@
 import { Component } from '../ecs';
 import { Actor } from './actor';
 import { Stats } from './stats';
-
-const HP_RECOVERY_PERCENT = 5;
-const HP_RECOVERY_TIME = 3;
-const DT = 1 / 60;
+import { HP_RECOVERY_PERCENT, HP_RECOVERY_TIME, DT } from '../constants';
 
 export class HPRecovery extends Component {
   alwaysRecover = false;

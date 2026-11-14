@@ -33,17 +33,18 @@ export class MainMenuState extends GameState {
 
     const title = new BitmapText({
       text: 'A Game Maybe',
-      style: { fontSize: 48, fill: 0xffffff },
+      style: { fontSize: 16, fill: 0xffffff },
     });
     title.anchor.set(0.5);
-    title.y = -app.screen.height / 6;
+    title.y = -app.screen.height / 3;
     this.container.addChild(title);
 
     const startBtn = new BitmapText({
       text: '[ Start Game ]',
-      style: { fontSize: 24, fill: 0x88ccff },
+      style: { fontSize: 12, fill: 0x88ccff },
     });
     startBtn.anchor.set(0.5);
+    startBtn.y = 0;
     startBtn.eventMode = 'static';
     startBtn.cursor = 'pointer';
     startBtn.on('pointerdown', () => this.onStart?.());
@@ -51,10 +52,10 @@ export class MainMenuState extends GameState {
 
     const skipBtn = new BitmapText({
       text: '[ Skip ]',
-      style: { fontSize: 18, fill: 0x88ff88 },
+      style: { fontSize: 10, fill: 0x88ff88 },
     });
     skipBtn.anchor.set(0.5);
-    skipBtn.y = 40;
+    skipBtn.y = 24;
     skipBtn.eventMode = 'static';
     skipBtn.cursor = 'pointer';
     skipBtn.on('pointerdown', () => this.onSkip?.());

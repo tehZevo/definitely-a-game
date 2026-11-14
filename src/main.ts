@@ -64,6 +64,7 @@ import { CharCreateState } from './core/charCreateState';
 import { getFaceImagePaths, type FaceConfig } from './graphics/characterCreator';
 import { nextMapFor, resolveMap } from './data/maps';
 import { TILE_IMAGES } from './data/tilePalettes';
+import { preloadBitmapFont } from './ui/bitmapText';
 
 const DEFAULT_FACE: FaceConfig = {
   gender: 'male',
@@ -263,6 +264,7 @@ async function startGame(
 }
 
 async function boot(): Promise<void> {
+  await preloadBitmapFont();
   const app = new Application();
   await app.init({
     background: '#1099bb',

@@ -22,6 +22,7 @@ export class MapDef {
 export interface DungeonResult {
   rooms: Room[];
   tiles: Map<string, TileType>;
+  spawners: SpawnerPlacement[];
 }
 
 export interface DFSOptions {
@@ -29,6 +30,12 @@ export interface DFSOptions {
   floorSize?: number;
   doorWidth?: number;
   accent?: number;
+  spawnerChance?: number;
+}
+
+export interface SpawnerPlacement {
+  x: number;
+  y: number;
 }
 
 const DEFAULTS: Required<DFSOptions> = {
@@ -36,6 +43,7 @@ const DEFAULTS: Required<DFSOptions> = {
   floorSize: 3,
   doorWidth: 2,
   accent: 0.1,
+  spawnerChance: 0.25,
 };
 
 function oob(x: number, y: number, size: number): boolean {
@@ -155,7 +163,17 @@ export function roomsToTiles(
 }
 
 export function generateDungeon(opts: Partial<DFSOptions> = {}): DungeonResult {
+  const options = { ...DEFAULTS, ...opts };
   const rooms = buildDFS(opts);
-  const tiles = roomsToTiles(rooms, opts.roomSize ?? 8, opts.doorWidth ?? 2, opts.accent ?? 0.1);
-  return { rooms, tiles };
+  const tiles = roomsToTiles(rooms, options.roomSize, options.doorWidth, options.accent);
+  const spawners: SpawnerPlacement[] = [];
+  for (const room of rooms) {
+    if (Math.random() < options.spawnerChance) {
+      spawners.push({
+        x: room.x * options.roomSize + options.roomSize / 2,
+        y: room.y * options.roomSize + options.roomSize / 2,
+      });
+    }
+  }
+  return { rooms, tiles, spawners };
 }

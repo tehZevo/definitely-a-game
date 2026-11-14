@@ -1,10 +1,7 @@
 import { Component } from '../ecs';
 import { Actor } from './actor';
 import { Stats } from './stats';
-
-const MP_RECOVERY_PERCENT = 5;
-const MP_RECOVERY_TIME = 3;
-const DT = 1 / 60;
+import { MP_RECOVERY_PERCENT, MP_RECOVERY_TIME, DT } from '../constants';
 
 export class MPRecovery extends Component {
   alwaysRecover = false;
@@ -14,9 +11,9 @@ export class MPRecovery extends Component {
     const actor = this.entity.getComponent(Actor);
     const stats = this.entity.getComponent(Stats);
     if (!actor || !stats) return;
+    void this.alwaysRecover;
 
     this.timeSinceLastRecovery += dt;
-    if (actor.inCombat && !this.alwaysRecover) return;
 
     if (this.timeSinceLastRecovery > MP_RECOVERY_TIME) {
       this.timeSinceLastRecovery = 0;

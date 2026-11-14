@@ -1,11 +1,11 @@
 import { MapDef } from '../../maps/dfsGenerator';
 import { getMap, registerMap } from '../registry';
-import { grassWalls, grassFloors, sandWalls, sandFloors, forestWalls, forestFloors } from '../tilePalettes';
+import { grassWalls, grassFloors, sandFloors, stoneWalls, forestWalls } from '../tilePalettes';
 
-export const forest = new MapDef('forest', 'forest', 'dfs');
-export const maze = new MapDef('maze', 'sand', 'dfs');
-export const plains = new MapDef('plains', 'grass', 'dfs');
-export const devMap = new MapDef('dev', 'grass', 'dev');
+export const forest = new MapDef('forest', forestWalls.add(grassFloors), 'dfs');
+export const maze = new MapDef('maze', sandFloors.add(stoneWalls), 'dfs');
+export const plains = new MapDef('plains', grassWalls.add(grassFloors), 'dfs');
+export const devMap = new MapDef('dev', grassFloors.add(stoneWalls), 'dev');
 
 export const allMaps: MapDef[] = [plains, forest, maze, devMap];
 
@@ -15,7 +15,7 @@ for (const map of allMaps) {
 
 export function resolveMap(map: MapDef | string): MapDef {
   if (typeof map !== 'string') return map;
-  return getMap(map) ?? new MapDef(map, 'grass', 'dfs');
+  return getMap(map) ?? new MapDef(map, grassWalls.add(grassFloors), 'dfs');
 }
 
 export function nextMapFor(map: MapDef | string): MapDef {
@@ -25,9 +25,3 @@ export function nextMapFor(map: MapDef | string): MapDef {
   return allMaps[(index + 1) % allMaps.length];
 }
 
-void grassWalls;
-void grassFloors;
-void sandWalls;
-void sandFloors;
-void forestWalls;
-void forestFloors;

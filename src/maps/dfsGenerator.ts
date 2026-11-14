@@ -1,4 +1,5 @@
 import type { TileType } from '../tiles/tile';
+import { TilePalette, grassFloors, grassWalls } from '../data/tilePalettes';
 
 export interface Room {
   x: number;
@@ -12,7 +13,7 @@ export interface Room {
 export class MapDef {
   constructor(
     public id: string,
-    public palette: string,
+    public palette: TilePalette = grassWalls.add(grassFloors),
     public generator: string,
   ) {}
 }

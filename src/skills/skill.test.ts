@@ -16,6 +16,12 @@ class CountingEffect extends SkillEffect {
   }
 }
 
+class MultiplierEffect extends SkillEffect {
+  constructor() {
+    super({ multiplier: 2 });
+  }
+}
+
 describe('Skill', () => {
   it('runs the effect on start and removes the entity when complete', () => {
     const world = new World();
@@ -27,5 +33,19 @@ describe('Skill', () => {
     world.update(0);
     expect(e.alive).toBe(false);
     expect(effect.removed).toBe(1);
+  });
+
+  it('uses the effect multiplier by default', () => {
+    const world = new World();
+    const user = world.createEntity([new Position(0, 0)]);
+    const skill = new Skill(new MultiplierEffect(), user);
+    expect(skill.multiplier).toBe(2);
+  });
+
+  it('allows an explicit multiplier to override the effect default', () => {
+    const world = new World();
+    const user = world.createEntity([new Position(0, 0)]);
+    const skill = new Skill(new MultiplierEffect(), user, undefined, undefined, 3);
+    expect(skill.multiplier).toBe(3);
   });
 });

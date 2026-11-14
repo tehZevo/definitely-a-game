@@ -1,4 +1,4 @@
-import { SkillEffect } from './skillEffect';
+import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
@@ -6,8 +6,13 @@ import { Actor } from '../../actor/actor';
 export const DAMAGE_SPREAD = 0.5;
 
 export class Damage extends SkillEffect {
-  constructor(public power = 100, public hits = 1, public magic = false) {
-    super();
+  constructor(
+    public power = 100,
+    public hits = 1,
+    public magic = false,
+    options: SkillEffectOptions = {},
+  ) {
+    super(options);
   }
 
   calculateHit(userStats: Stats, targetStats: Stats, critRatio: number): [number, boolean] {
@@ -28,10 +33,12 @@ export class Damage extends SkillEffect {
     const targetActor = skill.target?.getComponent(Actor);
     if (!userStats || !targetStats || !targetActor) return null;
     const critRatio = userStats.critical / 100;
-    const hits = Array.from({ length: this.hits }, () =>
-      this.calculateHit(userStats, targetStats, critRatio),
-    );
+    const hits = Array.from({ length: this.hits }, () => {
+      const [damage, isCrit] = this.calculateHit(userStats, targetStats, critRatio);
+      return [damage * skill.multiplier, isCrit] as [number, boolean];
+    });
     targetActor.damageHits(hits);
+    this.spawnChildren(skill, skill.target);
     return null;
   }
 }

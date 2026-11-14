@@ -1,4 +1,4 @@
-import { SkillEffect } from './skillEffect';
+import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import { Position } from '../../physics/position';
 import { ParticleSystem } from '../../particles/particleSystem';
@@ -24,8 +24,9 @@ export class EmitParticles extends SkillEffect {
     public perTick = 10,
     public flip: FlipMode | 'random' = 'none',
     public particleLife = 0.25,
+    options: SkillEffectOptions = {},
   ) {
-    super();
+    super(options);
   }
 
   override start(skill: Skill): unknown {
@@ -38,7 +39,8 @@ export class EmitParticles extends SkillEffect {
     if (!system) return null;
 
     const origin = new Vector2(pos.x + 0.5, pos.y + 0.5);
-    for (let i = 0; i < this.perTick; i++) {
+    const count = Math.max(1, Math.round(this.perTick * skill.multiplier));
+    for (let i = 0; i < count; i++) {
       const dir = randomDirection();
       const speed = this.minVel + Math.random() * (this.maxVel - this.minVel);
       const flip = this.flip === 'random' ? randomFlip() : this.flip;
@@ -52,6 +54,7 @@ export class EmitParticles extends SkillEffect {
         }),
       );
     }
+    this.spawnChildren(skill, skill.target);
     return null;
   }
 }

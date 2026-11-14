@@ -1,12 +1,16 @@
-import { SkillEffect } from './skillEffect';
+import { SkillEffect, type SkillEffectOptions } from './skillEffect';
 import type { Skill } from '../skill';
 import { Position } from '../../physics/position';
 import { Physics } from '../../physics/physics';
 import { Vector2 } from '../../utils/vector';
 
 export class Push extends SkillEffect {
-  constructor(public force = 1, public scaleWithDistance = true) {
-    super();
+  constructor(
+    public force = 1,
+    public scaleWithDistance = true,
+    options: SkillEffectOptions = {},
+  ) {
+    super(options);
   }
 
   override start(skill: Skill): unknown {
@@ -21,11 +25,12 @@ export class Push extends SkillEffect {
     const dist = Math.sqrt(dx * dx + dy * dy);
     const dir = dist > 0 ? new Vector2(dx / dist, dy / dist) : new Vector2(0, 0);
 
-    let f = this.force;
+    let f = this.force * skill.multiplier;
     if (this.scaleWithDistance) {
       f = f / Math.max(1, dist);
     }
     targetPhysics.applyForce(dir.scale(f));
+    this.spawnChildren(skill, skill.target);
     return null;
   }
 }

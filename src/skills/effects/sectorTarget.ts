@@ -10,7 +10,13 @@ export class SectorTarget extends Target {
     radius = 32,
     maxTargets = 1,
     children: SkillEffect | SkillEffect[] = [],
+    multiplier = 1,
   ) {
-    super([distanceFilter(radius), teamFilter(targetType), angleFilter(angle)], maxTargets, children);
+    super(
+      [distanceFilter(radius), teamFilter(targetType), angleFilter(angle)],
+      maxTargets,
+      children,
+      multiplier,
+    );
   }
 }

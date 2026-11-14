@@ -9,7 +9,8 @@ export class CircleTarget extends Target {
     radius = 32,
     maxTargets = 1,
     children: SkillEffect | SkillEffect[] = [],
+    multiplier = 1,
   ) {
-    super([distanceFilter(radius), teamFilter(targetType)], maxTargets, children);
+    super([distanceFilter(radius), teamFilter(targetType)], maxTargets, children, multiplier);
   }
 }

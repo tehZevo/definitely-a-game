@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { Sprite } from './sprite';
+import { flipScales } from './spriteDef';
 
 describe('Sprite', () => {
   it('defaults current to the first frame', () => {
@@ -22,5 +23,19 @@ describe('Sprite', () => {
     const s = new Sprite({ idle: ['a.png'] });
     s.setAnimation('nope');
     expect(s.current).toBe('idle');
+  });
+
+  it('stores flip mode', () => {
+    const s = new Sprite({ idle: ['a.png'] }, 'idle', 'x');
+    expect(s.flip).toBe('x');
+  });
+});
+
+describe('flipScales', () => {
+  it('maps flip modes to sprite scales', () => {
+    expect(flipScales('none')).toEqual({ x: 1, y: 1 });
+    expect(flipScales('x')).toEqual({ x: -1, y: 1 });
+    expect(flipScales('y')).toEqual({ x: 1, y: -1 });
+    expect(flipScales('both')).toEqual({ x: -1, y: -1 });
   });
 });

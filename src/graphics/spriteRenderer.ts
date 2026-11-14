@@ -5,6 +5,7 @@ import { Interactable } from '../core/interactable';
 import { INTERACT_CURSOR_SPRITE, INTERACT_CURSOR_Z_INDEX, InteractCursor } from '../core/interactCursor';
 import { Tooltip } from '../ui/tooltip';
 import { Sprite } from './sprite';
+import { flipScales } from './spriteDef';
 import { Shadow } from '../actor/shadow';
 import { Invulnerable } from '../actor/invulnerable';
 import { invulnerabilityAlpha } from './invulnerability';
@@ -150,8 +151,10 @@ export class SpriteRenderer {
           anim.frameIndex = (anim.frameIndex + 1) % anim.frameCount;
         }
       }
+      const scale = flipScales(sprite.flip);
       for (const layer of anim.layers) {
         layer.sprite.texture = layer.frames[anim.frameIndex] ?? layer.frames[0];
+        layer.sprite.scale.set(scale.x, scale.y);
       }
       view.x = Math.round(pos.x);
       view.y = Math.round(pos.y);

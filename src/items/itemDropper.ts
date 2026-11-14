@@ -1,6 +1,7 @@
 import { Component } from '../ecs';
 import { Position } from '../physics/position';
 import type { ItemDef } from '../items/itemDef';
+import type { Loadout } from './loadout';
 import { DroppedItem } from './droppedItem';
 
 const ITEM_DROP_RADIUS = 2;
@@ -12,8 +13,11 @@ export class ItemDropper extends Component {
     this.items = items;
   }
 
-  getDropList(): ItemDef[] {
-    return this.items.filter((item) => Math.random() < item.calcDropRate());
+  getDropList(playerLoadout?: Loadout): ItemDef[] {
+    const owned = new Set(playerLoadout?.itemIds() ?? []);
+    return this.items.filter(
+      (item) => !owned.has(item.id) && Math.random() < item.calcDropRate(),
+    );
   }
 
   drop(item: ItemDef, pos: Position): import('../ecs').Entity {

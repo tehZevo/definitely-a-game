@@ -8,6 +8,7 @@ import { EquipGrade, equipGradeIcon } from '../items/equipGrade';
 import { ItemDef, BASE_DROP_RATE } from '../items/itemDef';
 import { Weapon } from '../items/weapon';
 import { Armor } from '../items/armor';
+import { ItemDropper } from '../items/itemDropper';
 import { woodenShortsword, woodenShield, copperLongsword } from '../data/items/weapons';
 import { cottonHat, leatherSuit, copperHelmet } from '../data/items/armor';
 
@@ -149,6 +150,18 @@ describe('Loadout component', () => {
       }),
     );
     expect(equips.itemSets()).toEqual({ copper: 2, linen: 1 });
+  });
+});
+
+describe('ItemDropper', () => {
+  it('does not drop items the player already owns', () => {
+    const world = new World();
+    const dropperEntity = world.createEntity([new Position(0, 0), new ItemDropper()]);
+    const dropper = dropperEntity.getComponent(ItemDropper)!;
+    dropper.setItems([woodenShortsword]);
+    const loadout = new Loadout();
+    loadout.equipWeapon(woodenShortsword);
+    expect(dropper.getDropList(loadout)).toEqual([]);
   });
 });
 

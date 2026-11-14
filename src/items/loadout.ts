@@ -45,6 +45,10 @@ export class Loadout extends Component {
     return [...new Set(items.flatMap((item) => item.buffs))];
   }
 
+  itemIds(): string[] {
+    return this.equippedItems().map((item) => item.id);
+  }
+
   itemSets(): Record<string, number> {
     const counts: Record<string, number> = {};
     for (const item of this.equippedItems()) {

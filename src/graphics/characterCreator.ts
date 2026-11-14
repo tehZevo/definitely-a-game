@@ -53,12 +53,15 @@ export interface FaceConfig {
   eyeColor: EyeColor;
 }
 
-export function getFaceImagePaths(config: FaceConfig): string[] {
+export function getFaceImagePaths(config: FaceConfig, options?: { hideHair?: boolean }): string[] {
   const faceDir = 'assets/player/face/';
-  return [
+  const paths = [
     faceDir + 'skin.png',
     faceDir + GENDER_EYES[config.gender],
     faceDir + 'pupils.png',
-    faceDir + GENDER_HAIR_STYLES[config.gender][config.hairStyle],
   ];
+  if (!options?.hideHair) {
+    paths.push(faceDir + GENDER_HAIR_STYLES[config.gender][config.hairStyle]);
+  }
+  return paths;
 }

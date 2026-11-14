@@ -25,6 +25,7 @@ import { Shadow } from './actor/shadow';
 import { SafeArea } from './actor/safeArea';
 import { Physics } from './physics/physics';
 import { Loadout } from './items/loadout';
+import { ArmorSlot } from './items/slots';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
 import { magicBolt } from './data/skills/magicBolt';
@@ -124,9 +125,11 @@ async function startGame(
   const inputSource = touch
     ? new CombinedInput(keyboard, touch)
     : keyboard;
-  const facePaths = getFaceImagePaths(profile.face);
   const equips = new Loadout();
   equips.load(profile.equips);
+  const facePaths = getFaceImagePaths(profile.face, {
+    hideHair: equips.getArmor(ArmorSlot.HAT)?.hideHair,
+  });
   const stats = new Stats(
     profile.baseStats.hp,
     profile.baseStats.maxHp,

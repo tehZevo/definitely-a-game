@@ -7,6 +7,8 @@ import { Tooltip } from '../ui/tooltip';
 import { Sprite } from './sprite';
 import { Shadow } from '../actor/shadow';
 import { assetUrl } from '../assets';
+import { TILE_SIZE } from '../constants';
+import { ySortZ } from './ySort';
 
 const FRAME_DURATION = 0.1;
 
@@ -153,7 +155,7 @@ export class SpriteRenderer {
       view.y = Math.round(pos.y);
       view.zIndex = entity.getComponent(InteractCursor)
         ? INTERACT_CURSOR_Z_INDEX
-        : Math.round(pos.y);
+        : ySortZ(pos.y, TILE_SIZE);
     }
   }
 }

@@ -6,7 +6,7 @@ import { Team } from '../../actor/team';
 import { Stats } from '../../actor/stats';
 import { Skill } from '../../actor/skill';
 import { SkillEffect } from './skillEffect';
-import { Target, applyTarget } from './target';
+import { Target, TargetOrder, applyTarget } from './target';
 import { TargetType } from '../targetType';
 import { teamFilter } from '../targetFilters';
 
@@ -65,6 +65,83 @@ describe('applyTarget', () => {
 
     expect(targets.length).toBe(2);
     expect(world.find(Skill).length).toBe(3);
+  });
+
+  it('selects nearest targets first', () => {
+    const world = new World();
+    const user = world.createEntity([
+      new Position(0, 0),
+      new Actor(),
+      new Team(0),
+      new Stats(100, 100),
+    ]);
+    const far = world.createEntity([
+      new Position(20, 0),
+      new Actor(),
+      new Team(1),
+      new Stats(100, 100),
+    ]);
+    const near = world.createEntity([
+      new Position(5, 0),
+      new Actor(),
+      new Team(1),
+      new Stats(100, 100),
+    ]);
+    const parentEntity = world.createEntity([
+      new Position(0, 0),
+      new Skill(new SkillEffect(), user),
+    ]);
+    const parentSkill = parentEntity.getComponent(Skill)!;
+
+    const targets = applyTarget(
+      parentSkill,
+      [teamFilter(TargetType.ENEMY)],
+      1,
+      [new MarkerEffect()],
+      TargetOrder.NEAREST,
+    );
+
+    expect(targets).toEqual([near]);
+    expect(world.find(Skill).length).toBe(2);
+    expect(far.alive).toBe(true);
+  });
+
+  it('supports deterministic random target order', () => {
+    const world = new World();
+    const user = world.createEntity([
+      new Position(0, 0),
+      new Actor(),
+      new Team(0),
+      new Stats(100, 100),
+    ]);
+    const first = world.createEntity([
+      new Position(10, 0),
+      new Actor(),
+      new Team(1),
+      new Stats(100, 100),
+    ]);
+    const second = world.createEntity([
+      new Position(20, 0),
+      new Actor(),
+      new Team(1),
+      new Stats(100, 100),
+    ]);
+    const parentEntity = world.createEntity([
+      new Position(0, 0),
+      new Skill(new SkillEffect(), user),
+    ]);
+    const parentSkill = parentEntity.getComponent(Skill)!;
+
+    const targets = applyTarget(
+      parentSkill,
+      [teamFilter(TargetType.ENEMY)],
+      2,
+      [new MarkerEffect()],
+      TargetOrder.RANDOM,
+      () => 0,
+    );
+
+    expect(targets).toEqual([second, first]);
   });
 });
 

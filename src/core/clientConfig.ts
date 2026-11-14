@@ -53,7 +53,7 @@ export function loadClientConfig(storage?: GetStorage): ClientConfig {
 }
 
 export function saveClientConfig(config: ClientConfig, storage?: SetStorage): void {
-  const target = storage ?? (typeof localStorage === 'undefined' ? null : localStorage);
-  if (!target) return;
-  target.setItem(CLIENT_CONFIG_KEY, serializeClientConfig(config));
+  // Persistence is disabled for now; only honor an explicit storage (tests), not localStorage.
+  if (!storage) return;
+  storage.setItem(CLIENT_CONFIG_KEY, serializeClientConfig(config));
 }

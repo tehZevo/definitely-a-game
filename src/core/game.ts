@@ -1,6 +1,7 @@
 import { World } from '../ecs';
 import type { Application, Container } from 'pixi.js';
 import type { MapDef } from '../maps/dfsGenerator';
+import type { PlayerProfile } from './playerProfile';
 import type { GameState } from './gameState';
 
 export class Game {
@@ -8,6 +9,7 @@ export class Game {
   app: Application | null = null;
   worldLayer: Container | null = null;
   currentState: GameState | null = null;
+  playerProfile: PlayerProfile | null = null;
   onTransition: ((mapdef: MapDef | string) => void | Promise<void>) | null = null;
   private transitioning = false;
 

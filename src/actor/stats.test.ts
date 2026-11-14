@@ -37,4 +37,12 @@ describe('Stats', () => {
     s.addMp(-1000);
     expect(s.mp).toBe(0);
   });
+
+  it('snapshots and loads stats', () => {
+    const source = new Stats(75, 100, 25, 50, 120, 10, 5, 130, 7);
+    const target = new Stats(1, 1);
+    target.load(source.snapshot());
+
+    expect(target.snapshot()).toEqual(source.snapshot());
+  });
 });

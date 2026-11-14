@@ -23,6 +23,7 @@ import { Actor } from './actor/actor';
 import { Team } from './actor/team';
 import { Shadow } from './actor/shadow';
 import { Physics } from './physics/physics';
+import { Equips } from './items/equips';
 import { defaultAttack } from './data/skills/defaultAttack';
 import { fireball } from './data/skills/fireball';
 import { magicBolt } from './data/skills/magicBolt';
@@ -39,12 +40,21 @@ import { woodenShortsword } from './data/items/weapons';
 import { cottonRobe } from './data/items/armor';
 import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
+import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
 import { CharCreateState } from './core/charCreateState';
 import { getFaceImagePaths, type FaceConfig } from './graphics/characterCreator';
 import { nextMapFor, resolveMap } from './data/maps';
 import { TILE_IMAGES } from './data/tilePalettes';
+
+const DEFAULT_FACE: FaceConfig = {
+  gender: 'male',
+  skinTone: 'light',
+  hairStyle: 0,
+  hairColor: 'brown',
+  eyeColor: 'blue',
+};
 
 function dungeonToTileset(
   tiles: Map<string, import('./tiles/tile').TileType>,
@@ -74,16 +84,18 @@ function dungeonToTileset(
 async function startGame(
   app: Application,
   game: Game,
-  face: FaceConfig,
+  input: PlayerProfile | FaceConfig,
   mapdef: MapDef | string = 'plains',
 ): Promise<void> {
+  const profile = resolvePlayerProfile(input, game.playerProfile);
   const resolved = resolveMap(mapdef);
   const worldLayer = game.worldLayer!;
   worldLayer.removeChildren();
 
   const world = new World();
   game.world = world;
-  game.onTransition = (next) => startGame(app, game, face, next);
+  game.playerProfile = profile;
+  game.onTransition = (next) => startGame(app, game, profile, next);
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
@@ -100,15 +112,28 @@ async function startGame(
   const touch = 'ontouchstart' in window
     ? new TouchJoystick(app.canvas)
     : null;
-  const input = touch
+  const inputSource = touch
     ? new CombinedInput(keyboard, touch)
     : keyboard;
-  const facePaths = getFaceImagePaths(face);
+  const facePaths = getFaceImagePaths(profile.face);
+  const stats = new Stats(
+    profile.stats.hp,
+    profile.stats.maxHp,
+    profile.stats.mp,
+    profile.stats.maxMp,
+    profile.stats.physAtt,
+    profile.stats.physDef,
+    profile.stats.critical,
+    profile.stats.magAtt,
+    profile.stats.magDef,
+  );
+  const equips = new Equips();
+  equips.load(profile.equips);
   const player = world.createEntity([
     pos,
     new Physics(),
-    new PlayerController(input, defaultAttack),
-    new Stats(100, 100, 50, 50, 100, 0, 0, 100, 0),
+    new PlayerController(inputSource, defaultAttack),
+    stats,
     new Actor(),
     new Team(0),
     new Shadow(),
@@ -118,6 +143,7 @@ async function startGame(
       [SkillSlot.GAMMA]: quadStrike,
       [SkillSlot.DELTA]: magicBolt,
     }),
+    equips,
     new Sprite({
       idle: facePaths,
       walk: facePaths,
@@ -153,6 +179,15 @@ async function startGame(
   const camera = new Camera(worldLayer);
   const joystickOverlay = touch ? new JoystickOverlay(app.stage) : null;
 
+  const saveProfile = () => {
+    game.playerProfile = {
+      face: profile.face,
+      stats: stats.snapshot(),
+      equips: equips.save(),
+    };
+  };
+  saveProfile();
+
   const playState = new PlayState();
   playState.setUpdate((dt: number) => {
     world.update(dt);
@@ -165,6 +200,7 @@ async function startGame(
       app.screen.width,
       app.screen.height,
     );
+    saveProfile();
   });
   game.setState(playState);
 }
@@ -194,13 +230,7 @@ async function boot(): Promise<void> {
     game.setState(charCreate);
   });
   menu.setOnSkip(() => {
-    void startGame(app, game, {
-      gender: 'male',
-      skinTone: 'light',
-      hairStyle: 0,
-      hairColor: 'brown',
-      eyeColor: 'blue',
-    });
+    void startGame(app, game, DEFAULT_FACE);
   });
   game.setState(menu);
 

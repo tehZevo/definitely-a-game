@@ -6,6 +6,10 @@ import { Game } from './game';
 import { PlayState } from './playState';
 
 describe('Game', () => {
+  it('starts without a player profile', () => {
+    expect(new Game().playerProfile).toBeNull();
+  });
+
   it('updates the world and current state', () => {
     const game = new Game();
     const world = new World();

@@ -72,3 +72,47 @@ export function weaponSlot(wt: WeaponType): WeaponSlot {
   const h = weaponHandedness(wt);
   return h === Handedness.SECONDARY ? WeaponSlot.SECONDARY : WeaponSlot.PRIMARY;
 }
+
+export enum WeaponSpeed {
+  VERY_SLOW,
+  SLOW,
+  MEDIUM,
+  FAST,
+  VERY_FAST,
+}
+
+export function weaponSpeed(wt: WeaponType): WeaponSpeed {
+  switch (wt) {
+    case WeaponType.DAGGER:
+      return WeaponSpeed.VERY_FAST;
+    case WeaponType.SHORTSWORD:
+    case WeaponType.KNUCKLES:
+    case WeaponType.REPEATER:
+      return WeaponSpeed.FAST;
+    case WeaponType.MACE:
+    case WeaponType.BOW:
+      return WeaponSpeed.MEDIUM;
+    case WeaponType.LONGSWORD:
+    case WeaponType.STAFF:
+      return WeaponSpeed.SLOW;
+    case WeaponType.POLEARM:
+      return WeaponSpeed.VERY_SLOW;
+    default:
+      return WeaponSpeed.MEDIUM;
+  }
+}
+
+export function weaponSpeedModifier(speed: WeaponSpeed): number {
+  switch (speed) {
+    case WeaponSpeed.VERY_FAST:
+      return 0.8;
+    case WeaponSpeed.FAST:
+      return 0.9;
+    case WeaponSpeed.MEDIUM:
+      return 1.0;
+    case WeaponSpeed.SLOW:
+      return 1.1;
+    case WeaponSpeed.VERY_SLOW:
+      return 1.2;
+  }
+}

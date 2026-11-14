@@ -3,7 +3,9 @@ import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
+import { Equips } from '../items/equips';
 import type { SkillDef } from '../skills/skillDef';
+import { getSkillUseTime } from '../skills/skillUseTime';
 import { useSkill } from '../skills/useSkill';
 import type { InputSource } from '../core/input';
 
@@ -44,7 +46,7 @@ export class PlayerController extends Component {
     if (this.skill && this.attackTimer === 0 && this.input.isPressed('Space')) {
       if (this.entity.world) {
         useSkill(this.entity.world, this.skill, this.entity);
-        this.attackTimer = this.skill.useTime;
+        this.attackTimer = getSkillUseTime(this.skill, this.entity.getComponent(Equips));
       }
     }
   }

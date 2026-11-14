@@ -9,7 +9,7 @@ export class SkillSlotLoader extends LoadoutListener {
     if (!slots) return;
     for (const slot of SKILL_SLOTS) {
       const item = equips.skills[slot];
-      if (item) slots.set(slot, item.skilldef);
+      slots.set(slot, item ? item.skilldef : null);
     }
   }
 }

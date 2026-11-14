@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { woodenShortsword } from '../data/items/weapons';
 import { cottonRobe } from '../data/items/armor';
-import { calculateStatsFromEquips, gradeMultiplier, partMultiplierForEquip, scaledEquipStats } from './equipStatsCalculator';
-import { Equips } from './equips';
+import { calculateStatsFromLoadout, gradeMultiplier, partMultiplierForEquip, scaledEquipStats } from './equipStatsCalculator';
+import { Loadout } from './loadout';
 import { EquipGrade } from './equipGrade';
 
 describe('equip stats calculator', () => {
@@ -33,11 +33,11 @@ describe('equip stats calculator', () => {
   });
 
   it('calculates stats from base stats and equips', () => {
-    const equips = new Equips();
+    const equips = new Loadout();
     equips.equipWeapon(woodenShortsword);
     equips.equipArmor(cottonRobe);
 
-    const stats = calculateStatsFromEquips(
+    const stats = calculateStatsFromLoadout(
       {
         hp: 75,
         maxHp: 100,

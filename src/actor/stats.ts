@@ -1,6 +1,6 @@
 import { Component } from '../ecs';
-import { calculateStatsFromEquips } from '../items/equipStatsCalculator';
-import type { Equips } from '../items/equips';
+import { calculateStatsFromLoadout } from '../items/equipStatsCalculator';
+import type { Loadout } from '../items/loadout';
 
 export interface StatsData {
   hp: number;
@@ -70,13 +70,13 @@ export class Stats extends Component {
     this.magDef = data.magDef;
   }
 
-  setBase(base: StatsData, equips: Equips): void {
+  setBase(base: StatsData, equips: Loadout): void {
     this.base = { ...base };
     this.recalculate(equips);
   }
 
-  recalculate(equips: Equips): void {
-    const calculated = calculateStatsFromEquips(this.base, equips);
+  recalculate(equips: Loadout): void {
+    const calculated = calculateStatsFromLoadout(this.base, equips);
     const hp = this.hp;
     const mp = this.mp;
     this.load(calculated);

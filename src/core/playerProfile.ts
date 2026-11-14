@@ -1,14 +1,14 @@
 import type { FaceConfig } from '../graphics/characterCreator';
 import type { StatsData } from '../actor/stats';
-import type { EquipsData } from '../items/equips';
-import { Equips } from '../items/equips';
+import type { LoadoutData } from '../items/loadout';
+import { Loadout } from '../items/loadout';
 
 export interface PlayerProfile {
   name: string;
   face: FaceConfig;
   baseStats: StatsData;
   stats: StatsData;
-  equips: EquipsData;
+  equips: LoadoutData;
 }
 
 export const DEFAULT_STATS: StatsData = {
@@ -23,13 +23,13 @@ export const DEFAULT_STATS: StatsData = {
   magDef: 0,
 };
 
-export const DEFAULT_EQUIPS: EquipsData = new Equips().save();
+export const DEFAULT_LOADOUT: LoadoutData = new Loadout().save();
 
 export function makePlayerProfile(
   face: FaceConfig,
   name = 'Player',
   stats: StatsData = DEFAULT_STATS,
-  equips: EquipsData = DEFAULT_EQUIPS,
+  equips: LoadoutData = DEFAULT_LOADOUT,
   baseStats: StatsData = DEFAULT_STATS,
 ): PlayerProfile {
   return { name, face, baseStats, stats, equips };

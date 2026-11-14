@@ -1,7 +1,7 @@
 # Items
 
 Items are data definitions used by the world and by actors. They are not entities by
-themselves; entities can reference item definitions through components such as `Equips`,
+themselves; entities can reference item definitions through components such as `Loadout`,
 `Chest`, and dropped item components.
 
 ## `ItemDef`
@@ -57,9 +57,9 @@ Responsibilities:
 - Stores the `armorSlot`.
 - Participates in equip stat calculation.
 
-## `Equips`
+## `Loadout`
 
-`src/items/equips.ts` stores the weapons and armor currently equipped by an actor.
+`src/items/loadout.ts` stores the weapons and armor currently equipped by an actor.
 
 Responsibilities:
 

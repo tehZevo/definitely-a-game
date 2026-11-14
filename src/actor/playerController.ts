@@ -5,7 +5,7 @@ import { Move } from '../actions/move';
 import { UseSkill } from '../actions/useSkill';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
-import { Equips } from '../items/equips';
+import { Loadout } from '../items/loadout';
 import { SKILL_SLOTS, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import type { SkillDef } from '../skills/skillDef';
 import { SkillSlots } from '../skills/skillSlots';
@@ -61,7 +61,7 @@ export class PlayerController extends Component {
         } else if (this.entity.world) {
           useSkill(this.entity.world, skill, this.entity);
         }
-        this.attackTimer = getSkillUseTime(skill, this.entity.getComponent(Equips));
+        this.attackTimer = getSkillUseTime(skill, this.entity.getComponent(Loadout));
         return;
       }
     }

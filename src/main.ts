@@ -192,7 +192,7 @@ async function startGame(
   const spriteRenderer = new SpriteRenderer(worldLayer, tooltip);
   await spriteRenderer.preload(world);
 
-  const hud = new Hud(app.stage);
+  const hud = await Hud.create(app.stage, app.screen.height);
   const damageNumbers = new DamageNumberRenderer(app.stage);
   await SkillBar.create(app.stage, player.getComponent(SkillSlots)!, app.screen.height);
   const camera = new Camera(worldLayer);

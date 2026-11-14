@@ -30,7 +30,7 @@ export class UseSkill extends Action {
 
     this.active = true;
     stats.addHp(-this.skilldef.hpCost);
-    stats.addMp(-this.skilldef.mpCost);
+    actor.drainMp(this.skilldef.mpCost);
 
     const world = this.entity.world;
     const pos = this.entity.getComponent(Position);

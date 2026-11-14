@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
+import { DamageNumber } from '../ui/damageNumber';
+import { DamageNumberType } from '../ui/damageNumberType';
 import { Stats } from './stats';
 import { Actor } from './actor';
 
@@ -32,5 +34,33 @@ describe('Actor', () => {
     const e = world.createEntity([new Position(0, 0), stats, new Actor()]);
     e.getComponent(Actor)!.healMp(1000);
     expect(stats.mp).toBe(50);
+  });
+
+  it('healMp spawns a mana restore number', () => {
+    const world = new World();
+    const stats = new Stats(50, 100, 10, 50);
+    const e = world.createEntity([new Position(0, 0), stats, new Actor()]);
+    e.getComponent(Actor)!.healMp(20);
+    expect(stats.mp).toBe(30);
+
+    const numbers = world.find(DamageNumber);
+    expect(numbers).toHaveLength(1);
+    const number = numbers[0].getComponent(DamageNumber)!;
+    expect(number.number).toBe('+ 20');
+    expect(number.damageType).toBe(DamageNumberType.MANA_RESTORE);
+  });
+
+  it('drainMp removes mp and spawns a mana drain number', () => {
+    const world = new World();
+    const stats = new Stats(50, 100, 30, 50);
+    const e = world.createEntity([new Position(0, 0), stats, new Actor()]);
+    e.getComponent(Actor)!.drainMp(12);
+    expect(stats.mp).toBe(18);
+
+    const numbers = world.find(DamageNumber);
+    expect(numbers).toHaveLength(1);
+    const number = numbers[0].getComponent(DamageNumber)!;
+    expect(number.number).toBe('- 12');
+    expect(number.damageType).toBe(DamageNumberType.MANA);
   });
 });

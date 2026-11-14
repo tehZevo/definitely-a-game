@@ -6,14 +6,16 @@ import { Actor } from '../../actor/actor';
 export const DAMAGE_SPREAD = 0.5;
 
 export class Damage extends SkillEffect {
-  constructor(public power = 100, public hits = 1) {
+  constructor(public power = 100, public hits = 1, public magic = false) {
     super();
   }
 
   calculateHit(userStats: Stats, targetStats: Stats, critRatio: number): [number, boolean] {
     const isCrit = Math.random() < critRatio;
     const critDamageRate = 2 + Math.max(critRatio - 1, 0);
-    let damage = (userStats.physAtt * this.power) / 100 - targetStats.physDef;
+    const attack = this.magic ? userStats.magAtt : userStats.physAtt;
+    const defense = this.magic ? targetStats.magDef : targetStats.physDef;
+    let damage = (attack * this.power) / 100 - defense;
     if (isCrit) damage = damage * critDamageRate;
     damage = damage * DAMAGE_SPREAD + damage * (1 - DAMAGE_SPREAD) * Math.random();
     damage = Math.max(damage, 1);

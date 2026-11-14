@@ -19,4 +19,10 @@ describe('MobDef', () => {
     expect(d.maxMp).toBe(12);
     expect(new MobDef('x', 'y.png').maxHp).toBe(10);
   });
+
+  it('defaults magic stats', () => {
+    const d = new MobDef('x', 'y.png');
+    expect(d.magAtt).toBe(100);
+    expect(d.magDef).toBe(0);
+  });
 });

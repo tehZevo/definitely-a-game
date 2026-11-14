@@ -12,6 +12,8 @@ export class Stats extends Component {
     public physAtt = 100,
     public physDef = 0,
     public critical = 0,
+    public magAtt = 100,
+    public magDef = 0,
   ) {
     super();
   }

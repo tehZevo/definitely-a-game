@@ -17,6 +17,16 @@ describe('Damage', () => {
     expect(amount).toBeLessThanOrEqual(100);
   });
 
+  it('uses magic attack and magic defense for magic damage', () => {
+    const user = new Stats(100, 100, 0, 0, 100, 0, 0, 1000, 0);
+    const target = new Stats(100, 100, 0, 0, 100, 1000, 0, 0, 0);
+    const dmg = new Damage(100, 1, true);
+    const [amount] = dmg.calculateHit(user, target, 0);
+
+    expect(amount).toBeGreaterThanOrEqual(500);
+    expect(amount).toBeLessThanOrEqual(1000);
+  });
+
   it('start applies damage to the target', () => {
     const world = new World();
     const user = world.createEntity([

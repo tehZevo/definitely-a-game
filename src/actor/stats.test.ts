@@ -16,6 +16,12 @@ describe('Stats', () => {
     expect(s.maxMp).toBe(0);
   });
 
+  it('defaults magic attack and defense', () => {
+    const s = new Stats(30, 40);
+    expect(s.magAtt).toBe(100);
+    expect(s.magDef).toBe(0);
+  });
+
   it('addHp clamps to [0, maxHp]', () => {
     const s = new Stats(50, 100);
     s.addHp(200);

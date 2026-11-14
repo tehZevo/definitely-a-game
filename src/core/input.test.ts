@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { KeyboardInput, FakeInput, normalizeKeyCode } from './input';
 
 describe('KeyboardInput', () => {
-  it('maps WASD/arrows to an axis', () => {
+  it('maps the arrow keys to an axis', () => {
     const handlers: Record<string, (e: { code: string }) => void> = {};
     const target = {
       addEventListener: (t: string, h: (e: { code: string }) => void) => {
@@ -11,11 +11,11 @@ describe('KeyboardInput', () => {
     } as unknown as Window;
 
     const input = new KeyboardInput(target);
-    handlers['keydown']({ code: 'KeyD' });
-    handlers['keydown']({ code: 'KeyW' });
+    handlers['keydown']({ code: 'ArrowRight' });
+    handlers['keydown']({ code: 'ArrowUp' });
     expect(input.getAxis()).toEqual({ x: 1, y: -1 });
 
-    handlers['keyup']({ code: 'KeyD' });
+    handlers['keyup']({ code: 'ArrowRight' });
     expect(input.getAxis()).toEqual({ x: 0, y: -1 });
   });
 

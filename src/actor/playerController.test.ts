@@ -5,6 +5,9 @@ import { FakeInput } from '../core/input';
 import { PlayerController } from './playerController';
 import { Sprite } from '../graphics/sprite';
 import { Equips } from '../items/equips';
+import { Skill } from '../skills/skill';
+import { SkillSlot, SKILL_SLOT_KEYS } from '../skills/skillSlot';
+import { SkillSlots } from '../skills/skillSlots';
 import { woodenLongsword } from '../data/items/weapons';
 import { defaultAttack } from '../data/skills/defaultAttack';
 
@@ -71,5 +74,16 @@ describe('PlayerController', () => {
     world.update(0.1);
 
     expect((controller as unknown as { attackTimer: number }).attackTimer).toBeCloseTo(0.55);
+  });
+
+  it('uses the skill assigned to a pressed skill slot key', () => {
+    const world = new World();
+    const slots = new SkillSlots({ [SkillSlot.ALPHA]: defaultAttack });
+    const controller = new PlayerController(new FakeInput(0, 0, false, [SKILL_SLOT_KEYS[SkillSlot.ALPHA]]));
+    world.createEntity([new Position(0, 0), controller, slots]);
+
+    world.update(0.1);
+
+    expect(world.find(Skill).length).toBe(1);
   });
 });

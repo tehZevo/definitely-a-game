@@ -15,9 +15,9 @@ export const SKILL_SLOTS: readonly SkillSlot[] = [
 ];
 
 export const SKILL_SLOT_KEYS: Record<SkillSlot, string> = {
-  [SkillSlot.ALPHA]: 'Space',
-  [SkillSlot.BETA]: '1',
-  [SkillSlot.GAMMA]: '2',
-  [SkillSlot.DELTA]: '3',
-  [SkillSlot.OMEGA]: '4',
+  [SkillSlot.ALPHA]: 'KeyA',
+  [SkillSlot.BETA]: 'KeyS',
+  [SkillSlot.GAMMA]: 'KeyD',
+  [SkillSlot.DELTA]: 'KeyF',
+  [SkillSlot.OMEGA]: 'KeyQ',
 };

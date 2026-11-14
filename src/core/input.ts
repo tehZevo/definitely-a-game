@@ -1,3 +1,5 @@
+import { DEFAULT_KEY_MAP, type MovementDirection } from './keyMap';
+
 export interface Axis {
   x: number;
   y: number;
@@ -12,16 +14,18 @@ export function normalizeKeyCode(code: string): string {
   return code === 'NumpadEnter' ? 'Enter' : code;
 }
 
-const KEY_MAP: Record<string, Axis> = {
-  ArrowLeft: { x: -1, y: 0 },
-  KeyA: { x: -1, y: 0 },
-  ArrowRight: { x: 1, y: 0 },
-  KeyD: { x: 1, y: 0 },
-  ArrowUp: { x: 0, y: -1 },
-  KeyW: { x: 0, y: -1 },
-  ArrowDown: { x: 0, y: 1 },
-  KeyS: { x: 0, y: 1 },
+const MOVEMENT_VECTORS: Record<MovementDirection, Axis> = {
+  up: { x: 0, y: -1 },
+  down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
+  right: { x: 1, y: 0 },
 };
+
+const KEY_MAP: Record<string, Axis> = Object.fromEntries(
+  Object.entries(DEFAULT_KEY_MAP.movement).flatMap(([direction, codes]) =>
+    codes.map((code) => [code, MOVEMENT_VECTORS[direction as MovementDirection]]),
+  ),
+);
 
 export class KeyboardInput implements InputSource {
   private keys = new Set<string>();
@@ -56,14 +60,20 @@ export class KeyboardInput implements InputSource {
 }
 
 export class FakeInput implements InputSource {
-  constructor(private ax = 0, private ay = 0, private attack = false) {}
+  constructor(
+    private ax = 0,
+    private ay = 0,
+    private attack = false,
+    private pressed: string[] = [],
+  ) {}
 
   getAxis(): Axis {
     return { x: this.ax, y: this.ay };
   }
 
   isPressed(code: string): boolean {
-    void code;
-    return this.attack;
+    const wanted = normalizeKeyCode(code);
+    if (this.attack && wanted === 'Space') return true;
+    return this.pressed.some((key) => normalizeKeyCode(key) === wanted);
   }
 }

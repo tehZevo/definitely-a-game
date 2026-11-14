@@ -13,8 +13,10 @@ describe('skillSlot', () => {
   });
 
   it('maps each slot to a key binding', () => {
-    expect(SKILL_SLOT_KEYS[SkillSlot.ALPHA]).toBe('Space');
-    expect(SKILL_SLOT_KEYS[SkillSlot.BETA]).toBe('1');
-    expect(SKILL_SLOT_KEYS[SkillSlot.OMEGA]).toBe('4');
+    expect(SKILL_SLOT_KEYS[SkillSlot.ALPHA]).toBe('KeyA');
+    expect(SKILL_SLOT_KEYS[SkillSlot.BETA]).toBe('KeyS');
+    expect(SKILL_SLOT_KEYS[SkillSlot.GAMMA]).toBe('KeyD');
+    expect(SKILL_SLOT_KEYS[SkillSlot.DELTA]).toBe('KeyF');
+    expect(SKILL_SLOT_KEYS[SkillSlot.OMEGA]).toBe('KeyQ');
   });
 });

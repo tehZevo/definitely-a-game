@@ -8,7 +8,6 @@ export interface MenuItem {
 export class Menu extends Screen {
   options: MenuItem[];
   selection = 0;
-  uiManager: import('./uiManager').UIManager | null = null;
 
   constructor(options: MenuItem[] = [], selection = 0) {
     super();

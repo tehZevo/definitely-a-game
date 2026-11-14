@@ -32,7 +32,9 @@ import { SkillSlots } from './skills/skillSlots';
 import { SkillSlot } from './skills/skillSlot';
 import { Hud } from './ui/hud';
 import { SkillBar } from './ui/skillBar';
+import { StatsScreen } from './ui/statsScreen';
 import { Tooltip } from './ui/tooltip';
+import { UIManager } from './ui/uiManager';
 import { DamageNumberRenderer } from './ui/damageNumberRenderer';
 import { JoystickOverlay } from './ui/joystickOverlay';
 import { Stairs } from './tiles/stairs';
@@ -105,7 +107,8 @@ async function startGame(
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
   const tileRenderer = await TileRenderer.render(tileset, worldLayer);
 
-  world.createEntity([new GameMaster(resolved, game)]);
+  const uiManager = new UIManager(app.stage);
+  world.createEntity([new GameMaster(resolved, game), uiManager]);
   const chunks = chunkTiles(dungeon.tiles);
   world.createEntity([new TilePhysics(chunks)]);
   const spawnRoom = dungeon.rooms[0];
@@ -201,8 +204,23 @@ async function startGame(
   saveProfile();
 
   const playState = new PlayState();
+  let prevEnter = false;
+  let prevEscape = false;
   playState.setUpdate((dt: number) => {
     world.update(dt);
+
+    const enter = inputSource.isPressed('Enter');
+    const escape = inputSource.isPressed('Escape');
+    if (uiManager.focusStack.length > 0) {
+      if ((enter && !prevEnter) || (escape && !prevEscape)) {
+        uiManager.pop();
+      }
+    } else if (enter && !prevEnter) {
+      uiManager.openScreen(new StatsScreen(player, uiManager));
+    }
+    prevEnter = enter;
+    prevEscape = escape;
+
     tileRenderer.update(pos);
     spriteRenderer.update(world, dt);
     damageNumbers.update(world);

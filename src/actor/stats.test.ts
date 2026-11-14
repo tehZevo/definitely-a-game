@@ -18,6 +18,11 @@ describe('Stats', () => {
     expect(s.maxMp).toBe(0);
   });
 
+  it('does not store a move speed multiplier', () => {
+    const s = new Stats(30, 40);
+    expect((s as unknown as { moveSpeed?: unknown }).moveSpeed).toBeUndefined();
+  });
+
   it('defaults magic attack and defense', () => {
     const s = new Stats(30, 40);
     expect(s.magAtt).toBe(100);

@@ -1,6 +1,7 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
+import { PLAYER_MOVE_SPEED, TILE_SIZE } from '../constants';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
 import { Equips } from '../items/equips';
@@ -10,7 +11,10 @@ import { useSkill } from '../skills/useSkill';
 import type { InputSource } from '../core/input';
 
 export class PlayerController extends Component {
-  speed = 120;
+  get speed(): number {
+    return PLAYER_MOVE_SPEED * TILE_SIZE;
+  }
+
   private input: InputSource;
   private skill?: SkillDef;
   private attackTimer = 0;

@@ -1,7 +1,7 @@
 import { Component } from '../ecs';
 import { Vector2 } from '../utils/vector';
 import { Position } from '../physics/position';
-import { PLAYER_MOVE_SPEED, TILE_SIZE } from '../constants';
+import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
 import { Sprite } from '../graphics/sprite';
 import { Actor } from './actor';
 import { Equips } from '../items/equips';
@@ -15,7 +15,7 @@ import type { InputSource } from '../core/input';
 
 export class PlayerController extends Component {
   get speed(): number {
-    return PLAYER_MOVE_SPEED * TILE_SIZE;
+    return PLAYER_MOVE_SPEED * PLAYER_MOVE_SPEED_SCALE * TILE_SIZE;
   }
 
   private input: InputSource;

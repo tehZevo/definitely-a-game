@@ -3,6 +3,7 @@ import { World } from '../ecs';
 import { Position } from '../physics/position';
 import { FakeInput } from '../core/input';
 import { PlayerController } from './playerController';
+import { PLAYER_MOVE_SPEED, PLAYER_MOVE_SPEED_SCALE, TILE_SIZE } from '../constants';
 import { Sprite } from '../graphics/sprite';
 import { Equips } from '../items/equips';
 import { Skill } from '../skills/skill';
@@ -12,6 +13,12 @@ import { woodenLongsword } from '../data/items/weapons';
 import { defaultAttack } from '../data/skills/defaultAttack';
 
 describe('PlayerController', () => {
+  it('uses the Python physics terminal move speed', () => {
+    expect(new PlayerController(new FakeInput(0, 0)).speed).toBe(
+      PLAYER_MOVE_SPEED * PLAYER_MOVE_SPEED_SCALE * TILE_SIZE,
+    );
+  });
+
   it('moves by speed along the input axis', () => {
     const world = new World();
     const pos = new Position(0, 0);

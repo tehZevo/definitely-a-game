@@ -83,4 +83,15 @@ export class TilePhysics extends Component {
     }
     return rects;
   }
+
+  isSolidAt(tileX: number, tileY: number): boolean {
+    const cx = Math.floor(tileX / CHUNK_SIZE);
+    const cy = Math.floor(tileY / CHUNK_SIZE);
+    const rects = this.chunkRects.get(`${cx},${cy}`) ?? [];
+    return rects.some((rect) =>
+      tileX >= rect.x &&
+      tileX < rect.x + rect.w &&
+      tileY >= rect.y &&
+      tileY < rect.y + rect.h);
+  }
 }

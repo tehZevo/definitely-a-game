@@ -8,9 +8,25 @@ import { Skill } from '../../actor/skill';
 import { SkillEffect } from './skillEffect';
 import { Target, TargetOrder, applyTarget } from './target';
 import { TargetType } from '../targetType';
-import { teamFilter } from '../targetFilters';
+import { lineOfSightFilter, teamFilter } from '../targetFilters';
+import { TilePhysics } from '../../tiles/tilePhysics';
+import { Tileset } from '../../tiles/tileset';
+import { Tile } from '../../tiles/tile';
+import { CHUNK_SIZE, TILE_SIZE } from '../../constants';
 
 class MarkerEffect extends SkillEffect {}
+
+function physicsWithSolidTile(tileX: number, tileY: number): TilePhysics {
+  const tiles: Tile[][] = [];
+  for (let y = 0; y < CHUNK_SIZE; y++) {
+    const row: Tile[] = [];
+    for (let x = 0; x < CHUNK_SIZE; x++) {
+      row.push(new Tile('assets/tiles/floor.png', x === tileX && y === tileY));
+    }
+    tiles.push(row);
+  }
+  return new TilePhysics(new Map([['0,0', new Tileset(CHUNK_SIZE, CHUNK_SIZE, tiles)]]));
+}
 
 function setupWorld() {
   const world = new World();
@@ -174,5 +190,36 @@ describe('Target', () => {
 
     expect(targetEntity.getComponent(Skill)!.success).toBe(false);
     expect(world.find(Skill).length).toBe(1);
+  });
+
+  it('can require line of sight', () => {
+    const world = new World();
+    world.createEntity([physicsWithSolidTile(1, 0)]);
+    const user = world.createEntity([
+      new Position(0, 0),
+      new Actor(),
+      new Team(0),
+      new Stats(100, 100),
+    ]);
+    world.createEntity([
+      new Position(2 * TILE_SIZE, 0),
+      new Actor(),
+      new Team(1),
+      new Stats(100, 100),
+    ]);
+    const targetEffect = new Target(teamFilter(TargetType.ENEMY), 1, [new MarkerEffect()], 1, TargetOrder.NEAREST, true);
+    const targetEntity = world.createEntity([new Position(0, 0), new Skill(targetEffect, user)]);
+
+    expect(targetEntity.getComponent(Skill)!.success).toBe(false);
+    expect(world.find(Skill).length).toBe(1);
+  });
+
+  it('line of sight filter allows targets without tile physics', () => {
+    const { world, user, enemy } = setupWorld();
+    const skillEntity = world.createEntity([
+      new Position(0, 0),
+      new Skill(new SkillEffect(), user),
+    ]);
+    expect(lineOfSightFilter()(skillEntity.getComponent(Skill)!)(enemy)).toBe(true);
   });
 });

@@ -1,6 +1,6 @@
 import type { World, Entity } from '../ecs';
 import { Position } from '../physics/position';
-import { Skill } from './skill';
+import { Skill } from '../actor/skill';
 import type { SkillDef } from './skillDef';
 
 export function useSkill(world: World, skillDef: SkillDef, user: Entity): Entity {

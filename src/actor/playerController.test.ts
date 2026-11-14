@@ -9,7 +9,7 @@ import { Actor } from './actor';
 import { Stats } from './stats';
 import { Sprite } from '../graphics/sprite';
 import { Equips } from '../items/equips';
-import { Skill } from '../skills/skill';
+import { Skill } from '../actor/skill';
 import { SkillSlot, SKILL_SLOT_KEYS } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
 import { woodenLongsword } from '../data/items/weapons';

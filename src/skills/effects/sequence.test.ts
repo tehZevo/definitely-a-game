@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { World } from '../../ecs';
 import { Position } from '../../physics/position';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { SkillEffect } from './skillEffect';
 import { Sequence } from './sequence';
 

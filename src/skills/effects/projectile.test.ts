@@ -6,7 +6,7 @@ import { Actor } from '../../actor/actor';
 import { Team } from '../../actor/team';
 import { Stats } from '../../actor/stats';
 import { Sprite } from '../../graphics/sprite';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { SkillEffect } from './skillEffect';
 import { Projectile } from './projectile';
 import { TargetType } from '../targetType';

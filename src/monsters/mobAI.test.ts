@@ -7,7 +7,7 @@ import { PlayerController } from '../actor/playerController';
 import { FakeInput } from '../core/input';
 import { MobAI } from './mobAI';
 import { Vector2 } from '../utils/vector';
-import { Skill } from '../skills/skill';
+import { Skill } from '../actor/skill';
 import { SkillSlot } from '../skills/skillSlot';
 import { SkillSlots } from '../skills/skillSlots';
 import { defaultAttack } from '../data/skills/defaultAttack';

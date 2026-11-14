@@ -1,5 +1,5 @@
 import { SkillEffect, type SkillEffectOptions } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import type { BuffDef } from '../../buffs/buffDef';
 import { Stats } from '../../actor/stats';
 import { Buffs } from '../../buffs/buffs';

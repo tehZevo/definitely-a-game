@@ -1,5 +1,5 @@
 import { SkillEffect, type SkillEffectOptions } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import { Position } from '../../physics/position';
 import { Physics } from '../../physics/physics';
 import { Vector2 } from '../../utils/vector';

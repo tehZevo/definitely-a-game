@@ -3,7 +3,7 @@ import { World } from '../../ecs';
 import { Position } from '../../physics/position';
 import { Stats } from '../../actor/stats';
 import { Actor } from '../../actor/actor';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { ApplyBuff } from './applyBuff';
 import { Buffs } from '../../buffs/buffs';
 import { BuffDef } from '../../buffs/buffDef';

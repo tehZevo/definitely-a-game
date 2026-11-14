@@ -1,5 +1,5 @@
 import { SkillEffect, type SkillEffectOptions } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 import { Position } from '../../physics/position';
 import { ParticleSystem } from '../../particles/particleSystem';
 import { Particle, type FlipMode } from '../../particles/particle';

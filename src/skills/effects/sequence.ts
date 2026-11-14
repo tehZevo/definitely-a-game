@@ -1,5 +1,5 @@
 import { createChildSkill, SkillEffect, type SkillEffectOptions } from './skillEffect';
-import type { Skill } from '../skill';
+import type { Skill } from '../../actor/skill';
 
 export interface SequenceState {
   index: number;

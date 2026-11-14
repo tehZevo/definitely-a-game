@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { World } from '../ecs';
 import { Position } from '../physics/position';
 import { Skill } from './skill';
-import { SkillEffect } from './effects/skillEffect';
+import { SkillEffect } from '../skills/effects/skillEffect';
 
 class CountingEffect extends SkillEffect {
   started = 0;

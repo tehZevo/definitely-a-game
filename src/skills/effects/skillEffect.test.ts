@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { World } from '../../ecs';
 import { Position } from '../../physics/position';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { SkillEffect, createChildSkill, spawnEffectChildren } from './skillEffect';
 
 class MarkerEffect extends SkillEffect {}

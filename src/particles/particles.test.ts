@@ -4,7 +4,7 @@ import { Position } from '../physics/position';
 import { Particle } from '../particles/particle';
 import { ParticleSystem } from '../particles/particleSystem';
 import { Vector2 } from '../utils/vector';
-import { Skill } from '../skills/skill';
+import { Skill } from '../actor/skill';
 import { EmitParticles } from '../skills/effects/emitParticles';
 import { Actor } from '../actor/actor';
 import { Stats } from '../actor/stats';

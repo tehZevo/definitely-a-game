@@ -4,7 +4,7 @@ import { Position } from '../../physics/position';
 import { Actor } from '../../actor/actor';
 import { Team } from '../../actor/team';
 import { Stats } from '../../actor/stats';
-import { Skill } from '../skill';
+import { Skill } from '../../actor/skill';
 import { SkillEffect } from './skillEffect';
 import { Target, applyTarget } from './target';
 import { TargetType } from '../targetType';

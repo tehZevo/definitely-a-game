@@ -1,5 +1,5 @@
 import { Component, type Entity } from '../ecs';
-import type { SkillEffect } from './effects/skillEffect';
+import type { SkillEffect } from '../skills/effects/skillEffect';
 
 export class Skill extends Component {
   state: unknown = null;

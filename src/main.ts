@@ -43,6 +43,7 @@ import { Game } from './core/game';
 import { GameMaster } from './core/gameMaster';
 import { InteractTargeter } from './core/interactTargeter';
 import { loadClientConfig, saveClientConfig } from './core/clientConfig';
+import { LOGICAL_HEIGHT, LOGICAL_WIDTH, computeCanvasStyle } from './core/canvasLayout';
 import { resolvePlayerProfile, type PlayerProfile } from './core/playerProfile';
 import { PlayState } from './core/playState';
 import { MainMenuState } from './core/mainMenuState';
@@ -221,11 +222,21 @@ async function boot(): Promise<void> {
   const app = new Application();
   await app.init({
     background: '#1099bb',
-    resizeTo: window,
+    width: LOGICAL_WIDTH,
+    height: LOGICAL_HEIGHT,
     antialias: false,
     resolution: 1,
   });
-  document.getElementById('app')?.appendChild(app.canvas);
+  const canvas = app.canvas;
+  canvas.style.imageRendering = 'pixelated';
+  const applyCanvasSize = () => {
+    const style = computeCanvasStyle(window.innerWidth, window.innerHeight);
+    canvas.style.width = style.width;
+    canvas.style.height = style.height;
+  };
+  applyCanvasSize();
+  window.addEventListener('resize', applyCanvasSize);
+  document.getElementById('app')?.appendChild(canvas);
   app.stage.sortableChildren = true;
 
   const game = new Game();

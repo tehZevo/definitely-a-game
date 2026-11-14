@@ -16,7 +16,7 @@ export class Heal extends SkillEffect {
       skill.success = false;
       return null;
     }
-    const healing = (userStats.physAtt * this.power) / 100;
+    const healing = (userStats.magAtt * this.power) / 100;
     targetActor.heal(healing * DAMAGE_SPREAD * skill.multiplier);
     this.spawnChildren(skill, skill.target);
     return null;

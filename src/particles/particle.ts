@@ -9,6 +9,7 @@ export class Particle {
   life: number;
   path: string;
   flip: FlipMode;
+  palette?: string;
 
   constructor(opts: {
     path: string;
@@ -16,6 +17,7 @@ export class Particle {
     vel?: Vector2;
     life?: number;
     flip?: FlipMode;
+    palette?: string;
   }) {
     this.path = opts.path;
     this.pos = opts.pos;
@@ -23,6 +25,7 @@ export class Particle {
     this.life = opts.life ?? 1;
     this.startingLife = this.life;
     this.flip = opts.flip ?? 'none';
+    this.palette = opts.palette;
   }
 
   update(dt: number): void {

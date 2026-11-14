@@ -24,6 +24,7 @@ export class EmitParticles extends SkillEffect {
     public perTick = 10,
     public flip: FlipMode | 'random' = 'none',
     public particleLife = 0.25,
+    public palette?: string,
     options: SkillEffectOptions = {},
   ) {
     super(options);
@@ -60,6 +61,7 @@ export class EmitParticles extends SkillEffect {
           vel: dir.scale(speed),
           life: this.particleLife,
           flip,
+          palette: this.palette,
         }),
       );
     }

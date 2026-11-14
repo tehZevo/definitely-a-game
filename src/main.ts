@@ -102,7 +102,7 @@ async function startGame(
 
   const dungeon = generateDungeon({ roomSize: 8, floorSize: 3 });
   const tileset = dungeonToTileset(dungeon.tiles, resolved.palette);
-  await TileRenderer.render(tileset, worldLayer);
+  const tileRenderer = await TileRenderer.render(tileset, worldLayer);
 
   world.createEntity([new GameMaster(resolved, game)]);
   const chunks = chunkTiles(dungeon.tiles);
@@ -202,6 +202,7 @@ async function startGame(
   const playState = new PlayState();
   playState.setUpdate((dt: number) => {
     world.update(dt);
+    tileRenderer.update(pos);
     spriteRenderer.update(world, dt);
     damageNumbers.update(world);
     hud.update(player);

@@ -36,6 +36,10 @@ export class Loadout extends Component {
     return this.weapons[slot];
   }
 
+  get primaryWeapon(): Weapon | undefined {
+    return this.weapons[WeaponSlot.PRIMARY];
+  }
+
   getArmor(slot: ArmorSlot): Armor | undefined {
     return this.armor[slot];
   }

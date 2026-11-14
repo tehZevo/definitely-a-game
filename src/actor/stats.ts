@@ -1,6 +1,11 @@
 import { Component } from '../ecs';
-import { calculateStatsFromLoadout } from '../items/equipStatsCalculator';
+import { PrimaryStats } from '../stats/primaryStats';
+import { EquipStats } from '../stats/equipStats';
+import { Stats as FullStats } from '../stats/stats';
+import { calculateStats } from '../stats/calculator';
+import { sumScaledArchetypeStats } from '../items/equipStatsCalculator';
 import type { Loadout } from '../items/loadout';
+import { WeaponType } from '../items/slots';
 
 export interface StatsData {
   hp: number;
@@ -15,7 +20,11 @@ export interface StatsData {
 }
 
 export class Stats extends Component {
-  base: StatsData;
+  primary: PrimaryStats;
+  equip: EquipStats;
+  flatModifiers: Record<string, FullStats> = {};
+  scalingModifiers: Record<string, FullStats> = {};
+  private _calculated: FullStats;
 
   constructor(
     public hp: number,
@@ -27,9 +36,37 @@ export class Stats extends Component {
     public critical = 0,
     public magAtt = 100,
     public magDef = 0,
+    primary?: PrimaryStats,
+    equip?: EquipStats,
   ) {
     super();
-    this.base = this.snapshot();
+    this.primary = primary ?? PrimaryStats.Base();
+    this.equip = equip ?? EquipStats.One();
+    this._calculated = new FullStats(this.equip, this.primary);
+  }
+
+  get calculated(): FullStats {
+    return this._calculated;
+  }
+
+  addFlatModifier(id: string, modifier: FullStats): void {
+    this.flatModifiers[id] = modifier;
+    this.recalculate();
+  }
+
+  addScalingModifier(id: string, modifier: FullStats): void {
+    this.scalingModifiers[id] = modifier;
+    this.recalculate();
+  }
+
+  removeFlatModifier(id: string): void {
+    delete this.flatModifiers[id];
+    this.recalculate();
+  }
+
+  removeScalingModifier(id: string): void {
+    delete this.scalingModifiers[id];
+    this.recalculate();
   }
 
   addHp(amount: number): void {
@@ -55,7 +92,17 @@ export class Stats extends Component {
   }
 
   baseSnapshot(): StatsData {
-    return { ...this.base };
+    return {
+      hp: this.hp,
+      maxHp: this.maxHp,
+      mp: this.mp,
+      maxMp: this.maxMp,
+      physAtt: this.physAtt,
+      physDef: this.physDef,
+      critical: this.critical,
+      magAtt: this.magAtt,
+      magDef: this.magDef,
+    };
   }
 
   load(data: StatsData): void {
@@ -70,17 +117,53 @@ export class Stats extends Component {
     this.magDef = data.magDef;
   }
 
-  setBase(base: StatsData, equips: Loadout): void {
-    this.base = { ...base };
-    this.recalculate(equips);
+  setBase(primary: PrimaryStats, equip: EquipStats): void {
+    this.primary = primary.clone();
+    this.equip = equip.clone();
+    this.recalculate();
   }
 
-  recalculate(equips: Loadout): void {
-    const calculated = calculateStatsFromLoadout(this.base, equips);
-    const hp = this.hp;
-    const mp = this.mp;
-    this.load(calculated);
-    this.hp = Math.max(0, Math.min(this.maxHp, hp));
-    this.mp = Math.max(0, Math.min(this.maxMp, mp));
+  recalculate(equips?: Loadout): void {
+    const flat = this.sumFlatModifiers();
+    const scaling = this.sumScalingModifiers();
+    const weaponType = equips?.primaryWeapon?.weaponType ?? WeaponType.SHORTSWORD;
+    const archetypeStats = equips ? sumScaledArchetypeStats(equips) : new FullStats();
+
+    const result = calculateStats(
+      this.primary,
+      this.equip,
+      archetypeStats.primary,
+      archetypeStats.equip,
+      flat,
+      scaling,
+      weaponType,
+    );
+
+    this._calculated = result;
+    this.maxHp = result.secondary.hp;
+    this.maxMp = result.secondary.mp;
+    this.physAtt = result.secondary.physAtt;
+    this.magAtt = result.secondary.magAtt;
+    this.physDef = result.secondary.physDef;
+    this.magDef = result.secondary.magDef;
+    this.critical = result.secondary.critical;
+    this.hp = Math.min(this.hp, this.maxHp);
+    this.mp = Math.min(this.mp, this.maxMp);
+  }
+
+  private sumFlatModifiers(): FullStats {
+    let total = new FullStats();
+    for (const mod of Object.values(this.flatModifiers)) {
+      total = total.add(mod);
+    }
+    return total;
+  }
+
+  private sumScalingModifiers(): FullStats {
+    let total = FullStats.One;
+    for (const mod of Object.values(this.scalingModifiers)) {
+      total = total.multiply(mod);
+    }
+    return total;
   }
 }

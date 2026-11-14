@@ -19,9 +19,18 @@ export class Actor extends Component {
   combatTimer = 0;
   currentAction: Action | null = null;
   nextAction: Action | null = null;
+  skillCooldowns: Record<string, number> = {};
 
   get busy(): boolean {
     return this.currentAction !== null && !this.currentAction.interruptible;
+  }
+
+  isOnCooldown(skillId: string): boolean {
+    return (this.skillCooldowns[skillId] ?? 0) > 0;
+  }
+
+  setCooldown(skillId: string, duration: number): void {
+    this.skillCooldowns[skillId] = duration;
   }
 
   act(action: Action, force = false): void {
@@ -33,6 +42,8 @@ export class Actor extends Component {
   }
 
   override update(dt = 0): void {
+    this.updateCooldowns(dt);
+
     const deathAnimation = this.entity.getComponent(DeathAnimation);
     if (deathAnimation) {
       deathAnimation.update(dt);
@@ -53,6 +64,15 @@ export class Actor extends Component {
     if (!this.alive) return;
 
     this.updateAction(dt);
+  }
+
+  private updateCooldowns(dt: number): void {
+    for (const id of Object.keys(this.skillCooldowns)) {
+      this.skillCooldowns[id] -= dt;
+      if (this.skillCooldowns[id] <= 0) {
+        delete this.skillCooldowns[id];
+      }
+    }
   }
 
   private startAction(action: Action): void {

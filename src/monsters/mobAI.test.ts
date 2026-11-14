@@ -28,17 +28,21 @@ describe('MobAI', () => {
     const world = new World();
     withPlayer(world, 0, 0);
     const mobPos = new Position(500, 0);
-    world.createEntity([mobPos, new Actor(), new MobAI()]);
+    const mobActor = new Actor();
+    world.createEntity([mobPos, mobActor, new MobAI()]);
     world.update(1);
     expect(mobPos.x).toBe(500);
+    expect(mobActor.lookDir).toEqual(new Vector2(0, -1));
   });
 
-  it('does not move when already within stop range', () => {
+  it('faces the target when already within stop range', () => {
     const world = new World();
     withPlayer(world, 0, 0);
     const mobPos = new Position(5, 0);
-    world.createEntity([mobPos, new Actor(), new MobAI()]);
+    const mobActor = new Actor();
+    world.createEntity([mobPos, mobActor, new MobAI()]);
     world.update(1);
     expect(mobPos.x).toBe(5);
+    expect(mobActor.lookDir).toEqual(new Vector2(-1, 0));
   });
 });
